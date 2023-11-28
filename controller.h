@@ -24,7 +24,7 @@ class Controller{
     	Controller();
         // void startGame(unique_ptr<Player> player1, unique_ptr<Player> player2);
         // Player setupPlayer(const string playerType, Colour colour);
-        // Piece::Position convertCoords(string coords) const;
+        Position convertCoords(string coords) const;
         void displayScore() const;
         // unique_ptr<Piece> makePiece(char c, Piece::Position pos);
         void run();

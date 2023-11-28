@@ -30,9 +30,8 @@ class Piece{
         // Accessor methods
         int getX() const { return pos.posX; }
         int getY() const { return pos.posY; }
-        void setPosition(unique_ptr<Position> position) { 
-            pos.posX = position.get()->posX; 
-            pos.posY = position.get()->posY;
+        void setPosition(const Position& position) { 
+            pos = position;
         }
 
         Type getType() const { return pieceType; }

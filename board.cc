@@ -4,6 +4,27 @@ using namespace std;
 // Board::Board() : grid{8, vector<Piece*>(8,nullptr)}, turn{0}, isWin{false}, views{vector<View*>(2,nullptr)} {}
 Board::Board() : grid{8, vector<Piece*>(8,nullptr)}, turn{0}, isWin{false} {}
 
+void Board::makeMove(Piece *p, Position newPos){
+    if (p->isValid(newPos)) {
+        // Clear the piece's previous position on the board
+        grid[p->getX()][p->getY()] = nullptr;
+
+        // Capture handling if there is a piece at newPos
+        if (grid[newPos.posX][newPos.posY] != nullptr) {
+            // Handle capture 
+        }
+
+        // Move the piece to the new position
+        grid[newPos.posX][newPos.posY] = p;
+        
+        // Update the piece's internal position
+        p->setPosition(newPos);
+    }
+}
+
+
+
+
 
 
 void Board::addPiece(char type, Position pos) {

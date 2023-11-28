@@ -1,1 +1,1 @@
-main.o: main.cc controller.h view.h
+main.o: main.cc controller.h

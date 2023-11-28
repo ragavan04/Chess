@@ -6,28 +6,47 @@ Controller::Controller() : isWin{false}, player1Score{0}, player2Score{0}, gameI
 
 void Controller::run(){
     string command;
+    
     while (cin >> command) {
+
         // Parse and execute commands
         if (command == "game") {
             string whitePlayer;
             string blackPlayer;
-            // Start a new game
             cin >> whitePlayer;
             cin >> blackPlayer;
-            cout << "white: " << whitePlayer << "black: " << blackPlayer << endl;
 
-            // check for invalid input
+            // Validate whitePlayer and blackPlayer
+            bool validWhitePlayer = (whitePlayer == "human") || (whitePlayer.find("computer") == 0 && whitePlayer.size() == 11 && isdigit(whitePlayer[9]) && whitePlayer[9] >= '1' && whitePlayer[9] <= '4');
+            bool validBlackPlayer = (blackPlayer == "human") || (blackPlayer.find("computer") == 0 && blackPlayer.size() == 11 && isdigit(blackPlayer[9]) && blackPlayer[9] >= '1' && blackPlayer[9] <= '4');
+            
+            if (!validWhitePlayer || !validBlackPlayer) {
+                cerr << "Invalid player type. Player must be 'human' or 'computer[1-4]'." << endl;
+                continue;
+            } else {
+                cout << "White: " << whitePlayer << " Black: " << blackPlayer << endl;
+                if (whitePlayer.find("computer") == 0){
+                    int whiteDifficulty = whitePlayer[9] - '0';
+                    cout << "White player difficulty: " << whiteDifficulty << endl;
+                } 
+                if (blackPlayer.find("computer") == 0){
+                    int blackDifficulty = blackPlayer[9] - '0';
+                    cout << "Black player difficulty: " << blackDifficulty << endl;
+                } 
+            }
 
+
+
+            // Start a new game
             gameInProgress = true;
 
             
             
         } else if (command == "resign") {
-            cout << "inside resigning" << endl;
+            cout << "inside resign" << endl;
             gameInProgress = false;
 
         } else if (command == "move") {
-
             // checking if there is a game in progress
             if (!gameInProgress){
                 cerr << "Cannot make move. No game in progress." << endl;
@@ -35,7 +54,7 @@ void Controller::run(){
             }
 
             string cmd, startPostition, endPosition;
-            cin >> cmd >> startPostition >> endPosition;
+            cin >> startPostition >> endPosition;
 
             cout << "inside move" << endl;
 

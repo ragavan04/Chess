@@ -1,1 +1,1 @@
-controller.o: controller.cc controller.h view.h
+controller.o: controller.cc controller.h

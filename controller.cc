@@ -58,6 +58,16 @@ void Controller::run(){
 
             string cmd, startPostition, endPosition;
             cin >> startPostition >> endPosition;
+            Position tempStartPos = convertCoords(startPostition); // converting given coords into ints
+            Position tempEndPos = convertCoords(endPosition); // converting given coords into ints
+            Piece* curPiece = theBoard->getState()[tempStartPos.posX][tempStartPos.posY];
+
+            if (curPiece->isValid(tempEndPos)){
+                theBoard->makeMove(curPiece, tempEndPos);
+            } else {
+                cout << "Invalid move. Try a different move" << endl;
+            }
+
 
             cout << "inside move" << endl;
             theBoard->notifyObservers();
@@ -111,12 +121,36 @@ void Controller::processSetupCommand(const std::string& command) {
     string letter_position;
     stringstream ss{command};
     ss >> action >> piece >> letter_position;
+    Position position = convertCoords(letter_position);
     
 
     if (action == '+') {
         // Add piece to the board
+        theBoard->addPiece(piece, position);
         cout << "piece added: " << piece << "pos: " << letter_position << endl;
     } else if (action == '-') {
+        theBoard->removePiece(position);
         cout << "piece remove: " << letter_position <<  endl;
     }
+}
+
+Position Controller::convertCoords(string coords) const{
+    Position convertedCoords;
+    istringstream iss{coords};
+    char Xcoord;
+
+    iss >> Xcoord;
+    iss >> convertedCoords.posY;
+
+    if (Xcoord == 'a') convertedCoords.posX = 0;
+    if (Xcoord == 'b') convertedCoords.posX = 1;
+    if (Xcoord == 'c') convertedCoords.posX = 2;
+    if (Xcoord == 'd') convertedCoords.posX = 3;
+    if (Xcoord == 'e') convertedCoords.posX = 4;
+    if (Xcoord == 'f') convertedCoords.posX = 5;
+    if (Xcoord == 'g') convertedCoords.posX = 6;
+    if (Xcoord == 'h') convertedCoords.posX = 7;
+
+    return convertedCoords;
+
 }

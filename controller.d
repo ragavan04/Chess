@@ -1,1 +1,1 @@
-controller.o: controller.cc controller.h
+controller.o: controller.cc controller.h board.h

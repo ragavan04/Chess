@@ -5,19 +5,12 @@
 #include <vector>
 #include <memory>
 #include <sstream>
-// #include "piece.h"
-// #include "pawn.h"
-// #include "knight.h"
-// #include "bishop.h"
-// #include "rook.h"
-// #include "queen.h"
-// #include "king.h"
-// #include "player.h"
-// #include "view.h"
+#include "board.h"
+
 using namespace std;
 
 class Controller{
-    // unique_ptr<Board> theBoard;
+    Board* theBoard;
     // Player player1;
     // Player player2;
     //unique_ptr<View> TD;

@@ -2,7 +2,7 @@
 // #include "board.h"
 using namespace std;
 
-Controller::Controller() : isWin{false}, player1Score{0}, player2Score{0}, gameInProgress{false} {}
+Controller::Controller() : theBoard{new Board}, isWin{false}, player1Score{0}, player2Score{0}, gameInProgress{false} {}
 
 void Controller::run(){
     string command;
@@ -35,6 +35,7 @@ void Controller::run(){
                 } 
             }
 
+            cout << *theBoard;
 
 
             // Start a new game

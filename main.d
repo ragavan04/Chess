@@ -1,1 +1,1 @@
-main.o: main.cc controller.h
+main.o: main.cc controller.h board.h

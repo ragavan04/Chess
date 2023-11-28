@@ -4,12 +4,11 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "board.h"
+//#include "board.h"
 
 using namespace std;
 
 class Board;
-
 struct Position{ int posX; int posY; };
 
 class Piece{
@@ -19,14 +18,14 @@ class Piece{
         
     protected:
         Type pieceType;
-        Position pos;
         string colour;
-        Board* theBoard;
+        Position pos;
+        Board& theBoard;
         vector<Position> moves;
         
 
     public:
-        Piece(Type pieceType, string colour, Position pos, Board* board) 
+        Piece(Type pieceType, string colour, Position pos, Board& board) 
             : pieceType(pieceType), colour(colour), pos(pos), theBoard(board) {}
 
         // Accessor methods
@@ -36,7 +35,7 @@ class Piece{
 
         Type getType() const { return pieceType; }
 
-        virtual vector<Position> getPossibleMoves() const = 0; 
+        //virtual vector<Position> getPossibleMoves() const = 0; 
         virtual bool isValid(Position newPos) const = 0; // pure virtual methods, to be implemented within each piece
         virtual char displayChar() const = 0; // will return a char for each piece type (eg. 'p' for pawn), used in displaying the board
         ~Piece() {}; // virtual dtor

@@ -41,6 +41,7 @@ class Board {
         // bool isCheck(Player &p); // checks if there is a check present on the board
         // bool isStalemate(Player &p) const; // checks if there is a stalemate present on the board
         void makeMove(Piece* p, Position pos); // makes a move on the board, for the piece p to the positon pos
+        void addPiece(char type, Position pos);
         vector<vector<Piece*>> getState() const; // returns the grid
         // void clone(Piece::Type pieceType); // makes a clone of the given piece 
         void notifyObservers(); // notifies observers of changes made to the board

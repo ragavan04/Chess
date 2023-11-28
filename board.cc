@@ -26,73 +26,55 @@ void Board::makeMove(Piece *p, Position newPos){
 
 
 
-
-
-
 void Board::addPiece(char type, Position pos) {
 
-    //Piece *p;
+    Piece *p;
 
    switch(type) {
-        case 'p' : {}
-           p = new Pawn(); 
-        case 'n' : {}
-            
-        case 'b' : {}
-            
-        case 'r' : {}
-            
-        case 'q' : {}
-            
-        case 'k' : {} 
-            
-        case 'P' : {}
-            
-        case 'N' : {}
-            
-        case 'B' : {}
-            
-        case 'R' : {}
-            
-        case 'Q' : {}
-            
-        case 'K' : {}
-     
+        case 'p' : 
+            p = new Pawn(Piece::PAWN, "white", pos, *this);
+            break;
+        case 'n' :
+            p = new Knight(Piece::KNIGHT, "white", pos, *this); 
+            break;
+        case 'b' : 
+            p = new Bishop(Piece::BISHOP, "white", pos, *this);     
+            break;
+        case 'r' : 
+            p = new Rook(Piece::ROOK, "white", pos, *this); 
+            break;
+        case 'q' :
+            p = new Queen(Piece::QUEEN, "white", pos, *this); 
+            break;
+        case 'k' :  
+            p = new King(Piece::KING, "white", pos, *this); 
+            break;
+        case 'P' : 
+            p = new Pawn(Piece::PAWN, "black", pos, *this); 
+            break;
+        case 'N' : 
+            p = new Knight(Piece::KNIGHT, "black", pos, *this);  
+            break;
+        case 'B' : 
+            p = new Bishop(Piece::BISHOP, "black", pos, *this);     
+            break;
+        case 'R' : 
+            p = new Rook(Piece::ROOK, "black", pos, *this); 
+            break;
+        case 'Q' :
+            p = new Queen(Piece::QUEEN, "black", pos, *this); 
+            break;
+        case 'K' :
+            p = new King(Piece::KING, "black", pos, *this); 
+            break;
     }
     
-    
+    grid[pos.posX][pos.posY] = p;
 
 }
-
-
-
-
-
-ostream& operator<<(ostream& out, const Board& board) {
-    int boardSize = 8;
-    vector<vector<char>> theDisplay(boardSize, vector<char>(boardSize));
-    for (int row = 0; row < boardSize; ++row) {
-        for (int col = 0; col < boardSize; ++col) {
-            if (board.getState()[row][col] != nullptr) {
-                //theDisplay[row][col] = board.getState()[row][col]->displayChar(); 
-            } else {
-                // Set underscore for dark squares and space for light squares
-                theDisplay[row][col] = ((row + col) % 2 == 0) ? ' ' : '_';
-            }
-        }
-    }
     
-    for (int row = 7; row >= 0; --row) {
-        out << row + 1 << ' '; // Print row number
-        for (int col = 0; col < 8; ++col) {
-            out << theDisplay[row][col] << ' ';
-        }
-        out << '\n';
-    }
-    out << endl;
-    out << "  a b c d e f g h\n"; // Print column labels
-    return out;
-}
+    
+
 
 vector<vector<Piece*>> Board::getState() const{
     return grid;

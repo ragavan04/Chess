@@ -5,6 +5,46 @@ using namespace std;
 Board::Board() : grid{8, vector<Piece*>(8,nullptr)}, turn{0}, isWin{false} {}
 
 
+
+void Board::addPiece(char type, Position pos) {
+
+    //Piece *p;
+
+   switch(type) {
+        case 'p' : {}
+            
+        case 'n' : {}
+            
+        case 'b' : {}
+            
+        case 'r' : {}
+            
+        case 'q' : {}
+            
+        case 'k' : {} 
+            
+        case 'P' : {}
+            
+        case 'N' : {}
+            
+        case 'B' : {}
+            
+        case 'R' : {}
+            
+        case 'Q' : {}
+            
+        case 'K' : {}
+     
+    }
+    
+    
+
+}
+
+
+
+
+
 ostream& operator<<(ostream& out, const Board& board) {
     int boardSize = 8;
     vector<vector<char>> theDisplay(boardSize, vector<char>(boardSize));

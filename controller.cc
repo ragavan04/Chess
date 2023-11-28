@@ -1,5 +1,6 @@
 #include "controller.h"
 // #include "board.h"
+#include "textdisplay.h"
 using namespace std;
 
 Controller::Controller() : theBoard{new Board}, isWin{false}, player1Score{0}, player2Score{0}, gameInProgress{false} {}
@@ -35,6 +36,7 @@ void Controller::run(){
                 } 
             }
 
+            theBoard->notifyObservers();
             cout << *theBoard;
 
 
@@ -58,6 +60,7 @@ void Controller::run(){
             cin >> startPostition >> endPosition;
 
             cout << "inside move" << endl;
+            theBoard->notifyObservers();
 
         } else if (command == "setup") {
             cout << "inside setput mode" << endl;

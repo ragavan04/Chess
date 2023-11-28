@@ -8,6 +8,8 @@
 
 using namespace std;
 
+class Board;
+
 struct Position{ int posX; int posY; };
 
 class Piece{

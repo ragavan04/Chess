@@ -12,9 +12,6 @@ struct Position{ int posX; int posY; };
 
 class Piece{
     
-    private:
-         
-
     public:
         enum Type { PAWN, BISHOP, KNIGHT, ROOK, QUEEN, KING };
         
@@ -22,13 +19,13 @@ class Piece{
         Type pieceType;
         Position pos;
         string colour;
-        unique_ptr<Board> theBoard;
+        Board* theBoard;
         vector<Position> moves;
         
 
     public:
-        Piece(Type pieceType, string colour, Position pos, unique_ptr<Board> board)
-            : pieceType(pieceType), colour(colour), pos(pos), theBoard(std::move(board)) {}
+        Piece(Type pieceType, string colour, Position pos, Board* board) 
+            : pieceType(pieceType), colour(colour), pos(pos), theBoard(board) {}
 
         // Accessor methods
         int getX() const { return pos.posX; }
@@ -37,6 +34,7 @@ class Piece{
             pos.posX = position.get()->posX; 
             pos.posY = position.get()->posY;
         }
+
         Type getType() const { return pieceType; }
 
         vector<Position> getPossibleMoves() const; 

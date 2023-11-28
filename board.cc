@@ -73,7 +73,15 @@ void Board::addPiece(char type, Position pos) {
 
 }
     
-    
+void Board::removePiece(Position pos) {
+
+    if(grid[pos.posX][pos.posY] != nullptr) {
+        delete grid[pos.posX][pos.posY];
+        grid[pos.posX][pos.posY] = nullptr; 
+    }
+
+}
+   
 
 
 vector<vector<Piece*>> Board::getState() const{

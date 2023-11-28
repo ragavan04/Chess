@@ -13,7 +13,7 @@ class Controller{
     Board* theBoard;
     // Player player1;
     // Player player2;
-    //unique_ptr<View> TD;
+    View* TD;
     // unique_ptr<View> GD; 
     bool isWin;
     int player1Score;

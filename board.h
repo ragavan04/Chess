@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 #include <memory>
-// #include "view.h"
-// #include "piece.h"
+#include "view.h"
+#include "piece.h"
 class Piece;
+class View;
 using namespace std;
 
 
@@ -17,7 +18,7 @@ class Board {
     bool isWin;
     //Player player1; 
     //Player player2; 
-    // vector<View*> views;
+    vector<View*> views;
 
     public:
         Board();
@@ -37,7 +38,7 @@ class Board {
         vector<vector<Piece*>> getState() const; // returns the grid
         // void clone(Piece::Type pieceType); // makes a clone of the given piece 
         void notifyObservers(); // notifies observers of changes made to the board
-        // void attach(View *o);
+        void attach(View *o);
          
         ///Position findKingPosition(Player::Colour colour) const; // function to find the kings current position on the board
         friend ostream& operator<<(ostream& out, const Board& board);

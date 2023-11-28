@@ -8,6 +8,8 @@
 
 using namespace std;
 
+class Board;
+
 struct Position{ int posX; int posY; };
 
 class Piece{
@@ -24,8 +26,10 @@ class Piece{
         
 
     public:
-        Piece(Type pieceType, string colour, Position pos, Board* board) 
-            : pieceType(pieceType), colour(colour), pos(pos), theBoard(new Board) {}
+        Piece(Type pieceType, string colour, Position pos, Board* board)
+            : pieceType(pieceType), pos(pos), colour(colour), theBoard(board) {}
+
+
 
         // Accessor methods
         int getX() const { return pos.posX; }

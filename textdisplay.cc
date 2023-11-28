@@ -9,7 +9,7 @@ void TextDisplay::notify(const Board& board) {
     for (int row = 0; row < boardSize; ++row) {
         for (int col = 0; col < boardSize; ++col) {
             if (board.getState()[row][col] != nullptr) {
-                //theDisplay[row][col] = board.getState()[row][col]->displayChar(); 
+                theDisplay[row][col] = board.getState()[row][col]->displayChar(); 
             } else {
                 // Set underscore for dark squares and space for light squares
                 theDisplay[row][col] = ((row + col) % 2 == 0) ? ' ' : '_';

@@ -26,24 +26,21 @@ class Piece{
         
 
     public:
-        Piece(Type pieceType, string colour, Position pos, Board* board)
-            : pieceType(pieceType), pos(pos), colour(colour), theBoard(board) {}
-
-
+        Piece(Type pieceType, string colour, Position pos, Board* board) 
+            : pieceType(pieceType), colour(colour), pos(pos), theBoard(board) {}
 
         // Accessor methods
         int getX() const { return pos.posX; }
         int getY() const { return pos.posY; }
-        void setPosition(unique_ptr<Position> position) { 
-            pos.posX = position.get()->posX; 
-            pos.posY = position.get()->posY;
+        void setPosition(const Position& position) { 
+            pos = position;
         }
 
         Type getType() const { return pieceType; }
 
-        vector<Position> getPossibleMoves() const; 
-        bool isValid(Position newPos) const; // pure virtual methods, to be implemented within each piece
-        char displayChar() const; // will return a char for each piece type (eg. 'p' for pawn), used in displaying the board
+        virtual vector<Position> getPossibleMoves() const = 0; 
+        virtual bool isValid(Position newPos) const = 0; // pure virtual methods, to be implemented within each piece
+        virtual char displayChar() const = 0; // will return a char for each piece type (eg. 'p' for pawn), used in displaying the board
         ~Piece() {}; // virtual dtor
 };
 

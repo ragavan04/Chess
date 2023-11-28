@@ -12,7 +12,7 @@ void Board::addPiece(char type, Position pos) {
 
    switch(type) {
         case 'p' : {}
-            
+           p = new Pawn(); 
         case 'n' : {}
             
         case 'b' : {}

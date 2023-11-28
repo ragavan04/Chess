@@ -23,7 +23,7 @@ void Controller::run(){
             
             
         } else if (command == "resign") {
-            cout << "inside resisng" << endl;
+            cout << "inside resigning" << endl;
             gameInProgress = false;
 
         } else if (command == "move") {

@@ -55,7 +55,7 @@ void Board::makeMove(Piece *p, Position newPos){
 
         // Capture handling if there is a piece at newPos
         if (grid[newPos.posX][newPos.posY] != nullptr) {
-            // Handle capture 
+            delete grid[newPos.posX][newPos.posY]; 
         }
 
         // Move the piece to the new position

@@ -60,7 +60,7 @@ void Controller::run(){
             cin >> startPostition >> endPosition;
             Position tempStartPos = convertCoords(startPostition); // converting given coords into ints
             Position tempEndPos = convertCoords(endPosition); // converting given coords into ints
-            Piece* curPiece = theBoard->getState()[tempStartPos.posX][tempStartPos.posY];
+            Piece* curPiece = theBoard->getState()[tempStartPos.posY][tempStartPos.posX];
 
             if (curPiece->isValid(tempEndPos)){
                 theBoard->makeMove(curPiece, tempEndPos);
@@ -71,10 +71,14 @@ void Controller::run(){
 
             cout << "inside move" << endl;
             theBoard->notifyObservers();
+            cout << *theBoard << endl;
 
         } else if (command == "setup") {
             cout << "inside setput mode" << endl;
             setupMode();
+            cout << "passed setup" << endl;
+            theBoard->notifyObservers();
+            cout << *theBoard << endl;
         } else {
             std::cout << "Invalid command." << std::endl;
         }
@@ -134,23 +138,43 @@ void Controller::processSetupCommand(const std::string& command) {
     }
 }
 
+// Position Controller::convertCoords(string coords) const{
+//     Position convertedCoords;
+//     istringstream iss{coords};
+//     char Ycoord;
+
+//     iss >> Ycoord;
+//     iss >> convertedCoords.posX;
+
+//     if (Ycoord == 'a') convertedCoords.posY = 0;
+//     if (Ycoord == 'b') convertedCoords.posY = 1;
+//     if (Ycoord == 'c') convertedCoords.posY = 2;
+//     if (Ycoord == 'd') convertedCoords.posY = 3;
+//     if (Ycoord == 'e') convertedCoords.posY = 4;
+//     if (Ycoord == 'f') convertedCoords.posY = 5;
+//     if (Ycoord == 'g') convertedCoords.posY = 6;
+//     if (Ycoord == 'h') convertedCoords.posY = 7;
+
+//     convertedCoords.posY = 8 - convertedCoords.posY;
+
+//     return convertedCoords;
+
+// }
+
 Position Controller::convertCoords(string coords) const{
     Position convertedCoords;
     istringstream iss{coords};
-    char Xcoord;
+    char colChar;
+    int row;
 
-    iss >> Xcoord;
-    iss >> convertedCoords.posY;
+    iss >> colChar; // column letter
+    iss >> row;     // row number
 
-    if (Xcoord == 'a') convertedCoords.posX = 0;
-    if (Xcoord == 'b') convertedCoords.posX = 1;
-    if (Xcoord == 'c') convertedCoords.posX = 2;
-    if (Xcoord == 'd') convertedCoords.posX = 3;
-    if (Xcoord == 'e') convertedCoords.posX = 4;
-    if (Xcoord == 'f') convertedCoords.posX = 5;
-    if (Xcoord == 'g') convertedCoords.posX = 6;
-    if (Xcoord == 'h') convertedCoords.posX = 7;
+    // Convert 'a'-'h' to 0-7 (for columns)
+    convertedCoords.posX = colChar - 'a';
+
+    // Convert 1-8 to 0-7 (for rows), inverting the row order
+    convertedCoords.posY = 8 - row;
 
     return convertedCoords;
-
 }

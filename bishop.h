@@ -4,14 +4,11 @@
 
 class Bishop : public Piece {
 public:
-    Bishop(Type pieceType, string colour, Position pos, Board& board)
-        : Piece(pieceType, colour, pos, board) {}
+    Bishop(Type pieceType, string colour, Position pos, Board& board);
 
     vector<Position> getPossibleMoves() const override;
 
-    char displayChar() const {
-        return 'B';
-    }
+    char displayChar() const override;
 };
 
 #endif

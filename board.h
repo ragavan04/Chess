@@ -24,11 +24,11 @@ class Board {
 
         // bool isInCheckAfterMove(Position kingPos) const; // checks if the king is still in check after being in check in the previous turn
         // Position getPosition(const Piece p) const; // gets the position of a given piece
-        // void switchTurns(); // switches the turn field
+        void switchTurns(); // switches the turn field
         // int whoWins() const ; // returns 1 if player 1 wins, returns 2 if player 2 wins
         // void boardInit(Piece p, Position pos, string action); // initalizes the board
         // bool getIsWin() const; // returns true if the board is a winning state, returns false is board is not in a winning state 
-        // int getTurn() const; // returns the turn field
+        int getTurn() const; // returns the turn field
         // void addMoves(Piece p); // adds possible moves to the availableMoves vector
         // bool isCheckmate(Player &p) const; // checks if there is a checkmate present on the board
         // bool isCheck(Player &p); // checks if there is a check present on the board

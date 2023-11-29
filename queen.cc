@@ -7,162 +7,83 @@ Queen::Queen(Type pieceType, string colour, Position pos, Board& board)
         : Piece(pieceType, colour, pos, board) {}
 
 // Returns a vector of possible positions that the Queen can move on the board
-vector<Position> Queen::getPossibleMoves() const { 
+vector<Position> Queen::getPossibleMoves() const {
+    // Create vector to be populated
     vector<Position> possibleMoves;
-    int x = getX();
-    int y = getY();
-    int north = getY();
-    int east = getX();
-    int south = 7 - getY();
-    int west = 7 - getX();
-    int tempY = y;
-    int tempX = x;
 
-    // North
-    for (int i = north; i > 0; --i) {
-        --tempY;
-        if (theBoard.getState()[x][tempY] == nullptr) {
-            possibleMoves.push_back({x, tempY});
-        } else {
-            if (theBoard.getState()[x][tempY]->getColour() == getColour()) {
-                tempY = y;
+    // Horizontal moves
+    for (int i = 0; i < 8; ++i) {
+        if (i != pos.posY) {
+            if (theBoard.getState()[pos.posX][i] == nullptr) {
+                possibleMoves.push_back(Position{ pos.posX, i }); // Horizontal move
+            } else if (theBoard.getState()[pos.posX][i]->getColour() != getColour()) {
+                possibleMoves.push_back(Position{ pos.posX, i }); // Horizontal move
                 break;
             } else {
-                possibleMoves.push_back({x, tempY});
-                tempY = y;
                 break;
             }
         }
     }
 
-    // East
-    for (int i = east; i > 0; --i) {
-        ++tempX;
-        if (theBoard.getState()[tempX][y] == nullptr) {
-            possibleMoves.push_back({tempX, y});
-        } else {
-            if (theBoard.getState()[tempX][y]->getColour() == getColour()) {
-                tempX = x;
+    // Vertical moves
+    for (int i = 0; i < 8; ++i) {
+        if (i != pos.posX) {
+            if (theBoard.getState()[i][pos.posY] == nullptr) {
+                possibleMoves.push_back(Position{ i, pos.posY }); // Vertical move
+            } else if (theBoard.getState()[i][pos.posY]->getColour() != getColour()) {
+                possibleMoves.push_back(Position{ i, pos.posY }); // Vertical move
                 break;
             } else {
-                possibleMoves.push_back({tempX, y});
-                tempX = x;
                 break;
             }
         }
     }
 
-    // South
-    for (int i = south; i > 0; --i) {
-        ++tempY;
-        if (theBoard.getState()[x][tempY] == nullptr) {
-            possibleMoves.push_back({x, tempY});
+    // Diagonal moves (upper left)
+    for (int i = 1; pos.posX - i >= 0 && pos.posY - i >= 0; ++i) {
+        if (theBoard.getState()[pos.posX - i][pos.posY - i] == nullptr) {
+            possibleMoves.push_back(Position{ pos.posX - i, pos.posY - i });
+        } else if (theBoard.getState()[pos.posX - i][pos.posY - i]->getColour() != getColour()) {
+            possibleMoves.push_back(Position{ pos.posX - i, pos.posY - i });
+            break;
         } else {
-            if (theBoard.getState()[x][tempY]->getColour() == getColour()) {
-                tempY = y;
-                break;
-            } else {
-                possibleMoves.push_back({x, tempY});
-                tempY = y;
-                break;
-            }
+            break;
         }
     }
 
-    // West
-    for (int i = west; i > 0; --i) {
-        --tempX;
-        if (theBoard.getState()[tempX][y] == nullptr) {
-            possibleMoves.push_back({tempX, y});
+    // Diagonal moves (upper right)
+    for (int i = 1; pos.posX - i >= 0 && pos.posY + i < 8; ++i) {
+        if (theBoard.getState()[pos.posX - i][pos.posY + i] == nullptr) {
+            possibleMoves.push_back(Position{ pos.posX - i, pos.posY + i });
+        } else if (theBoard.getState()[pos.posX - i][pos.posY + i]->getColour() != getColour()) {
+            possibleMoves.push_back(Position{ pos.posX - i, pos.posY + i });
+            break;
         } else {
-            if (theBoard.getState()[tempX][y]->getColour() == getColour()) {
-                tempX = x;
-                break;
-            } else {
-                possibleMoves.push_back({tempX, y});
-                tempX = x;
-                break;
-            }
+            break;
         }
     }
 
-    // North-East
-    while (tempX < 7 || tempY > 0) {
-        ++tempX;
-        --tempY;
-        if (theBoard.getState()[tempX][tempY] == nullptr) {
-            possibleMoves.push_back({tempX, tempY});
+    // Diagonal moves (lower left)
+    for (int i = 1; pos.posX + i < 8 && pos.posY - i >= 0; ++i) {
+        if (theBoard.getState()[pos.posX + i][pos.posY - i] == nullptr) {
+            possibleMoves.push_back(Position{ pos.posX + i, pos.posY - i });
+        } else if (theBoard.getState()[pos.posX + i][pos.posY - i]->getColour() != getColour()) {
+            possibleMoves.push_back(Position{ pos.posX + i, pos.posY - i });
+            break;
         } else {
-            if (theBoard.getState()[tempX][tempY]->getColour() == getColour()) {
-                tempX = x;
-                tempY = y;
-                break;
-            } else {
-                possibleMoves.push_back({tempX, y});
-                tempX = x;
-                tempY = y;
-                break;
-            }
+            break;
         }
     }
 
-    // South-East
-    while (tempX < 7 || tempY < 7) {
-        ++tempX;
-        ++tempY;
-        if (theBoard.getState()[tempX][tempY] == nullptr) {
-            possibleMoves.push_back({tempX, tempY});
+    // Diagonal moves (lower right)
+    for (int i = 1; pos.posX + i < 8 && pos.posY + i < 8; ++i) {
+        if (theBoard.getState()[pos.posX + i][pos.posY + i] == nullptr) {
+            possibleMoves.push_back(Position{ pos.posX + i, pos.posY + i });
+        } else if (theBoard.getState()[pos.posX + i][pos.posY + i]->getColour() != getColour()) {
+            possibleMoves.push_back(Position{ pos.posX + i, pos.posY + i });
+            break;
         } else {
-            if (theBoard.getState()[tempX][tempY]->getColour() == getColour()) {
-                tempX = x;
-                tempY = y;
-                break;
-            } else {
-                possibleMoves.push_back({tempX, y});
-                tempX = x;
-                tempY = y;
-                break;
-            }
-        }
-    }
-
-    // South-West
-    while (tempX > 0 || tempY < 7) {
-        --tempX;
-        ++tempY;
-        if (theBoard.getState()[tempX][tempY] == nullptr) {
-            possibleMoves.push_back({tempX, tempY});
-        } else {
-            if (theBoard.getState()[tempX][tempY]->getColour() == getColour()) {
-                tempX = x;
-                tempY = y;
-                break;
-            } else {
-                possibleMoves.push_back({tempX, y});
-                tempX = x;
-                tempY = y;
-                break;
-            }
-        }
-    }
-
-    // North-West
-    while (tempX > 0 || tempY > 0) {
-        --tempX;
-        --tempY;
-        if (theBoard.getState()[tempX][tempY] == nullptr) {
-            possibleMoves.push_back({tempX, tempY});
-        } else {
-            if (theBoard.getState()[tempX][tempY]->getColour() == getColour()) {
-                tempX = x;
-                tempY = y;
-                break;
-            } else {
-                possibleMoves.push_back({tempX, y});
-                tempX = x;
-                tempY = y;
-                break;
-            }
+            break;
         }
     }
 

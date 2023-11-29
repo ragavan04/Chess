@@ -13,6 +13,41 @@ Board::Board() : grid{8, vector<Piece*>(8,nullptr)}, turn{0}, isWin{false}, view
     views[0] = new TextDisplay();
 }
 
+void Board::standardBoardSetup(){
+    // Setting up pawns
+    for (int i = 0; i < 8; ++i) {
+        grid[1][i] = new Pawn(Piece::PAWN, "white", {1, i}, *this); // White pawns
+        grid[6][i] = new Pawn(Piece::PAWN, "black", {6, i}, *this); // Black pawns
+    }
+
+    // Setting up rooks
+    grid[0][0] = new Rook(Piece::ROOK, "white", {0, 0}, *this);
+    grid[0][7] = new Rook(Piece::ROOK, "white", {0, 7}, *this);
+    grid[7][0] = new Rook(Piece::ROOK, "black", {7, 0}, *this);
+    grid[7][7] = new Rook(Piece::ROOK, "black", {7, 7}, *this);
+
+    // Setting up knights
+    grid[0][1] = new Knight(Piece::KNIGHT, "white", {0, 1}, *this);
+    grid[0][6] = new Knight(Piece::KNIGHT, "white", {0, 6}, *this);
+    grid[7][1] = new Knight(Piece::KNIGHT, "black", {7, 1}, *this);
+    grid[7][6] = new Knight(Piece::KNIGHT, "black", {7, 6}, *this);
+
+    // Setting up bishops
+    grid[0][2] = new Bishop(Piece::BISHOP, "white", {0, 2}, *this);
+    grid[0][5] = new Bishop(Piece::BISHOP, "white", {0, 5}, *this);
+    grid[7][2] = new Bishop(Piece::BISHOP, "black", {7, 2}, *this);
+    grid[7][5] = new Bishop(Piece::BISHOP, "black", {7, 5}, *this);
+
+    // Setting up queens
+    grid[0][3] = new Queen(Piece::QUEEN, "white", {0, 3}, *this);
+    grid[7][3] = new Queen(Piece::QUEEN, "black", {7, 3}, *this);
+
+    // Setting up kings
+    grid[0][4] = new King(Piece::KING, "white", {0, 4}, *this);
+    grid[7][4] = new King(Piece::KING, "black", {7, 4}, *this);
+}
+
+
 void Board::makeMove(Piece *p, Position newPos){
     if (p->isValid(newPos)) {
         // Clear the piece's previous position on the board

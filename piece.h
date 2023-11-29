@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-//#include "board.h"
+#include "board.h"
 
 using namespace std;
 
@@ -31,7 +31,7 @@ class Piece{
         int getX() const { return pos.posX; }
         int getY() const { return pos.posY; }
         void setPosition(const Position& position) { pos = position; }
-
+        string getColour() const { return colour; }
         Type getType() const { return pieceType; }
 
         virtual vector<Position> getPossibleMoves() const = 0; 

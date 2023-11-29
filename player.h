@@ -3,27 +3,27 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <memory>
 #include "piece.h"
+#include <map>
 
 using namespace std;
 
 class Player{
     protected:
         string colour;
-        vector<Piece*> availablePieces;
         vector<Piece*> lostPieces;
-        vector<pair<Piece*, Position>> availableMoves;
+        map<Position, Position> availableMoves; 
     public:
         Player(const string& colour) : colour{colour} {}
 
         // Acessor methods
-        const Piece* getAvailablePiece(int index) const { return availablePieces[index]; }
         void setColour(string newColour) { colour = newColour; }
         string getColour() const { return colour; }
-        vector<pair<Piece*, Position>> getAvailableMoves() { return availableMoves; }
+        void addToLostPieces(Piece* lostPiece) { lostPieces.push_back(lostPiece); }
+        vector<Piece*> getLostPieces() { return lostPieces; }
+        map<Position, Position> getAvailableMoves() { return availableMoves; }
 
-        void addMoves(const Piece* p);
+        void addToAvailableMoves(Position startPos, Position endPost);
         virtual ~Player() {}; // virtual dtor   
 };
 

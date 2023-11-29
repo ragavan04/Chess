@@ -19,33 +19,32 @@ vector<Position> Rook::getPossibleMoves() const {
         oppColour == "white";
     }
     
+    ////////////// INCLUDE CASTLING
 
     // checking west side of rook
     for(int i = pos.posX; i > 0; --i) {
-
-        if(theBoard.getState()[i][pos.posY] == nullptr) {
-            Position tempPos{i,pos.posY};
-            temp.push_back(tempPos);
+        Position tempPos;
+        tempPos.posX = i;
+        tempPos.posY = pos.posY;
+        
+        if(theBoard.getState()[i][pos.posY] == nullptr) {    
+            temp.push_back(tempPos); 
         } else if(theBoard.getState()[i][pos.posY] != nullptr && theBoard.getState()[i][pos.posY]->getColour() == oppColour) {
-            Position tempPos{i,pos.posY};
-            temp.push_back(tempPos);
+            temp.push_back(tempPos); 
             break;
-        } else {
-            break;
-        }
+        } 
     }
 
     // checking east side of rook
     for(int i = pos.posX; i < 8; ++i) {
-
+        Position tempPos;
+        tempPos.posX = i;
+        tempPos.posY = pos.posY;
+        
         if(theBoard.getState()[i][pos.posY] == nullptr) {
-            Position tempPos{i,pos.posY};
-            temp.push_back(tempPos);
+            temp.push_back(tempPos); 
         } else if(theBoard.getState()[i][pos.posY] != nullptr && theBoard.getState()[i][pos.posY]->getColour() == oppColour) {
-            Position tempPos{i,pos.posY};
-            temp.push_back(tempPos);
-            break;
-        } else {
+            temp.push_back(tempPos); 
             break;
         }
     }
@@ -53,14 +52,14 @@ vector<Position> Rook::getPossibleMoves() const {
     // checking north side of rook
     for(int i = pos.posY; i > 0; --i) {
 
+        Position tempPos;
+        tempPos.posX = pos.posX;
+        tempPos.posY = i;
+        
         if(theBoard.getState()[pos.posX][i] == nullptr) {
-            Position tempPos{pos.posX,i};
-            temp.push_back(tempPos);
+            temp.push_back(tempPos); 
         } else if(theBoard.getState()[pos.posX][i] != nullptr && theBoard.getState()[pos.posX][i]->getColour() == oppColour) {
-            Position tempPos{pos.posX,i};
-            temp.push_back(tempPos);
-            break;
-        } else {
+            temp.push_back(tempPos); 
             break;
         }
     }
@@ -68,18 +67,17 @@ vector<Position> Rook::getPossibleMoves() const {
     // checking north side of rook
     for(int i = pos.posY; i < 8; ++i) {
 
+        Position tempPos;
+        tempPos.posX = pos.posX;
+        tempPos.posY = i;
+        
         if(theBoard.getState()[pos.posX][i] == nullptr) {
-            Position tempPos{pos.posX,i};
-            temp.push_back(tempPos);
+            temp.push_back(tempPos); 
         } else if(theBoard.getState()[pos.posX][i] != nullptr && theBoard.getState()[pos.posX][i]->getColour() == oppColour) {
-            Position tempPos{pos.posX,i};
-            temp.push_back(tempPos);
+            temp.push_back(tempPos); 
             break;
-        } else {
-            break;
-        }
+        } 
     }
-
     return temp;
 }
 
@@ -92,7 +90,6 @@ char Rook::displayChar() const {
     } else if(getColour() == "black") {
         return 'R';
     }
-    
     
 }
 

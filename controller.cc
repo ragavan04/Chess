@@ -46,6 +46,7 @@ void Controller::run(){
 
             // Start a new game
             gameInProgress = true;
+            cout << "Enter 'setup' to place your own pieces. Enter 'standard' to use a standard chess board" << endl;
 
             
             
@@ -116,15 +117,20 @@ void Controller::run(){
             theBoard->switchTurns(); // switching the turn
 
         } else if (command == "setup") {
-            cout << "inside setput mode" << endl;
+            cout << "inside setup mode" << endl;
             setupMode();
-            cout << "passed setup" << endl;
             theBoard->notifyObservers();
             cout << *theBoard << endl;
-        } else {
+        } else if (command == "standard"){
+            theBoard->standardBoardSetup();
+            theBoard->notifyObservers();
+            cout << *theBoard << endl;
+
+
+        }else {
             std::cout << "Invalid command." << std::endl;
         }
-    }
+    } 
 }
 
 

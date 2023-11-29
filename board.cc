@@ -114,3 +114,20 @@ ostream& operator<<(ostream& out, const Board& b) {
     }
     return out;
 }
+
+
+
+void Board::switchTurns() {
+	
+	if(turn == 0) {
+		turn == 1;
+	} else if(turn == 1) {
+		turn == 0;
+	}
+
+}
+
+
+int Board::getTurn() const {
+    return turn;
+}

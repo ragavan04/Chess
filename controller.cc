@@ -56,22 +56,60 @@ void Controller::run(){
                 continue;
             }
 
-            string cmd, startPostition, endPosition;
-            cin >> startPostition >> endPosition;
-            Position tempStartPos = convertCoords(startPostition); // converting given coords into ints
-            Position tempEndPos = convertCoords(endPosition); // converting given coords into ints
-            Piece* curPiece = theBoard->getState()[tempStartPos.posX][tempStartPos.posY];
+            // keep prompting user until a vaild move is made
+            //bool vaildMoveMade = false;
+            //while(!vaildMoveMade){
 
-            if (curPiece->isValid(tempEndPos)){
-                theBoard->makeMove(curPiece, tempEndPos);
-            } else {
-                cout << "Invalid move. Try a different move" << endl;
-            }
+                string cmd, startPostition, endPosition;
+                cin >> startPostition >> endPosition;
+                Position tempStartPos = convertCoords(startPostition); // converting given coords into ints
+                Position tempEndPos = convertCoords(endPosition); // converting given coords into ints
+
+                // checks if given coords are in bounds
+                if ((tempStartPos.posX == -1 && tempStartPos.posY == -1) || (tempEndPos.posX == -1 && tempEndPos.posY == -1)){
+                    cerr << "Position out of bounds. Select a position with column[a-h] and row[1-8]" << endl;
+                    continue;
+                }
+
+                Piece* curPiece = theBoard->getState()[tempStartPos.posX][tempStartPos.posY];
+
+                if ((curPiece != nullptr) && (curPiece->isValid(tempEndPos))){
+                    theBoard->makeMove(curPiece, tempEndPos);
+                } else {
+                    cout << "Invalid move. Try a different move" << endl;
+                }
+
+                // // checking if its player 1's turn and if they are trying to move one of their own pieces
+                // if (theBoard->getTurn() == 0){ 
+                //     if (curPiece->getColour() == "white"){
+                //         // if the given move is vaild, then make the move
+                //         if (curPiece->isValid(tempEndPos)){
+                //             theBoard->makeMove(curPiece, tempEndPos);
+                //             vaildMoveMade = true;
+                //         } else {
+                //             cout << "Invalid move. Try a different move" << endl;
+                //         }
+                //     }
+                // // checking if its player 2's turn and if they are trying to move one of their own pieces
+                // } else {
+                //     if (curPiece->getColour() == "black"){
+                //         // if the given move is vaild, then make the move
+                //         if (curPiece->isValid(tempEndPos)){ // WE DONT NEED TYPE IN HERE, JUST USED BISHOP AS A TEMP
+                //             theBoard->makeMove(curPiece, tempEndPos);
+                //             vaildMoveMade = true;
+                //         } else {
+                //             cout << "Invalid move. Try a different move" << endl;
+                //         }
+                //     }
+                // }
+            //}
+
 
 
             cout << "inside move" << endl;
             theBoard->notifyObservers();
             cout << *theBoard << endl;
+            theBoard->switchTurns(); // switching the turn
 
         } else if (command == "setup") {
             cout << "inside setput mode" << endl;
@@ -151,12 +189,20 @@ Position Controller::convertCoords(string coords) const{
 
     iss >> colChar; // column letter
     iss >> row;     // row number
+    colChar = tolower(colChar); // make sure colChar is lowercase
 
-    // Convert 'a'-'h' to 0-7 (for columns)
-    convertedCoords.posY = colChar - 'a';
+    if (('a' <= colChar && colChar <= 'h') && (1 <= row && row <= 8)){
+        // Convert 'a'-'h' to 0-7 (for columns)
+        convertedCoords.posY = colChar - 'a';
 
-    // Convert 1-8 to 0-7 (for rows), inverting the row order
-    convertedCoords.posX = row - 1;
+        // Convert 1-8 to 0-7 (for rows), inverting the row order
+        convertedCoords.posX = row - 1;
+    } else {
+        // signal error
+        convertedCoords.posX = -1;
+        convertedCoords.posY = -1;
+        return convertedCoords; 
+    }
 
     return convertedCoords;
 }

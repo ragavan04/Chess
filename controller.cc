@@ -138,29 +138,6 @@ void Controller::processSetupCommand(const std::string& command) {
     }
 }
 
-// Position Controller::convertCoords(string coords) const{
-//     Position convertedCoords;
-//     istringstream iss{coords};
-//     char Ycoord;
-
-//     iss >> Ycoord;
-//     iss >> convertedCoords.posX;
-
-//     if (Ycoord == 'a') convertedCoords.posY = 0;
-//     if (Ycoord == 'b') convertedCoords.posY = 1;
-//     if (Ycoord == 'c') convertedCoords.posY = 2;
-//     if (Ycoord == 'd') convertedCoords.posY = 3;
-//     if (Ycoord == 'e') convertedCoords.posY = 4;
-//     if (Ycoord == 'f') convertedCoords.posY = 5;
-//     if (Ycoord == 'g') convertedCoords.posY = 6;
-//     if (Ycoord == 'h') convertedCoords.posY = 7;
-
-//     convertedCoords.posY = 8 - convertedCoords.posY;
-
-//     return convertedCoords;
-
-// }
-
 Position Controller::convertCoords(string coords) const{
     Position convertedCoords;
     istringstream iss{coords};
@@ -174,7 +151,7 @@ Position Controller::convertCoords(string coords) const{
     convertedCoords.posX = colChar - 'a';
 
     // Convert 1-8 to 0-7 (for rows), inverting the row order
-    convertedCoords.posY = 8 - row;
+    convertedCoords.posY = row - 1;
 
     return convertedCoords;
 }

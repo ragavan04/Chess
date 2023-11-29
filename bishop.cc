@@ -6,94 +6,55 @@ Bishop::Bishop(Type pieceType, string colour, Position pos, Board& board)
 
 vector<Position> Bishop::getPossibleMoves() const {
     vector<Position> possibleMoves;
-    int x = getX();
-    int y = getY();
-    int north = getY();
-    int east = getX();
-    int south = 7 - getY();
-    int west = 7 - getX();
-    int tempY = y;
-    int tempX = x;
 
-    // North-East
-    while (tempX < 7 || tempY > 0) {
-        ++tempX;
-        --tempY;
-        if (theBoard.getState()[tempX][tempY] == nullptr) {
-            possibleMoves.push_back({tempX, tempY});
+    // Diagonal moves (upper left)
+    for (int i = 1; pos.posX - i >= 0 && pos.posY - i >= 0; ++i) {
+        if (theBoard.getState()[pos.posX - i][pos.posY - i] == nullptr) {
+            possibleMoves.push_back(Position{ pos.posX - i, pos.posY - i });
+        } else if (theBoard.getState()[pos.posX - i][pos.posY - i]->getColour() != getColour()) {
+            possibleMoves.push_back(Position{ pos.posX - i, pos.posY - i });
+            break;
         } else {
-            if (theBoard.getState()[tempX][tempY]->getColour() == getColour()) {
-                tempX = x;
-                tempY = y;
-                break;
-            } else {
-                possibleMoves.push_back({tempX, y});
-                tempX = x;
-                tempY = y;
-                break;
-            }
+            break;
         }
     }
 
-    // South-East
-    while (tempX < 7 || tempY < 7) {
-        ++tempX;
-        ++tempY;
-        if (theBoard.getState()[tempX][tempY] == nullptr) {
-            possibleMoves.push_back({tempX, tempY});
+    // Diagonal moves (upper right)
+    for (int i = 1; pos.posX - i >= 0 && pos.posY + i < 8; ++i) {
+        if (theBoard.getState()[pos.posX - i][pos.posY + i] == nullptr) {
+            possibleMoves.push_back(Position{ pos.posX - i, pos.posY + i });
+        } else if (theBoard.getState()[pos.posX - i][pos.posY + i]->getColour() != getColour()) {
+            possibleMoves.push_back(Position{ pos.posX - i, pos.posY + i });
+            break;
         } else {
-            if (theBoard.getState()[tempX][tempY]->getColour() == getColour()) {
-                tempX = x;
-                tempY = y;
-                break;
-            } else {
-                possibleMoves.push_back({tempX, y});
-                tempX = x;
-                tempY = y;
-                break;
-            }
+            break;
         }
     }
 
-    // South-West
-    while (tempX > 0 || tempY < 7) {
-        --tempX;
-        ++tempY;
-        if (theBoard.getState()[tempX][tempY] == nullptr) {
-            possibleMoves.push_back({tempX, tempY});
+    // Diagonal moves (lower left)
+    for (int i = 1; pos.posX + i < 8 && pos.posY - i >= 0; ++i) {
+        if (theBoard.getState()[pos.posX + i][pos.posY - i] == nullptr) {
+            possibleMoves.push_back(Position{ pos.posX + i, pos.posY - i });
+        } else if (theBoard.getState()[pos.posX + i][pos.posY - i]->getColour() != getColour()) {
+            possibleMoves.push_back(Position{ pos.posX + i, pos.posY - i });
+            break;
         } else {
-            if (theBoard.getState()[tempX][tempY]->getColour() == getColour()) {
-                tempX = x;
-                tempY = y;
-                break;
-            } else {
-                possibleMoves.push_back({tempX, y});
-                tempX = x;
-                tempY = y;
-                break;
-            }
+            break;
         }
     }
 
-    // North-West
-    while (tempX > 0 || tempY > 0) {
-        --tempX;
-        --tempY;
-        if (theBoard.getState()[tempX][tempY] == nullptr) {
-            possibleMoves.push_back({tempX, tempY});
+    // Diagonal moves (lower right)
+    for (int i = 1; pos.posX + i < 8 && pos.posY + i < 8; ++i) {
+        if (theBoard.getState()[pos.posX + i][pos.posY + i] == nullptr) {
+            possibleMoves.push_back(Position{ pos.posX + i, pos.posY + i });
+        } else if (theBoard.getState()[pos.posX + i][pos.posY + i]->getColour() != getColour()) {
+            possibleMoves.push_back(Position{ pos.posX + i, pos.posY + i });
+            break;
         } else {
-            if (theBoard.getState()[tempX][tempY]->getColour() == getColour()) {
-                tempX = x;
-                tempY = y;
-                break;
-            } else {
-                possibleMoves.push_back({tempX, y});
-                tempX = x;
-                tempY = y;
-                break;
-            }
+            break;
         }
     }
+
 
     return possibleMoves;
 }

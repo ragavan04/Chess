@@ -131,3 +131,18 @@ void Board::switchTurns() {
 int Board::getTurn() const {
     return turn;
 }
+
+void Board::clearBoard() {
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            delete grid[i][j];
+            grid[i][j] = nullptr;
+        }
+    }
+    for (auto view : views) {
+        delete view;
+    }
+    views.clear();
+    turn = 0;
+    isWin = false;
+}

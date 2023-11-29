@@ -5,6 +5,10 @@ using namespace std;
 
 Controller::Controller() : theBoard{new Board}, isWin{false}, player1Score{0}, player2Score{0}, gameInProgress{false} {}
 
+Controller::~Controller() {
+    theBoard->clearBoard();
+}
+
 void Controller::run(){
     string command;
     

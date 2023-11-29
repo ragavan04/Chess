@@ -9,9 +9,6 @@ public:
     // Override the getPossibleMoves method for the Queen
     vector<Position> getPossibleMoves() const override;
 
-    // Override the isValid method for the Queen
-    bool isValid(Position newPos) const override;
-
     char displayChar() const override;
 };
 

@@ -4,20 +4,12 @@
 
 class Knight : public Piece {
 public:
-    Knight(Type pieceType, string colour, Position pos, Board& board)
-        : Piece(pieceType, colour, pos, board) {}
+    Knight(Type pieceType, string colour, Position pos, Board& board);
 
     // Override the getPossibleMoves method for the Knight
-    //vector<Position> getPossibleMoves() const override;
+    vector<Position> getPossibleMoves() const override;
 
-    // Override the isValid method for the Knight
-    bool isValid(Position newPos) const override{
-        return true;
-    }
-
-    char displayChar() const {
-        return 'N';
-    }
+    char displayChar() const override;
 };
 
 #endif

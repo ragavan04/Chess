@@ -10,16 +10,16 @@ vector<Position> Queen::getPossibleMoves() const {
     vector<Position> possibleMoves;
     int x = getX();
     int y = getY();
-    int north = 7 - getY();
-    int east = 7 - getX();
-    int south = getY();
-    int west = getX();
+    int north = getY();
+    int east = getX();
+    int south = 7 - getY();
+    int west = 7 - getX();
     int tempY = y;
     int tempX = x;
 
     // North
     for (int i = north; i > 0; --i) {
-        ++tempY;
+        --tempY;
         if (theBoard.getState()[x][tempY] == nullptr) {
             possibleMoves.push_back({x, tempY});
         } else {
@@ -53,7 +53,7 @@ vector<Position> Queen::getPossibleMoves() const {
 
     // South
     for (int i = south; i > 0; --i) {
-        --tempY;
+        ++tempY;
         if (theBoard.getState()[x][tempY] == nullptr) {
             possibleMoves.push_back({x, tempY});
         } else {
@@ -86,26 +86,6 @@ vector<Position> Queen::getPossibleMoves() const {
     }
 
     // North-East
-    while (tempX < 7 || tempY < 7) {
-        ++tempX;
-        ++tempY;
-        if (theBoard.getState()[tempX][tempY] == nullptr) {
-            possibleMoves.push_back({tempX, tempY});
-        } else {
-            if (theBoard.getState()[tempX][tempY]->getColour() == getColour()) {
-                tempX = x;
-                tempY = y;
-                break;
-            } else {
-                possibleMoves.push_back({tempX, y});
-                tempX = x;
-                tempY = y;
-                break;
-            }
-        }
-    }
-
-    // South-East
     while (tempX < 7 || tempY > 0) {
         ++tempX;
         --tempY;
@@ -125,10 +105,10 @@ vector<Position> Queen::getPossibleMoves() const {
         }
     }
 
-    // South-West
-    while (tempX > 0 || tempY > 0) {
-        --tempX;
-        --tempY;
+    // South-East
+    while (tempX < 7 || tempY < 7) {
+        ++tempX;
+        ++tempY;
         if (theBoard.getState()[tempX][tempY] == nullptr) {
             possibleMoves.push_back({tempX, tempY});
         } else {
@@ -145,7 +125,7 @@ vector<Position> Queen::getPossibleMoves() const {
         }
     }
 
-    // North-West
+    // South-West
     while (tempX > 0 || tempY < 7) {
         --tempX;
         ++tempY;
@@ -165,19 +145,27 @@ vector<Position> Queen::getPossibleMoves() const {
         }
     }
 
-    return possibleMoves;
-}
-
-// Returns a bool based on if the given position is valid
-bool Queen::isValid(Position newPos) const {
-    // Create vector of positions with all possible moves
-    vector<Position> possibleMoves = getPossibleMoves();
-    for (const auto& move : possibleMoves) {
-        if (move.posX == newPos.posX && move.posY == newPos.posY) {
-            return true;  // newPos exists in possibleMoves vector
+    // North-West
+    while (tempX > 0 || tempY > 0) {
+        --tempX;
+        --tempY;
+        if (theBoard.getState()[tempX][tempY] == nullptr) {
+            possibleMoves.push_back({tempX, tempY});
+        } else {
+            if (theBoard.getState()[tempX][tempY]->getColour() == getColour()) {
+                tempX = x;
+                tempY = y;
+                break;
+            } else {
+                possibleMoves.push_back({tempX, y});
+                tempX = x;
+                tempY = y;
+                break;
+            }
         }
     }
-    return false;  // newPos doesn't exist in possibleMoves vector
+
+    return possibleMoves;
 }
 
 char Queen::displayChar() const {

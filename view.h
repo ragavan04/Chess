@@ -6,6 +6,7 @@
 #include "piece.h"
 using namespace std;
 
+class Board;
 class View{
     public:
         virtual void notify(const Board& board) = 0;

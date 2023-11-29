@@ -1,4 +1,5 @@
 #include "rook.h"
+#include "board.h"
 
 
 Rook::Rook(Type pieceType, string colour, Position pos, Board& board)

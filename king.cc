@@ -1,4 +1,5 @@
 #include "king.h"
+#include "board.h"
 
 
 King::King(Type pieceType, string colour, Position pos, Board& board)

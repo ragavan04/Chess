@@ -1,4 +1,5 @@
-#include "queen.h"
+#include "knight.h"
+#include "board.h"
 using namespace std;
 
 // Ctor for Knight

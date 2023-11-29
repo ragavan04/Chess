@@ -1,5 +1,5 @@
 #include "pawn.h"
-
+#include "board.h"
 
 
 Pawn::Pawn(Type pieceType, string colour, Position pos, Board& board)

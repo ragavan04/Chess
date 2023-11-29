@@ -17,16 +17,17 @@ vector<Position> Pawn::getPossibleMoves() const {
         oppColour == "white";
     }
 
-    // if(getColour() == "black") { 
-    //     if(!moved && theBoard.getState()[pos.posY - 2][pos.posX] == nullptr) {
-    //         Position tempPos{pos.posY - 2,pos.posX};
-    //         temp.push_back(tempPos);        
-    //     }
+    if(getColour() == "white") { 
+        if(!moved && theBoard.getState()[pos.posX][pos.posY + 2] == nullptr) {
+            Position tempPos{pos.posX,pos.posY - 2};
+            temp.push_back(tempPos);        
+        }
 
-    //     if(theBoard.getState()[pos.posY - 1][pos.posX] == nullptr) {
-    //         Position tempPos{pos.posY - 1,pos.posX};
-    //         temp.push_back(tempPos);        
-    //     } 
+        if(theBoard.getState()[pos.posX][pos.posY + 1] == nullptr) {
+            Position tempPos{pos.posX,pos.posY - 1};
+            temp.push_back(tempPos);      
+        }
+ 
     
 
     //     // check for capture move on top left corner
@@ -42,7 +43,8 @@ vector<Position> Pawn::getPossibleMoves() const {
     //             Position tempPos{pos.posX + 1,pos.posY - 1};
     //             temp.push_back(tempPos);
     //     }
-    // } 
+    
+    } 
 
     if(getColour() == "white") { 
         if(!moved && theBoard.getState()[pos.posY - 2][pos.posX] == nullptr) {

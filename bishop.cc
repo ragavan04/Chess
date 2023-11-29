@@ -1,5 +1,8 @@
 #include "bishop.h"
 
+Bishop::Bishop(Type pieceType, string colour, Position pos, Board& board)
+    : Piece(pieceType, colour, pos, board) {}
+
 vector<Position> Bishop::getPossibleMoves() const {
     vector<Position> possibleMoves;
     int x = getX();
@@ -93,3 +96,13 @@ vector<Position> Bishop::getPossibleMoves() const {
 
     return possibleMoves;
 }
+
+
+char Bishop::displayChar() const{
+    if(getColour() == "white"){
+        return 'b';
+    } else {
+        return 'B';
+    }
+}
+

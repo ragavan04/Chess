@@ -20,7 +20,7 @@ vector<Position> King::getPossibleMoves() const {
             
             
             // Check if the position is either empty or has an opponent's piece
-            if (pieceAtNewPos == nullptr) {
+            if (pieceAtNewPos == nullptr || pieceAtNewPos->getColour() != this->colour) {
                 moves.push_back(newPos);
             }
         }

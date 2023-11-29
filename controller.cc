@@ -124,7 +124,12 @@ void Controller::processSetupCommand(const std::string& command) {
     char action, piece;
     string letter_position;
     stringstream ss{command};
-    ss >> action >> piece >> letter_position;
+    ss >> action;
+    if (action == '+') {
+        ss >> piece >> letter_position;
+    } else if (action == '-') {
+        ss >> letter_position;
+    }
     Position position = convertCoords(letter_position);
     
 

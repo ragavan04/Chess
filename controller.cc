@@ -60,7 +60,7 @@ void Controller::run(){
             cin >> startPostition >> endPosition;
             Position tempStartPos = convertCoords(startPostition); // converting given coords into ints
             Position tempEndPos = convertCoords(endPosition); // converting given coords into ints
-            Piece* curPiece = theBoard->getState()[tempStartPos.posY][tempStartPos.posX];
+            Piece* curPiece = theBoard->getState()[tempStartPos.posX][tempStartPos.posY];
 
             if (curPiece->isValid(tempEndPos)){
                 theBoard->makeMove(curPiece, tempEndPos);
@@ -153,10 +153,10 @@ Position Controller::convertCoords(string coords) const{
     iss >> row;     // row number
 
     // Convert 'a'-'h' to 0-7 (for columns)
-    convertedCoords.posX = colChar - 'a';
+    convertedCoords.posY = colChar - 'a';
 
     // Convert 1-8 to 0-7 (for rows), inverting the row order
-    convertedCoords.posY = row - 1;
+    convertedCoords.posX = row - 1;
 
     return convertedCoords;
 }

@@ -34,8 +34,17 @@ class Piece{
         string getColour() const { return colour; }
         Type getType() const { return pieceType; }
 
-        virtual vector<Position> getPossibleMoves() const = 0; 
-        virtual bool isValid(Position newPos) const = 0; // pure virtual methods, to be implemented within each piece
+        virtual vector<Position> getPossibleMoves() const = 0;
+        bool isValid(Position newPos) const { // Returns a bool based on if the given position is valid
+            // Create vector of positions with all possible moves
+            vector<Position> possibleMoves = getPossibleMoves();
+            for (const auto& move : possibleMoves) {
+                if (move.posX == newPos.posX && move.posY == newPos.posY) {
+                    return true; // newPos exists in possibleMoves vector
+                }
+            }
+            return false; // newPos doesn't exist in possibleMoves vector
+        } 
         virtual char displayChar() const = 0; // will return a char for each piece type (eg. 'p' for pawn), used in displaying the board
         ~Piece() {}; // virtual dtor
 };

@@ -36,7 +36,7 @@ class Piece{
         virtual vector<Position> getPossibleMoves() const = 0;
         bool isValid(Position newPos) const;
         virtual char displayChar() const = 0; // will return a char for each piece type (eg. 'p' for pawn), used in displaying the board
-        ~Piece() {}; // virtual dtor
+        virtual ~Piece() {}; // virtual dtor
 };
 
 

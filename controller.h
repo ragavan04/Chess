@@ -22,6 +22,7 @@ class Controller{
 
     public:
     	Controller();
+        ~Controller();
         // void startGame(unique_ptr<Player> player1, unique_ptr<Player> player2);
         // Player setupPlayer(const string playerType, Colour colour);
         Position convertCoords(string coords) const;

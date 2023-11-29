@@ -40,6 +40,7 @@ class Board {
         // void clone(Piece::Type pieceType); // makes a clone of the given piece 
         void notifyObservers(); // notifies observers of changes made to the board
         void attach(View *o);
+        void clearBoard();
          
         ///Position findKingPosition(Player::Colour colour) const; // function to find the kings current position on the board
         friend ostream& operator<<(ostream& out, const Board& board);

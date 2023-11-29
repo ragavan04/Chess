@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "board.h"
+// #include "board.h"
 
 using namespace std;
 
@@ -24,27 +24,17 @@ class Piece{
         
 
     public:
-        Piece(Type pieceType, string colour, Position pos, Board& board) 
-            : pieceType(pieceType), colour(colour), pos(pos), theBoard(board) {}
+        Piece(Type pieceType, string colour, Position pos, Board& board);
 
         // Accessor methods
-        int getX() const { return pos.posX; }
-        int getY() const { return pos.posY; }
-        void setPosition(const Position& position) { pos = position; }
-        string getColour() const { return colour; }
-        Type getType() const { return pieceType; }
+        int getX() const;
+        int getY() const;
+        void setPosition(const Position& position);
+        string getColour() const;
+        Type getType() const;
 
         virtual vector<Position> getPossibleMoves() const = 0;
-        bool isValid(Position newPos) const { // Returns a bool based on if the given position is valid
-            // Create vector of positions with all possible moves
-            vector<Position> possibleMoves = getPossibleMoves();
-            for (const auto& move : possibleMoves) {
-                if (move.posX == newPos.posX && move.posY == newPos.posY) {
-                    return true; // newPos exists in possibleMoves vector
-                }
-            }
-            return false; // newPos doesn't exist in possibleMoves vector
-        } 
+        bool isValid(Position newPos) const;
         virtual char displayChar() const = 0; // will return a char for each piece type (eg. 'p' for pawn), used in displaying the board
         ~Piece() {}; // virtual dtor
 };

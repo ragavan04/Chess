@@ -1,4 +1,5 @@
 #include "bishop.h"
+#include "board.h"
 
 Bishop::Bishop(Type pieceType, string colour, Position pos, Board& board)
     : Piece(pieceType, colour, pos, board) {}

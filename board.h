@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 class Piece;
+class Player;
 class View;
 class Position;
 using namespace std;
@@ -37,6 +38,8 @@ class Board {
         void makeMove(Piece* p, Position pos); // makes a move on the board, for the piece p to the positon pos
         void addPiece(char type, Position pos);
         void removePiece(Position pos);
+        Position findKingPosition(string colour) const;
+        bool isCheck(Player &p) const;
         vector<vector<Piece*>> getState() const; // returns the grid
         // void clone(Piece::Type pieceType); // makes a clone of the given piece 
         void notifyObservers(); // notifies observers of changes made to the board

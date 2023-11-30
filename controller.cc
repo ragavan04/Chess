@@ -83,6 +83,7 @@ void Controller::run(){
 
             // player 1 turn control
             if (theBoard->getTurn() == 0 && player1->getPlayerType() == "human") {
+                cout << "inside white player:   " << endl;
                 makeHumanMove("white", player1);
             // player 2 turn control
             } else if (theBoard->getTurn() == 1 && player2->getPlayerType() == "human") {
@@ -176,7 +177,7 @@ Position Controller::convertCoords(string coords) const{
 
     iss >> colChar; // column letter
     iss >> row;     // row number
-    colChar = tolower(colChar); // make sure colChar is lowercase
+    //colChar = tolower(colChar); // make sure colChar is lowercase
 
     if (('a' <= colChar && colChar <= 'h') && (1 <= row && row <= 8)){
         // Convert 'a'-'h' to 0-7 (for columns)
@@ -198,11 +199,16 @@ void Controller::makeHumanMove(const string& playerColor, Player* player) {
     bool validMoveMade = false;
 
     while (!validMoveMade) {
+        string line;
         string startPosition, endPosition;
-        cin >> startPosition >> endPosition;
+        cin >> startPosition;
+        if (startPosition == "move"){
+            cin >> startPosition;
+        }
+        cin >> endPosition;
         Position tempStartPos = convertCoords(startPosition);
         Position tempEndPos = convertCoords(endPosition);
-
+        
         if ((tempStartPos.posX == -1 && tempStartPos.posY == -1) || (tempEndPos.posX == -1 && tempEndPos.posY == -1)){
             cerr << "Position out of bounds. Select a position with column[a-h] and row[1-8]" << endl;
             continue;

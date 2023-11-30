@@ -6,6 +6,8 @@
 #include <memory>
 #include <sstream>
 #include "board.h"
+#include "player.h"
+#include "human.h"
 
 using namespace std;
 
@@ -31,6 +33,7 @@ class Controller{
         void run();
         void setupMode();
         void processSetupCommand(const std::string& command);
+        void makeHumanMove(const string& playerColor, Player* player);
 };
 
 

@@ -18,7 +18,7 @@ vector<Position> Pawn::getPossibleMoves() const {
     }
 
     // if the pawn is white, it can only move down on the board
-    if(getColour() == "white") { 
+    if(getColour() == "white" && pos.posX < 8) { 
         if(!moved && theBoard.getState()[pos.posX + 2][pos.posY] == nullptr) {
             Position tempPos{pos.posX + 2,pos.posY};
             temp.push_back(tempPos);        
@@ -30,19 +30,19 @@ vector<Position> Pawn::getPossibleMoves() const {
         }
 
         // checks for capture move on the left side
-        if(theBoard.getState()[pos.posX + 1][pos.posY - 1] != nullptr && theBoard.getState()[pos.posX + 1][pos.posY - 1]->getColour() != colour) { 
+        if((pos.posY > 0) && theBoard.getState()[pos.posX + 1][pos.posY - 1] != nullptr && theBoard.getState()[pos.posX + 1][pos.posY - 1]->getColour() != colour) { 
             Position tempPos{pos.posX + 1,pos.posY - 1};
             temp.push_back(tempPos);       
         }
 
         // checks for capture move on the right side 
-        if(theBoard.getState()[pos.posX + 1][pos.posY + 1] != nullptr && theBoard.getState()[pos.posX + 1][pos.posY + 1]->getColour() != colour) { 
+        if((pos.posY < 7) && theBoard.getState()[pos.posX + 1][pos.posY + 1] != nullptr && theBoard.getState()[pos.posX + 1][pos.posY + 1]->getColour() != colour) { 
             Position tempPos{pos.posX + 1,pos.posY + 1};
             temp.push_back(tempPos);       
         }
 
         // en passant move on left side
-        if(theBoard.getState()[pos.posX][pos.posY - 1] != nullptr && theBoard.getState()[pos.posX][pos.posY - 1]->getType() == Piece::PAWN
+        if((pos.posY > 0) && theBoard.getState()[pos.posX][pos.posY - 1] != nullptr && theBoard.getState()[pos.posX][pos.posY - 1]->getType() == Piece::PAWN
             && theBoard.getState()[pos.posX][pos.posY - 1]->getColour() != colour) {
             Pawn *pawn = dynamic_cast<Pawn*>(theBoard.getState()[pos.posX][pos.posY - 1]);
             if(pawn->getEnpassant()) {
@@ -52,7 +52,7 @@ vector<Position> Pawn::getPossibleMoves() const {
         }
 
         // en passant move on right side
-        if(theBoard.getState()[pos.posX][pos.posY + 1] != nullptr && theBoard.getState()[pos.posX][pos.posY + 1]->getType() == Piece::PAWN
+        if((pos.posY < 7) && theBoard.getState()[pos.posX][pos.posY + 1] != nullptr && theBoard.getState()[pos.posX][pos.posY + 1]->getType() == Piece::PAWN
             && theBoard.getState()[pos.posX][pos.posY + 1]->getColour() != colour) {
             Pawn *pawn = dynamic_cast<Pawn*>(theBoard.getState()[pos.posX][pos.posY + 1]);
             if(pawn->getEnpassant()) {
@@ -64,7 +64,7 @@ vector<Position> Pawn::getPossibleMoves() const {
 
     }
 
-    if(getColour() == "black") { 
+     if(getColour() == "black" /*&& pos.posX <= 8*/) { 
         if(!moved && theBoard.getState()[pos.posX - 2][pos.posY] == nullptr) {
             Position tempPos{pos.posX - 2,pos.posY};
             temp.push_back(tempPos);        
@@ -76,19 +76,19 @@ vector<Position> Pawn::getPossibleMoves() const {
         }
 
         // checks for capture move on the left side
-        if(theBoard.getState()[pos.posX - 1][pos.posY - 1] != nullptr && theBoard.getState()[pos.posX + 1][pos.posY - 1]->getColour() != colour) { 
+        if((pos.posY > 0) && theBoard.getState()[pos.posX - 1][pos.posY - 1] != nullptr &&  theBoard.getState()[pos.posX - 1][pos.posY - 1]->getColour() != colour) { 
             Position tempPos{pos.posX - 1,pos.posY - 1};
             temp.push_back(tempPos);       
         }
 
         // checks for capture move on the right side 
-        if(theBoard.getState()[pos.posX - 1][pos.posY + 1] != nullptr && theBoard.getState()[pos.posX + 1][pos.posY + 1]->getColour() != colour) { 
+        if((pos.posY < 7) && theBoard.getState()[pos.posX - 1][pos.posY + 1] != nullptr &&  theBoard.getState()[pos.posX - 1][pos.posY + 1]->getColour() != colour) { 
             Position tempPos{pos.posX - 1,pos.posY + 1};
             temp.push_back(tempPos);       
         }
 
         // en passant move on left side
-        if(theBoard.getState()[pos.posX][pos.posY - 1] != nullptr && theBoard.getState()[pos.posX][pos.posY - 1]->getType() == Piece::PAWN
+        if((pos.posY > 0) && theBoard.getState()[pos.posX][pos.posY - 1] != nullptr && theBoard.getState()[pos.posX][pos.posY - 1]->getType() == Piece::PAWN
             && theBoard.getState()[pos.posX][pos.posY - 1]->getColour() != colour) {
             Pawn *pawn = dynamic_cast<Pawn*>(theBoard.getState()[pos.posX][pos.posY - 1]);
             if(pawn->getEnpassant()) {
@@ -98,7 +98,7 @@ vector<Position> Pawn::getPossibleMoves() const {
         }
 
         // en passant move on right side
-        if(theBoard.getState()[pos.posX][pos.posY + 1] != nullptr && theBoard.getState()[pos.posX][pos.posY + 1]->getType() == Piece::PAWN
+        if((pos.posY < 7) && theBoard.getState()[pos.posX][pos.posY + 1] != nullptr && theBoard.getState()[pos.posX][pos.posY + 1]->getType() == Piece::PAWN
             && theBoard.getState()[pos.posX][pos.posY + 1]->getColour() != colour) {
             Pawn *pawn = dynamic_cast<Pawn*>(theBoard.getState()[pos.posX][pos.posY + 1]);
             if(pawn->getEnpassant()) {
@@ -109,7 +109,6 @@ vector<Position> Pawn::getPossibleMoves() const {
 
 
     }
- 
     
 
     //     // check for capture move on top left corner

@@ -1,6 +1,6 @@
 #include "board.h"
 #include "textdisplay.h"
-#include "player.h"
+#include "board.h"
 #include "pawn.h"
 #include "rook.h"
 #include "knight.h"
@@ -76,39 +76,45 @@ void Board::makeMove(Piece *p, Position newPos){
                 pawn->setEnpassantFalse();
             }
 
-            if(p->getType() == Piece::PAWN && (grid[newPos.posX][newPos.posY - 1] != nullptr) 
-                    && (p->getColour() == "black" && (grid[newPos.posX][newPos.posY - 1]->getType() == Piece::PAWN) || 
-                    (grid[newPos.posX][newPos.posY + 1]->getType() == Piece::PAWN))) {
+            }
+             
+            
+            if(p->getType() == Piece::PAWN && (grid[p->getX() - 1][p->getY()] != nullptr) 
+                    && (p->getColour() == "white" && (grid[p->getX() - 1][p->getY()]->getType() == Piece::PAWN))) {
+                        
+                    // cout << "deleting in black" << endl;
+                    // if((newPos.posX = p->getX() - 1) && (newPos.posY = p->getY())) {
+                    //     delete grid[newPos.posX][newPos.posY];
+                    // }
+                    // if((newPos.posX = p->getX() - 1) && (newPos.posY = p->getY())) {
+                    //     delete grid[newPos.posX][newPos.posY];
+                    // }
+                    delete grid[p->getX() - 1][p->getY()];
+                    grid[p->getX() - 1][p->getY()] = nullptr;
+            }
                     
-                    cout << "deleting in black" << endl;
-                    if((newPos.posX = p->getX() - 1) && (newPos.posY = p->getY() - 1)) {
-                        delete grid[newPos.posX][newPos.posY - 1];
-                    }
-                    if((newPos.posX = p->getX() - 1) && (newPos.posY = p->getY() + 1)) {
-                        delete grid[newPos.posX][newPos.posY + 1];
-                    }
-            }
                 
-            
-            if(p->getType() == Piece::PAWN && (grid[newPos.posX][newPos.posY + 1] != nullptr) 
-                    && (p->getColour() == "white" && (grid[newPos.posX][newPos.posY + 1]->getType() == Piece::PAWN || 
-                        (grid[newPos.posX][newPos.posY - 1]->getType() == Piece::PAWN)))) {
+            if(p->getType() == Piece::PAWN && (grid[p->getX() + 1][p->getY()] != nullptr) 
+                    && (p->getColour() == "black" && (grid[p->getX() + 1][p->getY()]->getType() == Piece::PAWN))) {
 
-                    cout << "deleting in white" << endl;
-                     
-                    if((newPos.posX = p->getX() + 1) && (newPos.posY = p->getY() - 1)) {
-                        delete grid[newPos.posX][newPos.posY - 1];
-                    }
-                    if((newPos.posX = p->getX() + 1) && (newPos.posY = p->getY() + 1)) {
-                        delete grid[newPos.posX][newPos.posY + 1];
-                    }
+                    // cout << "deleting in white" << endl;
+                        
+                    // if((newPos.posX = p->getX() + 1) && (newPos.posY = p->getY())) {
+                    //     delete grid[newPos.posX][newPos.posY];
+                    // }
+                    // if((newPos.posX = p->getX() + 1) && (newPos.posY = p->getY())) {
+                    //     delete grid[newPos.posX][newPos.posY];
+                    // }
+                   delete grid[p->getX() + 1][p->getY()];
+                   grid[p->getX() + 1][p->getY()] = nullptr;
             }
-            
         }
+            
+        
         
         // Update the piece's internal position
         
-    }
+    
 }
 
 
@@ -168,43 +174,9 @@ void Board::removePiece(Position pos) {
     }
 
 }
-
-Position Board::findKingPosition(string colour) const {
-    for (int row = 0; row < grid.size(); ++row) {
-        for (int col = 0; col < grid[row].size(); ++col) {
-            const auto& piecePtr = grid[row][col];
-            if (piecePtr && piecePtr->getColour() == colour && piecePtr->getType() == Piece::KING) {
-                return {row, col};
-            }
-        }
-    }
-}
-
-// Method to check if p1's king is currently in check
-bool Board::isCheck(Player &p) const {
-    // Find the positions of the white and black kings
-    Position kingPos = {-1, -1};
-    kingPos = findKingPosition(p.getColour());
-    vector<Position> possibleMoves;
-    
-    // Check if any piece can capture the king 
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            if ((grid[i][j] != nullptr) && (grid[i][j]->getType() != Piece::Type::KING) && (grid[i][j]->getColour() != p.getColour())) {
-                // See if any possible move of the piece is the same as the king's position
-                possibleMoves = grid[i][j]->getPossibleMoves(); 
-                for (const auto& move : possibleMoves) {
-                    if (move.posX == kingPos.posX && move.posX == kingPos.posX) {
-                        return true; // P1's King is in check
-                    }
-                }
-            }
-        }
-    }
-
-    return false; // P1's King is not in check
-}
    
+
+
 vector<vector<Piece*>> Board::getState() const{
     return grid;
 }
@@ -232,11 +204,13 @@ ostream& operator<<(ostream& out, const Board& b) {
 
 
 void Board::switchTurns() {
+	
 	if(turn == 0) {
 		turn = 1;
 	} else if(turn == 1) {
 		turn = 0;
 	}
+
 }
 
 

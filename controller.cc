@@ -87,6 +87,7 @@ void Controller::run(){
                 makeHumanMove("white", player1);
             // player 2 turn control
             } else if (theBoard->getTurn() == 1 && player2->getPlayerType() == "human") {
+                cout << "inside black player" << endl;
                 makeHumanMove("black", player2);
             }
 
@@ -208,6 +209,9 @@ void Controller::makeHumanMove(const string& playerColor, Player* player) {
         cin >> endPosition;
         Position tempStartPos = convertCoords(startPosition);
         Position tempEndPos = convertCoords(endPosition);
+
+        cout << "Starting position: (" << tempStartPos.posX << "," << tempStartPos.posY << ")" << endl;
+        cout << "Ending position: (" << tempEndPos.posX << "," << tempEndPos.posY << ")" << endl;
         
         if ((tempStartPos.posX == -1 && tempStartPos.posY == -1) || (tempEndPos.posX == -1 && tempEndPos.posY == -1)){
             cerr << "Position out of bounds. Select a position with column[a-h] and row[1-8]" << endl;

@@ -60,9 +60,54 @@ void Board::makeMove(Piece *p, Position newPos){
 
         // Move the piece to the new position
         grid[newPos.posX][newPos.posY] = p;
+        p->setPosition(newPos);
+
+
+        // en passant is valid after it has been moved twice
+        if(grid[newPos.posX][newPos.posY]->getType() == Piece::PAWN) {
+            
+            Pawn *pawn = dynamic_cast<Pawn*>(p);
+            pawn->setMove();
+
+            if(pawn->getToggle() && (newPos.posX = pawn->getX() + 2) && (newPos.posY = pawn->getY() + 2)) {
+                pawn->setEnpassantTrue();
+                pawn->setToggle();
+            } else {
+                pawn->setEnpassantFalse();
+            }
+
+            if(p->getType() == Piece::PAWN && (grid[newPos.posX][newPos.posY - 1] != nullptr) 
+                    && (p->getColour() == "black" && (grid[newPos.posX][newPos.posY - 1]->getType() == Piece::PAWN) || 
+                    (grid[newPos.posX][newPos.posY + 1]->getType() == Piece::PAWN))) {
+                    
+                    cout << "deleting in black" << endl;
+                    if((newPos.posX = p->getX() - 1) && (newPos.posY = p->getY() - 1)) {
+                        delete grid[newPos.posX][newPos.posY - 1];
+                    }
+                    if((newPos.posX = p->getX() - 1) && (newPos.posY = p->getY() + 1)) {
+                        delete grid[newPos.posX][newPos.posY + 1];
+                    }
+            }
+                
+            
+            if(p->getType() == Piece::PAWN && (grid[newPos.posX][newPos.posY + 1] != nullptr) 
+                    && (p->getColour() == "white" && (grid[newPos.posX][newPos.posY + 1]->getType() == Piece::PAWN || 
+                        (grid[newPos.posX][newPos.posY - 1]->getType() == Piece::PAWN)))) {
+
+                    cout << "deleting in white" << endl;
+                     
+                    if((newPos.posX = p->getX() + 1) && (newPos.posY = p->getY() - 1)) {
+                        delete grid[newPos.posX][newPos.posY - 1];
+                    }
+                    if((newPos.posX = p->getX() + 1) && (newPos.posY = p->getY() + 1)) {
+                        delete grid[newPos.posX][newPos.posY + 1];
+                    }
+            }
+            
+        }
         
         // Update the piece's internal position
-        p->setPosition(newPos);
+        
     }
 }
 

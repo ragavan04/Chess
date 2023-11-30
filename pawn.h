@@ -5,6 +5,8 @@
 class Pawn : public Piece {
 
     bool moved;
+    bool enpassant;
+    bool oneTimeToggle;
 
 public:
     Pawn(Type pieceType, string colour, Position pos, Board& board);
@@ -15,6 +17,13 @@ public:
     // Override the isValid method for the Pawn
 
     char displayChar() const;
+    void setMove() { moved = true; }
+    void setEnpassantTrue() { enpassant = true; }
+    void setEnpassantFalse() { enpassant = false;}
+    void setToggle() { oneTimeToggle = false; }
+    bool getEnpassant() { return enpassant; }
+    bool getMoved() { return moved; }
+    bool getToggle() { return oneTimeToggle; }
 };
 
 #endif

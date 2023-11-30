@@ -11,6 +11,8 @@ Controller::~Controller() {
 
 void Controller::run(){
     string command;
+    Player* player1;
+    Player* player2;
     
     while (cin >> command) {
 
@@ -40,6 +42,18 @@ void Controller::run(){
                 } 
             }
 
+            if (whitePlayer == "human"){
+                player1 = new Human{"white", "human"};
+            } else {
+                // create computer
+            }
+
+            if (blackPlayer == "human"){
+                player2 = new Human{"black", "human"};
+            } else {
+                // create computer
+            }
+
             theBoard->notifyObservers();
             cout << *theBoard;
 
@@ -61,61 +75,24 @@ void Controller::run(){
                 continue;
             }
 
-            // keep prompting user until a vaild move is made
-            //bool vaildMoveMade = false;
-            //while(!vaildMoveMade){
+            // if ((curPiece != nullptr) && (curPiece->isValid(tempEndPos))){
+            //     theBoard->makeMove(curPiece, tempEndPos);
+            // } else {
+            //     cout << "Invalid move. Try a different move" << endl;
+            // }
 
-                string cmd, startPostition, endPosition;
-                cin >> startPostition >> endPosition;
-                Position tempStartPos = convertCoords(startPostition); // converting given coords into ints
-                Position tempEndPos = convertCoords(endPosition); // converting given coords into ints
-
-                // checks if given coords are in bounds
-                if ((tempStartPos.posX == -1 && tempStartPos.posY == -1) || (tempEndPos.posX == -1 && tempEndPos.posY == -1)){
-                    cerr << "Position out of bounds. Select a position with column[a-h] and row[1-8]" << endl;
-                    continue;
-                }
-
-                Piece* curPiece = theBoard->getState()[tempStartPos.posX][tempStartPos.posY];
-
-                if ((curPiece != nullptr) && (curPiece->isValid(tempEndPos))){
-                    theBoard->makeMove(curPiece, tempEndPos);
-                } else {
-                    cout << "Invalid move. Try a different move" << endl;
-                }
-
-                // // checking if its player 1's turn and if they are trying to move one of their own pieces
-                // if (theBoard->getTurn() == 0){ 
-                //     if (curPiece->getColour() == "white"){
-                //         // if the given move is vaild, then make the move
-                //         if (curPiece->isValid(tempEndPos)){
-                //             theBoard->makeMove(curPiece, tempEndPos);
-                //             vaildMoveMade = true;
-                //         } else {
-                //             cout << "Invalid move. Try a different move" << endl;
-                //         }
-                //     }
-                // // checking if its player 2's turn and if they are trying to move one of their own pieces
-                // } else {
-                //     if (curPiece->getColour() == "black"){
-                //         // if the given move is vaild, then make the move
-                //         if (curPiece->isValid(tempEndPos)){ // WE DONT NEED TYPE IN HERE, JUST USED BISHOP AS A TEMP
-                //             theBoard->makeMove(curPiece, tempEndPos);
-                //             vaildMoveMade = true;
-                //         } else {
-                //             cout << "Invalid move. Try a different move" << endl;
-                //         }
-                //     }
-                // }
-            //}
+            // player 1 turn control
+            if (theBoard->getTurn() == 0 && player1->getPlayerType() == "human") {
+                makeHumanMove("white", player1);
+            // player 2 turn control
+            } else if (theBoard->getTurn() == 1 && player2->getPlayerType() == "human") {
+                makeHumanMove("black", player2);
+            }
 
 
-
-            cout << "inside move" << endl;
             theBoard->notifyObservers();
             cout << *theBoard << endl;
             theBoard->switchTurns(); // switching the turn
-
         } else if (command == "setup") {
             cout << "inside setup mode" << endl;
             setupMode();
@@ -127,7 +104,7 @@ void Controller::run(){
             cout << *theBoard << endl;
 
 
-        }else {
+        } else {
             std::cout << "Invalid command." << std::endl;
         }
     } 
@@ -216,3 +193,31 @@ Position Controller::convertCoords(string coords) const{
 
     return convertedCoords;
 }
+
+void Controller::makeHumanMove(const string& playerColor, Player* player) {
+    bool validMoveMade = false;
+
+    while (!validMoveMade) {
+        string startPosition, endPosition;
+        cin >> startPosition >> endPosition;
+        Position tempStartPos = convertCoords(startPosition);
+        Position tempEndPos = convertCoords(endPosition);
+
+        if ((tempStartPos.posX == -1 && tempStartPos.posY == -1) || (tempEndPos.posX == -1 && tempEndPos.posY == -1)){
+            cerr << "Position out of bounds. Select a position with column[a-h] and row[1-8]" << endl;
+            continue;
+        }
+
+        Piece* curPiece = theBoard->getState()[tempStartPos.posX][tempStartPos.posY];
+        if (curPiece != nullptr && curPiece->isValid(tempEndPos) && curPiece->getColour() == playerColor) {
+            theBoard->makeMove(curPiece, tempEndPos);
+            validMoveMade = true;
+        } else {
+            cout << "Invalid move." << endl;
+            theBoard->notifyObservers();
+            cout << *theBoard << endl;
+        }
+    }
+}
+
+

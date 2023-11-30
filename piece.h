@@ -9,7 +9,15 @@
 using namespace std;
 
 class Board;
-struct Position{ int posX; int posY; };
+
+struct Position{ 
+    int posX; 
+    int posY; 
+    bool operator<(const Position& other) const {
+        if (posX == other.posX) return posY < other.posY;
+        return posX < other.posX;
+    }
+};
 
 class Piece{
     

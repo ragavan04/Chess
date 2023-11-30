@@ -187,13 +187,11 @@ ostream& operator<<(ostream& out, const Board& b) {
 
 
 void Board::switchTurns() {
-	
 	if(turn == 0) {
-		turn == 1;
+		turn = 1;
 	} else if(turn == 1) {
-		turn == 0;
+		turn = 0;
 	}
-
 }
 
 

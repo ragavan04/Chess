@@ -18,13 +18,13 @@ vector<Position> Pawn::getPossibleMoves() const {
     }
 
     // if the pawn is white, it can only move down on the board
-    if(getColour() == "white" && pos.posX < 8) { 
-        if(!moved && theBoard.getState()[pos.posX + 2][pos.posY] == nullptr) {
+    if(getColour() == "white" && pos.posX < 7) { 
+        if((pos.posX < 6) && !moved && theBoard.getState()[pos.posX + 2][pos.posY] == nullptr) {
             Position tempPos{pos.posX + 2,pos.posY};
             temp.push_back(tempPos);        
         }
 
-        if(theBoard.getState()[pos.posX + 1][pos.posY] == nullptr) {
+        if((pos.posX < 7) && theBoard.getState()[pos.posX + 1][pos.posY] == nullptr) {
             Position tempPos{pos.posX + 1,pos.posY};
             temp.push_back(tempPos);      
         }
@@ -64,13 +64,14 @@ vector<Position> Pawn::getPossibleMoves() const {
 
     }
 
-     if(getColour() == "black" /*&& pos.posX <= 8*/) { 
-        if(!moved && theBoard.getState()[pos.posX - 2][pos.posY] == nullptr) {
+     if(getColour() == "black" && pos.posX > 0) { 
+        if((pos.posX > 1) && !moved && theBoard.getState()[pos.posX - 2][pos.posY] == nullptr) {
             Position tempPos{pos.posX - 2,pos.posY};
             temp.push_back(tempPos);        
         }
 
-        if(theBoard.getState()[pos.posX - 1][pos.posY] == nullptr) {
+        if((pos.posX > 0) && theBoard.getState()[pos.posX - 1][pos.posY] == nullptr) {
+            cout << "pawn can move one space" << endl;
             Position tempPos{pos.posX - 1,pos.posY};
             temp.push_back(tempPos);      
         }

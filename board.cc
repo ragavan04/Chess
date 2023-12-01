@@ -48,16 +48,10 @@ void Board::standardBoardSetup(){
 }
 
 void Board::testBoardSetup(){
-    for (int i = 0; i < 8; ++i) {
-        grid[1][i] = new Pawn(Piece::PAWN, "white", {1, i}, *this); // White pawns
-        grid[6][i] = new Pawn(Piece::PAWN, "black", {6, i}, *this); // Black pawns
-    }
 
     // Setting up rooks
-    grid[0][0] = new Rook(Piece::ROOK, "white", {0, 0}, *this);
-    grid[0][7] = new Rook(Piece::ROOK, "white", {0, 7}, *this);
-    grid[7][0] = new Rook(Piece::ROOK, "black", {7, 0}, *this);
-    grid[7][7] = new Rook(Piece::ROOK, "black", {7, 7}, *this);
+    grid[0][7] = new Pawn(Piece::ROOK, "white", {0, 7}, *this);
+    grid[0][3] = new King(Piece::KING, "white", {0, 3}, *this);
 
 }
 
@@ -101,18 +95,20 @@ void Board::makeMove(Piece *p, Position newPos){
                     }
                 }
 
+                cout << "moving the king" << endl;
                 if(!king->getMove() && (newPos.posY == king->getY() - 2)) {
                 cout << "king has moved!" << endl;
             
                 
                 // check if king has been moved before and the selected position is two spaces to the right of king
                 if(!king->getMove() && (newPos.posY == king->getY() + 2)) {            
-                    
+                    cout << "the king has moved two to the right" << endl;
                     // check if king is at least at position f 
                     if((king->getY() > 6) && !king->getMove()) {
-
+                        cout << "entered king if statement" << endl;
                         // iterate through the left side of the king to find a rook, if pieces are found, castle is not possible
                         for(int i = king->getY() + 2; i < 8; ++i) {
+                            cout << "at iteration: " << i << endl;
                             if(grid[king->getX()][i] != nullptr && grid[king->getX()][i]->getType() == Piece::ROOK) {
                                 // if rook has been found, check if it has been moved
                                 Rook *rook = dynamic_cast<Rook*>(grid[king->getX()][i]);
@@ -155,7 +151,6 @@ void Board::makeMove(Piece *p, Position newPos){
         // Move the piece to the new position
         grid[newPos.posX][newPos.posY] = p;
 
-        Position tempPos = {p->getX(), p->getY()};
 
         // Update the piece's internal position
         p->setPosition(newPos);
@@ -194,23 +189,40 @@ void Board::makeMove(Piece *p, Position newPos){
         }
              
             
-        if(p->getType() == Piece::PAWN && (grid[p->getX() - 1][p->getY()] != nullptr) 
+        if((p->getX() > 0) && p->getType() == Piece::PAWN && (grid[p->getX() - 1][p->getY()] != nullptr) 
                 && (p->getColour() == "white" && (grid[p->getX() - 1][p->getY()]->getType() == Piece::PAWN))) {
                 delete grid[p->getX() - 1][p->getY()];
                 grid[p->getX() - 1][p->getY()] = nullptr;
+                cout << "deleted black pawn" << endl;
         }
                 
             
-        if(p->getType() == Piece::PAWN && (grid[p->getX() + 1][p->getY()] != nullptr) 
+        if((p->getX() < 7) && p->getType() == Piece::PAWN && (grid[p->getX() + 1][p->getY()] != nullptr) 
                 && (p->getColour() == "black" && (grid[p->getX() + 1][p->getY()]->getType() == Piece::PAWN))) {
                 delete grid[p->getX() + 1][p->getY()];
                 grid[p->getX() + 1][p->getY()] = nullptr;
+                cout << "deleted white pawn" << endl;
         }
         }
 
          
 }
 
+void Board::undoMove(Position startPos, Position endPos) {
+    // Get the piece at the end position
+    Piece* movedPiece = grid[endPos.posX][endPos.posY];
+
+    // Move the piece back to its original position
+    grid[startPos.posX][startPos.posY] = movedPiece;
+    grid[endPos.posX][endPos.posY] = nullptr;
+
+    // Update the piece's position
+    if (movedPiece) {
+        movedPiece->setPosition(startPos);
+    }
+
+    notifyObservers();
+}
 
 
 void Board::addPiece(char type, Position pos, Player* curPlayer) {
@@ -310,7 +322,7 @@ bool Board::isCheckmate(string playerColour) {
     return false;
 }
 
-vector<vector<Piece*>> Board::getState() const{
+vector<vector<Piece*>> Board::getState() const {
     return grid;
 }
 

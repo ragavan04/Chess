@@ -225,7 +225,14 @@ void Controller::makeHumanMove(const string& playerColor, Player* player) {
         Piece* curPiece = theBoard->getState()[tempStartPos.posX][tempStartPos.posY];
         if (curPiece != nullptr && curPiece->isValid(tempEndPos) && curPiece->getColour() == playerColor) {
             theBoard->makeMove(curPiece, tempEndPos);
-            validMoveMade = true;
+            if (theBoard->isCheck(playerColor)) {
+                cout << "King is in Check!" << endl;
+                theBoard->makeMove(curPiece, tempStartPos);
+                theBoard->notifyObservers();
+                cout << *theBoard << endl;
+            } else {
+                validMoveMade = true;
+            } 
         } else {
             cout << "Invalid move." << endl;
             theBoard->notifyObservers();

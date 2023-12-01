@@ -40,12 +40,13 @@ class Board {
         void addPiece(char type, Position pos);
         void removePiece(Position pos);
         Position findKingPosition(string colour) const;
-        bool isCheck(Player &p) const;
+        bool isCheck(string colour) const;
         vector<vector<Piece*>> getState() const; // returns the grid
         // void clone(Piece::Type pieceType); // makes a clone of the given piece 
         void notifyObservers(); // notifies observers of changes made to the board
         void attach(View *o);
         void clearBoard();
+        ~Board();
          
         ///Position findKingPosition(Player::Colour colour) const; // function to find the kings current position on the board
         friend ostream& operator<<(ostream& out, const Board& board);

@@ -1,6 +1,7 @@
 #include "board.h"
 #include "textdisplay.h"
 #include "board.h"
+#include "player.h"
 #include "pawn.h"
 #include "rook.h"
 #include "knight.h"
@@ -147,16 +148,24 @@ void Board::makeMove(Piece *p, Position newPos){
         // Clear the piece's previous position on the board
         grid[p->getX()][p->getY()] = nullptr;
 
-        // Capture handling if there is a piece at newPos
-        if (grid[newPos.posX][newPos.posY] != nullptr) {
-            delete grid[newPos.posX][newPos.posY]; 
-        }
-
         // Move the piece to the new position
         grid[newPos.posX][newPos.posY] = p;
 
+        Position tempPos = {p->getX(), p->getY()};
+
         // Update the piece's internal position
         p->setPosition(newPos);
+
+        if (isCheck(p->getColour())) {
+            p->setPosition(tempPos);
+            grid[p->getX()][p->getY()] = p;
+            cout << "King is in Check!" << endl;
+        } else {
+            // Capture handling if there is a piece at newPos
+            if (grid[newPos.posX][newPos.posY] != nullptr) {
+                delete grid[newPos.posX][newPos.posY]; 
+            }
+        }
 
         if(grid[p->getX()][p->getY()] != nullptr && grid[newPos.posX][newPos.posY]->getType() == Piece::KING) {
            King *king = dynamic_cast<King*>(p);
@@ -267,7 +276,41 @@ void Board::removePiece(Position pos) {
 
 }
    
+Position Board::findKingPosition(string colour) const {
+    for (int row = 0; row < 8; ++row) {
+        for (int col = 0; col < 8; ++col) {
+            const auto& piecePtr = grid[row][col];
+            if (piecePtr && piecePtr->getColour() == colour && piecePtr->getType() == Piece::KING) {
+                return {row, col};
+            }
+        }
+    }
+}
 
+// Method to check if p1's king is currently in check
+bool Board::isCheck(string playerColour) const {
+    // Find the positions of the white and black kings
+    Position kingPos = {-1, -1};
+    kingPos = findKingPosition(playerColour);
+    vector<Position> possibleMoves;
+    
+    // Check if any piece can capture the king 
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if ((grid[i][j] != nullptr) && (grid[i][j]->getType() != Piece::Type::KING) && (grid[i][j]->getColour() != playerColour)) {
+                // See if any possible move of the piece is the same as the king's position
+                possibleMoves = grid[i][j]->getPossibleMoves(); 
+                for (const auto& move : possibleMoves) {
+                    if (move.posX == kingPos.posX && move.posX == kingPos.posX) {
+                        return true; // P1's King is in check
+                    }
+                }
+            }
+        }
+    }
+
+    return false; // P1's King is not in check
+}
 
 vector<vector<Piece*>> Board::getState() const{
     return grid;
@@ -323,4 +366,8 @@ void Board::clearBoard() {
     views.clear();
     turn = 0;
     isWin = false;
+}
+
+Board::~Board() {
+    clearBoard();
 }

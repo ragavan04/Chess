@@ -49,7 +49,86 @@ void Board::standardBoardSetup(){
 
 
 void Board::makeMove(Piece *p, Position newPos){
-    if (p->isValid(newPos)) {
+    if (p->isValid(newPos)) {   
+
+        if(grid[p->getX()][p->getY()] != nullptr && grid[p->getX()][p->getY()]->getType() == Piece::KING) {
+            
+            // Since king has been selected, check if a castle move is possible
+            
+            King *king = dynamic_cast<King*>(p);
+
+            // check if king has been moved before and the selected position is two spaces to the left of king
+            if(!king->getMove() && (newPos.posY == king->getY() - 2)) {            
+                
+                // check if king is at least at position c
+                if((king->getY() > 1) && !king->getMove()) {
+
+                    // iterate through the left side of the king to find a rook, if pieces are found, castle is not possible
+                    for(int i = king->getY() - 2; i >= 0; --i) {
+                        if(grid[king->getX()][i] != nullptr && grid[king->getX()][i]->getType() == Piece::ROOK) {
+                            // if rook has been found, check if it has been moved
+                            Rook *rook = dynamic_cast<Rook*>(grid[king->getX()][i]);
+
+                            if(!rook->getMove()) {
+                                // if it hasn't been moved and there are no pieces, in the way, castle is valid
+                                grid[king->getX()][i] = nullptr;
+                                Position newTempPos{newPos.posX,newPos.posY + 1};
+                                grid[newTempPos.posX][newTempPos.posY] = rook;
+                                rook->setPosition(newTempPos);
+                                delete grid[king->getX()][i];
+                                rook->setMove();
+                            }
+
+                            break;
+                        } else if(grid[king->getX()][i] != nullptr) {
+                            // a piece has been found that is not a rook, therefore castle is not valid
+                            break;
+                        }
+                    }
+                }
+
+                if(!king->getMove() && (newPos.posY == king->getY() - 2)) {
+                cout << "king has moved!" << endl;
+            
+                
+                // check if king has been moved before and the selected position is two spaces to the right of king
+                if(!king->getMove() && (newPos.posY == king->getY() + 2)) {            
+                    
+                    // check if king is at least at position f 
+                    if((king->getY() > 6) && !king->getMove()) {
+
+                        // iterate through the left side of the king to find a rook, if pieces are found, castle is not possible
+                        for(int i = king->getY() + 2; i < 8; ++i) {
+                            if(grid[king->getX()][i] != nullptr && grid[king->getX()][i]->getType() == Piece::ROOK) {
+                                // if rook has been found, check if it has been moved
+                                Rook *rook = dynamic_cast<Rook*>(grid[king->getX()][i]);
+
+                                if(!rook->getMove()) {
+                                    // if it hasn't been moved and there are no pieces, in the way, castle is valid
+                                    grid[king->getX()][i] = nullptr;
+                                    Position newTempPos{newPos.posX,newPos.posY - 1};
+                                    grid[newTempPos.posX][newTempPos.posY] = rook;
+                                    rook->setPosition(newTempPos);
+                                    delete grid[king->getX()][i];
+                                    rook->setMove();
+                                }
+
+                                break;
+                            } else if(grid[king->getX()][i] != nullptr) {
+                                // a piece has been found that is not a rook, therefore castle is not valid
+                                break;
+                            }
+                        }
+                    }
+        
+                }            
+        
+            } // end of if statement
+            
+            } 
+        
+        } // end of king check
+        
         // Clear the piece's previous position on the board
         grid[p->getX()][p->getY()] = nullptr;
 
@@ -60,61 +139,59 @@ void Board::makeMove(Piece *p, Position newPos){
 
         // Move the piece to the new position
         grid[newPos.posX][newPos.posY] = p;
+
+        // Update the piece's internal position
         p->setPosition(newPos);
 
+        if(grid[p->getX()][p->getY()] != nullptr && grid[newPos.posX][newPos.posY]->getType() == Piece::KING) {
+           King *king = dynamic_cast<King*>(p);
+           if(!king->getMove()) { 
+            king->setMove(); 
+           }
+        }
 
-        // en passant is valid after it has been moved twice
-        if(grid[newPos.posX][newPos.posY]->getType() == Piece::PAWN) {
+        if(grid[p->getX()][p->getY()] != nullptr && grid[p->getX()][p->getY()]->getType() == Piece::ROOK) {
+                    
+            Rook *rook = dynamic_cast<Rook*>(p);
+            if(!rook->getMove()) {
+                rook->setMove();
+            }
+
+        }
+
+        // en passant is valid after it has been moved twice ///////// -------> change grid[newPos.posX][newPos.posY] to just p
+        if(grid[p->getX()][p->getY()] != nullptr && grid[newPos.posX][newPos.posY]->getType() == Piece::PAWN) {
             
             Pawn *pawn = dynamic_cast<Pawn*>(p);
             pawn->setMove();
 
-            if(pawn->getToggle() && (newPos.posX = pawn->getX() + 2) && (newPos.posY = pawn->getY() + 2)) {
+
+            // make sure to test this... seems a little off
+            if(pawn->getToggle() && (newPos.posX == pawn->getX() + 2)) {
                 pawn->setEnpassantTrue();
                 pawn->setToggle();
             } else {
                 pawn->setEnpassantFalse();
             }
 
-            }
+        }
              
             
-            if(p->getType() == Piece::PAWN && (grid[p->getX() - 1][p->getY()] != nullptr) 
-                    && (p->getColour() == "white" && (grid[p->getX() - 1][p->getY()]->getType() == Piece::PAWN))) {
-                        
-                    // cout << "deleting in black" << endl;
-                    // if((newPos.posX = p->getX() - 1) && (newPos.posY = p->getY())) {
-                    //     delete grid[newPos.posX][newPos.posY];
-                    // }
-                    // if((newPos.posX = p->getX() - 1) && (newPos.posY = p->getY())) {
-                    //     delete grid[newPos.posX][newPos.posY];
-                    // }
-                    delete grid[p->getX() - 1][p->getY()];
-                    grid[p->getX() - 1][p->getY()] = nullptr;
-            }
-                    
-                
-            if(p->getType() == Piece::PAWN && (grid[p->getX() + 1][p->getY()] != nullptr) 
-                    && (p->getColour() == "black" && (grid[p->getX() + 1][p->getY()]->getType() == Piece::PAWN))) {
-
-                    // cout << "deleting in white" << endl;
-                        
-                    // if((newPos.posX = p->getX() + 1) && (newPos.posY = p->getY())) {
-                    //     delete grid[newPos.posX][newPos.posY];
-                    // }
-                    // if((newPos.posX = p->getX() + 1) && (newPos.posY = p->getY())) {
-                    //     delete grid[newPos.posX][newPos.posY];
-                    // }
-                   delete grid[p->getX() + 1][p->getY()];
-                   grid[p->getX() + 1][p->getY()] = nullptr;
-            }
+        if(p->getType() == Piece::PAWN && (grid[p->getX() - 1][p->getY()] != nullptr) 
+                && (p->getColour() == "white" && (grid[p->getX() - 1][p->getY()]->getType() == Piece::PAWN))) {
+                delete grid[p->getX() - 1][p->getY()];
+                grid[p->getX() - 1][p->getY()] = nullptr;
         }
+                
             
-        
-        
-        // Update the piece's internal position
-        
-    
+        if(p->getType() == Piece::PAWN && (grid[p->getX() + 1][p->getY()] != nullptr) 
+                && (p->getColour() == "black" && (grid[p->getX() + 1][p->getY()]->getType() == Piece::PAWN))) {
+                delete grid[p->getX() + 1][p->getY()];
+                grid[p->getX() + 1][p->getY()] = nullptr;
+        }
+        }
+
+         
 }
 
 

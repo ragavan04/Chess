@@ -1,9 +1,10 @@
 #include "king.h"
 #include "board.h"
+#include "rook.h"
 
 
 King::King(Type pieceType, string colour, Position pos, Board& board)
-    : Piece(pieceType, colour, pos, board) {}
+    : Piece(pieceType, colour, pos, board), moved{false} {}
 
 bool isInCheckAfterMove(string colour, Position kingPos, Board& board) {
     string oppColour = (colour == "white") ? "black" : "white";
@@ -47,6 +48,48 @@ vector<Position> King::getPossibleMoves() const {
                 }
             }
         }
+    }
+
+    
+    if(!moved && (pos.posY > 1) && theBoard.getState()[pos.posX][pos.posY - 2] == nullptr) {
+
+        for(int i = pos.posY - 1; i >= 0; --i) {
+            if(theBoard.getState()[pos.posX][i] != nullptr && theBoard.getState()[pos.posX][i]->getColour() == colour
+                && theBoard.getState()[pos.posX][i]->getType() == Piece::ROOK) {
+
+                Rook *rook = dynamic_cast<Rook*>(theBoard.getState()[pos.posX][i]);
+
+                if(!rook->getMove()) {
+                    Position temp{pos.posX,pos.posY - 2};
+                    moves.push_back(temp);
+                }
+                break;
+            } else if(theBoard.getState()[pos.posX][i] != nullptr) {
+                break;
+            }
+        }
+
+    }
+
+    if(!moved && (pos.posY < 6) && theBoard.getState()[pos.posX][pos.posY + 2] == nullptr) {
+        
+        for(int i = pos.posY + 2; i < 8; ++i) {
+            if(theBoard.getState()[pos.posX][i] != nullptr && theBoard.getState()[pos.posX][i]->getColour() == colour
+                && theBoard.getState()[pos.posX][i]->getType() == Piece::ROOK) {
+
+                Rook *rook = dynamic_cast<Rook*>(theBoard.getState()[pos.posX][i]);
+
+                if(!rook->getMove()) {
+                    Position temp{pos.posX,pos.posY + 2};
+                    moves.push_back(temp);
+                }
+
+                break;
+            } else if(theBoard.getState()[pos.posX][i] != nullptr) {
+                break;
+            }
+        }
+
     }
 
     return moves;

@@ -59,10 +59,9 @@ void Board::testBoardSetup(){
 void Board::makeMove(Piece *p, Position newPos){
     if (p->isValid(newPos)) {   
 
-        if(grid[p->getX()][p->getY()] != nullptr && grid[p->getX()][p->getY()]->getType() == Piece::KING) {
+        if(grid[p->getX()][p->getY()] != nullptr && grid[p->getX()][p->getY()]->getType() == Piece::KING) { 
             
             // Since king has been selected, check if a castle move is possible
-            
             King *king = dynamic_cast<King*>(p);
 
             // check if king has been moved before and the selected position is two spaces to the left of king
@@ -94,21 +93,17 @@ void Board::makeMove(Piece *p, Position newPos){
                         }
                     }
                 }
+             }
 
-                cout << "moving the king" << endl;
-                if(!king->getMove() && (newPos.posY == king->getY() - 2)) {
-                cout << "king has moved!" << endl;
-            
-                
+            if(!king->getMove() && (newPos.posY == king->getY() + 2)) {
+               
                 // check if king has been moved before and the selected position is two spaces to the right of king
                 if(!king->getMove() && (newPos.posY == king->getY() + 2)) {            
-                    cout << "the king has moved two to the right" << endl;
                     // check if king is at least at position f 
-                    if((king->getY() > 6) && !king->getMove()) {
-                        cout << "entered king if statement" << endl;
+                    if((king->getY() < 6) && !king->getMove()) {
                         // iterate through the left side of the king to find a rook, if pieces are found, castle is not possible
                         for(int i = king->getY() + 2; i < 8; ++i) {
-                            cout << "at iteration: " << i << endl;
+                            
                             if(grid[king->getX()][i] != nullptr && grid[king->getX()][i]->getType() == Piece::ROOK) {
                                 // if rook has been found, check if it has been moved
                                 Rook *rook = dynamic_cast<Rook*>(grid[king->getX()][i]);
@@ -131,12 +126,12 @@ void Board::makeMove(Piece *p, Position newPos){
                             }
                         }
                     }
-        
-                }            
+    
+                }               
         
             } // end of if statement
             
-            } 
+             
         
         } // end of king check
         

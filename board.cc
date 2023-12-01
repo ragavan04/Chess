@@ -119,6 +119,7 @@ void Board::makeMove(Piece *p, Position newPos){
 
                                 if(!rook->getMove()) {
                                     // if it hasn't been moved and there are no pieces, in the way, castle is valid
+                                    cout << "Entering rook condition" << endl;
                                     grid[king->getX()][i] = nullptr;
                                     Position newTempPos{newPos.posX,newPos.posY - 1};
                                     grid[newTempPos.posX][newTempPos.posY] = rook;

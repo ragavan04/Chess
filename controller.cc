@@ -124,7 +124,17 @@ void Controller::run(){
             theBoard->switchTurns(); // switching the turn
         } else if (command == "setup") {
             cout << "inside setup mode" << endl;
-            setupMode();
+            setupMode(player1, player2);
+            for (size_t i = 0; i < player1->getAvailablePieces().size(); ++i){
+                cout << "Player 1 piece:  " << player1->getAvailablePieces()[i]->displayChar() << "position: " << "X: "<< player1->getAvailablePieces()[i]->getX() << "Y: " << player1->getAvailablePieces()[i]->getY() << endl;
+            }
+
+            cout << endl;
+
+            for (size_t i = 0; i < player2->getAvailablePieces().size(); ++i){
+                cout << "Player 2 piece:  " << player2->getAvailablePieces()[i]->displayChar() << "position: " << "X: "<< player2->getAvailablePieces()[i]->getX() << "Y: " << player2->getAvailablePieces()[i]->getY() << endl;
+            }
+
             theBoard->notifyObservers();
             cout << *theBoard << endl;
         } else if (command == "standard"){
@@ -164,7 +174,7 @@ void Controller::displayScore() const{
 
 
 
-void Controller::setupMode() {
+void Controller::setupMode(Player* player1, Player* player2) {
     std::string setupCommand;
     cout << "Entering setup mode. Enter commands to place pieces or type 'done' to exit." << endl;
     while (getline(cin, setupCommand)) {
@@ -172,32 +182,70 @@ void Controller::setupMode() {
             cout << "Exiting setup mode." << endl;
             break;
         }
-        processSetupCommand(setupCommand);
+        processSetupCommand(setupCommand, player1, player2);
     }
 }
 
 
-void Controller::processSetupCommand(const std::string& command) {
+void Controller::processSetupCommand(const string& command, Player* player1, Player* player2) {
+    bool whitePlacing, blackPlacing;
     // Parse the command to extract piece type and position
     char action, piece;
     string letter_position;
+    string colour;
     stringstream ss{command};
     ss >> action;
     if (action == '+') {
         ss >> piece >> letter_position;
     } else if (action == '-') {
         ss >> letter_position;
+    } else if (action == '='){
+        ss >> colour;
     }
     Position position = convertCoords(letter_position);
     
-
-    if (action == '+') {
+    if (action == '+' && (position.posX != -1 && position.posY != -1)) {
         // Add piece to the board
-        theBoard->addPiece(piece, position);
-        cout << "piece added: " << piece << "pos: " << letter_position << endl;
-    } else if (action == '-') {
-        theBoard->removePiece(position);
-        cout << "piece remove: " << letter_position <<  endl;
+        if (whitePlacing){
+            theBoard->addPiece(tolower(piece), position, player1);
+            cout << "Piece added: " << piece << " Position: " << letter_position << endl;
+        } else if (blackPlacing){
+            theBoard->addPiece(toupper(piece), position, player2);
+            cout << "Piece added: " << piece << " Position: " << letter_position << endl;
+        } else {
+            cout << "No colour selected to place pieces. Enter '= colour' to let a player place pieces" << endl;
+        }
+    
+    } else if (action == '-' && (position.posX != -1 && position.posY != -1)) {
+        if (whitePlacing){
+            if (theBoard->getState()[position.posX][position.posY] != nullptr && theBoard->getState()[position.posX][position.posY]->getColour() == "white"){
+                theBoard->removePiece(position);
+                cout << "piece remove: " << letter_position <<  endl;
+            } else {
+                cout << "Cannot remove a piece thats not yours or an empty position." << endl;
+            }
+        } 
+
+        if (blackPlacing){
+            if (theBoard->getState()[position.posX][position.posY] != nullptr &&  theBoard->getState()[position.posX][position.posY]->getColour() == "black"){
+                theBoard->removePiece(position);
+                cout << "piece remove: " << letter_position <<  endl;
+            } else {
+                cout << "Cannot remove a piece thats not yours or an empty position." << endl;
+            }
+        }
+        
+    
+    } else if (action == '='){
+        if (colour == "white"){
+            whitePlacing = true;
+            blackPlacing = false;
+        } else if (colour == "black"){
+            whitePlacing = false;
+            blackPlacing = true;
+        } else {
+            cout << "Invalid colour" << endl;
+        }
     }
 }
 

@@ -12,6 +12,7 @@ class Player{
     protected:
         string colour;
         string playerType;
+        vector<Piece*> availablePieces;
         vector<Piece*> lostPieces;
         map<Position, vector<Position>> availableMoves; 
     public:
@@ -24,6 +25,8 @@ class Player{
         void addToLostPieces(Piece* lostPiece) { lostPieces.push_back(lostPiece); }
         vector<Piece*> getLostPieces() { return lostPieces; }
         map<Position, vector<Position>> getAvailableMoves() { return availableMoves; }
+        vector<Piece*> getAvailablePieces() { return availablePieces; } 
+        void addToAvailablePieces(Piece* p) { availablePieces.push_back(p); }
 
         void addToAvailableMoves(Piece* piece);
         virtual ~Player() {}; // virtual dtor   

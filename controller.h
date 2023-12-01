@@ -31,8 +31,8 @@ class Controller{
         void displayScore() const;
         // unique_ptr<Piece> makePiece(char c, Piece::Position pos);
         void run();
-        void setupMode();
-        void processSetupCommand(const std::string& command);
+        void setupMode(Player* player1, Player* player2);
+        void processSetupCommand(const string& command, Player* player1, Player* player2);
         void makeHumanMove(const string& playerColor, Player* player);
 };
 

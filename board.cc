@@ -213,7 +213,7 @@ void Board::makeMove(Piece *p, Position newPos){
 
 
 
-void Board::addPiece(char type, Position pos) {
+void Board::addPiece(char type, Position pos, Player* curPlayer) {
 
     Piece *p;
 
@@ -255,8 +255,9 @@ void Board::addPiece(char type, Position pos) {
             p = new King(Piece::KING, "black", pos, *this); 
             break;
     }
-    
+    curPlayer->addToAvailablePieces(p);
     grid[pos.posX][pos.posY] = p;
+
 
 }
     

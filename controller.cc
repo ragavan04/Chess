@@ -118,9 +118,6 @@ void Controller::run(){
                 makeHumanMove("black", player2);
             }
 
-
-            theBoard->notifyObservers();
-            cout << *theBoard << endl;
             theBoard->switchTurns(); // switching the turn
         } else if (command == "setup") {
             cout << "inside setup mode" << endl;
@@ -277,10 +274,11 @@ Position Controller::convertCoords(string coords) const{
 
 void Controller::makeHumanMove(const string& playerColor, Player* player) {
     bool validMoveMade = false;
+    bool validPromotionEntered = false;
 
     while (!validMoveMade) {
-        string line;
         string startPosition, endPosition;
+        char promotionPiece;
         cin >> startPosition;
         if (startPosition == "move"){
             cin >> startPosition;
@@ -299,15 +297,42 @@ void Controller::makeHumanMove(const string& playerColor, Player* player) {
 
         Piece* curPiece = theBoard->getState()[tempStartPos.posX][tempStartPos.posY];
         if (curPiece != nullptr && curPiece->isValid(tempEndPos) && curPiece->getColour() == playerColor) {
-            theBoard->makeMove(curPiece, tempEndPos);
+
+            // pawn promotion logic
+            if ((curPiece->getType() == Piece::PAWN) && playerColor == "white" && tempEndPos.posX == 7 || (curPiece->getType() == Piece::PAWN) && playerColor == "black" && tempEndPos.posX == 0){               
+                while(!validPromotionEntered){
+                    cin >> promotionPiece;
+                    if (promotionPiece == 'N' || promotionPiece == 'n' || promotionPiece == 'R' || promotionPiece == 'r' || promotionPiece == 'Q' || promotionPiece == 'q' || promotionPiece == 'B' || promotionPiece == 'b' || promotionPiece == 'P' || promotionPiece == 'p'){
+                        validPromotionEntered = true;
+                    } else {
+                        cout << "Enter valid promotion" << endl;
+                        continue;
+                    }                    
+                }
+
+                theBoard->removePiece(tempStartPos);
+                // check if player is white, if so add piece for white player
+                if (playerColor == "white"){
+                    theBoard->addPiece(tolower(promotionPiece), tempEndPos, player);
+                } 
+
+                // check if player is black, if so add piece for black player
+                if (playerColor == "black"){
+                    theBoard->addPiece(toupper(promotionPiece), tempEndPos, player);
+                }
+            } else {
+                // make the move inputted
+                theBoard->makeMove(curPiece, tempEndPos);
+            }
+
             validMoveMade = true;
-            
         } else {
             cout << "Invalid move." << endl;
-            theBoard->notifyObservers();
-            cout << *theBoard << endl;
         }
     }
+
+    theBoard->notifyObservers();
+    cout << *theBoard << endl;
 }
 
 

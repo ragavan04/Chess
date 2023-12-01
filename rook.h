@@ -3,9 +3,11 @@
 #include "piece.h"
 
 class Rook : public Piece {
+    bool moved;
 public:
     Rook(Type pieceType, string colour, Position pos, Board& board);
-
+    void setMove() { moved = true; }
+    bool getMove() { return moved; }
     // Override the getPossibleMoves method for the Knight
     vector<Position> getPossibleMoves() const override;
 

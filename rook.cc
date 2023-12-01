@@ -3,7 +3,7 @@
 
 
 Rook::Rook(Type pieceType, string colour, Position pos, Board& board)
-        : Piece(pieceType, colour, pos, board) {}
+        : Piece(pieceType, colour, pos, board), moved{false} {}
 
 
 

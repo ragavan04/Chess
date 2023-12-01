@@ -47,6 +47,20 @@ void Board::standardBoardSetup(){
     grid[7][4] = new King(Piece::KING, "black", {7, 4}, *this);
 }
 
+void Board::testBoardSetup(){
+    for (int i = 0; i < 8; ++i) {
+        grid[1][i] = new Pawn(Piece::PAWN, "white", {1, i}, *this); // White pawns
+        grid[6][i] = new Pawn(Piece::PAWN, "black", {6, i}, *this); // Black pawns
+    }
+
+    // Setting up rooks
+    grid[0][0] = new Rook(Piece::ROOK, "white", {0, 0}, *this);
+    grid[0][7] = new Rook(Piece::ROOK, "white", {0, 7}, *this);
+    grid[7][0] = new Rook(Piece::ROOK, "black", {7, 0}, *this);
+    grid[7][7] = new Rook(Piece::ROOK, "black", {7, 7}, *this);
+
+}
+
 
 void Board::makeMove(Piece *p, Position newPos){
     if (p->isValid(newPos)) {   

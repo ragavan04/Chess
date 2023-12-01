@@ -24,6 +24,7 @@ class Board {
         Board();
 
         void standardBoardSetup();
+        void testBoardSetup();
         // bool isInCheckAfterMove(Position kingPos) const; // checks if the king is still in check after being in check in the previous turn
         // Position getPosition(const Piece p) const; // gets the position of a given piece
         void switchTurns(); // switches the turn field

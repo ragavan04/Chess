@@ -106,6 +106,10 @@ void Controller::run(){
             cout << *theBoard << endl;
 
 
+        } else if (command == "test"){
+            theBoard->testBoardSetup();
+            theBoard->notifyObservers();
+            cout << *theBoard << endl;
         } else {
             std::cout << "Invalid command." << std::endl;
         }

@@ -294,7 +294,7 @@ bool Board::isCheck(string playerColour) const {
                 // See if any possible move of the piece is the same as the king's position
                 possibleMoves = grid[i][j]->getPossibleMoves(); 
                 for (const auto& move : possibleMoves) {
-                    if (move.posX == kingPos.posX && move.posX == kingPos.posX) {
+                    if (move.posX == kingPos.posX && move.posY == kingPos.posY) {
                         return true; // P1's King is in check
                     }
                 }

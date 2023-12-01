@@ -65,7 +65,33 @@ void Controller::run(){
             
             
         } else if (command == "resign") {
-            cout << "inside resign" << endl;
+            if (gameInProgress){
+                // print board
+                theBoard->notifyObservers();
+                cout << *theBoard << endl;
+
+                // check for player 1 resign
+                if (theBoard->getTurn() == 0){
+                    cout << "Player 1 resigns" << endl;
+                    cout << "Black Wins!" << endl;
+                    player2Score += 1;
+                } 
+
+
+                // check for player 2 resign
+                if (theBoard->getTurn() == 1){
+                    cout << "Player 2 resigns" << endl;
+                    cout << "White Wins!" << endl;
+                    player1Score += 1;
+                }
+                displayScore();
+                theBoard->clearBoard();
+                cout << "New game started" << endl;
+
+            } else {
+                cout << "No game in progress, cannot end game" << endl;
+            }
+            
             gameInProgress = false;
 
         } else if (command == "move") {
@@ -80,6 +106,7 @@ void Controller::run(){
             // } else {
             //     cout << "Invalid move. Try a different move" << endl;
             // }
+
 
             // player 1 turn control
             if (theBoard->getTurn() == 0 && player1->getPlayerType() == "human") {

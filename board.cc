@@ -208,6 +208,21 @@ void Board::makeMove(Piece *p, Position newPos){
          
 }
 
+void Board::undoMove(Position startPos, Position endPos) {
+    // Get the piece at the end position
+    Piece* movedPiece = grid[endPos.posX][endPos.posY];
+
+    // Move the piece back to its original position
+    grid[startPos.posX][startPos.posY] = movedPiece;
+    grid[endPos.posX][endPos.posY] = nullptr;
+
+    // Update the piece's position
+    if (movedPiece) {
+        movedPiece->setPosition(startPos);
+    }
+
+    notifyObservers();
+}
 
 
 void Board::addPiece(char type, Position pos, Player* curPlayer) {
@@ -307,7 +322,7 @@ bool Board::isCheckmate(string playerColour) {
     return false;
 }
 
-vector<vector<Piece*>> Board::getState() const{
+vector<vector<Piece*>> Board::getState() const {
     return grid;
 }
 

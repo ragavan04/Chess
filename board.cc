@@ -305,6 +305,10 @@ bool Board::isCheck(string playerColour) const {
     return false; // P1's King is not in check
 }
 
+bool Board::isCheckmate(string playerColour) {
+    return false;
+}
+
 vector<vector<Piece*>> Board::getState() const{
     return grid;
 }

@@ -41,6 +41,7 @@ class Board {
         void removePiece(Position pos);
         Position findKingPosition(string colour) const;
         bool isCheck(string colour) const;
+        bool isCheckmate(string playerColour);
         vector<vector<Piece*>> getState() const; // returns the grid
         // void clone(Piece::Type pieceType); // makes a clone of the given piece 
         void notifyObservers(); // notifies observers of changes made to the board

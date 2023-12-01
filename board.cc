@@ -1,6 +1,5 @@
 #include "board.h"
 #include "textdisplay.h"
-#include "board.h"
 #include "player.h"
 #include "pawn.h"
 #include "rook.h"
@@ -148,6 +147,11 @@ void Board::makeMove(Piece *p, Position newPos){
         // Clear the piece's previous position on the board
         grid[p->getX()][p->getY()] = nullptr;
 
+        // Capture handling if there is a piece at newPos
+        if (grid[newPos.posX][newPos.posY] != nullptr) {
+            delete grid[newPos.posX][newPos.posY]; 
+        }
+
         // Move the piece to the new position
         grid[newPos.posX][newPos.posY] = p;
 
@@ -155,17 +159,6 @@ void Board::makeMove(Piece *p, Position newPos){
 
         // Update the piece's internal position
         p->setPosition(newPos);
-
-        if (isCheck(p->getColour())) {
-            p->setPosition(tempPos);
-            grid[p->getX()][p->getY()] = p;
-            cout << "King is in Check!" << endl;
-        } else {
-            // Capture handling if there is a piece at newPos
-            if (grid[newPos.posX][newPos.posY] != nullptr) {
-                delete grid[newPos.posX][newPos.posY]; 
-            }
-        }
 
         if(grid[p->getX()][p->getY()] != nullptr && grid[newPos.posX][newPos.posY]->getType() == Piece::KING) {
            King *king = dynamic_cast<King*>(p);

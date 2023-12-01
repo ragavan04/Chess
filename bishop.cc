@@ -55,7 +55,6 @@ vector<Position> Bishop::getPossibleMoves() const {
         }
     }
 
-
     return possibleMoves;
 }
 

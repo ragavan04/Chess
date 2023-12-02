@@ -117,21 +117,21 @@ void Controller::run(){
                 cout << "inside black player" << endl;
                 makeHumanMove("black", player2);
             }
+            /*PRINTING OUT ALL MOVES!!!!
+            player1->renderAvailableMoves(theBoard);
+            player2->renderAvailableMoves(theBoard);
+            cout << "player 1 availble moves:" << endl;
+            player1->printAvailableMoves();
+            cout << endl << endl;
+            cout << "player 2 availble moves:" << endl;
+            player2->printAvailableMoves();
+            */
+
 
             theBoard->switchTurns(); // switching the turn
         } else if (command == "setup") {
             cout << "inside setup mode" << endl;
             setupMode(player1, player2);
-            for (size_t i = 0; i < player1->getAvailablePieces().size(); ++i){
-                cout << "Player 1 piece:  " << player1->getAvailablePieces()[i]->displayChar() << "position: " << "X: "<< player1->getAvailablePieces()[i]->getX() << "Y: " << player1->getAvailablePieces()[i]->getY() << endl;
-            }
-
-            cout << endl;
-
-            for (size_t i = 0; i < player2->getAvailablePieces().size(); ++i){
-                cout << "Player 2 piece:  " << player2->getAvailablePieces()[i]->displayChar() << "position: " << "X: "<< player2->getAvailablePieces()[i]->getX() << "Y: " << player2->getAvailablePieces()[i]->getY() << endl;
-            }
-
             theBoard->notifyObservers();
             cout << *theBoard << endl;
         } else if (command == "standard"){
@@ -176,6 +176,13 @@ void Controller::setupMode(Player* player1, Player* player2) {
     cout << "Entering setup mode. Enter commands to place pieces or type 'done' to exit." << endl;
     while (getline(cin, setupCommand)) {
         if (setupCommand == "done") {
+            
+            // Check if both players have placed at least one king and are under the standard piece count
+            if (!player1->hasPlacedKing() || !player2->hasPlacedKing()) {
+                cout << "Each player must place at least one King." << endl;
+                continue; // Stay in setup mode
+            }
+
             cout << "Exiting setup mode." << endl;
             break;
         }
@@ -199,16 +206,41 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
     } else if (action == '='){
         ss >> colour;
     }
+   
     Position position = convertCoords(letter_position);
     
     if (action == '+' && (position.posX != -1 && position.posY != -1)) {
+        // Check if the piece can be added based on the count
+        
+        bool canAddPiece = (whitePlacing ? player1->addPieceType(piece) : player2->addPieceType(piece));
+        
+        // bool canAddPiece;
+        // if (whitePlacing){
+        //     canAddPiece = player1->addPieceType(piece);
+        // } else if (blackPlacing){
+        //     canAddPiece = player2->addPieceType(piece);
+        // }
+
+        if (!canAddPiece) {
+            cout << "Exceeded the standard amount for this piece type." << endl;
+            return;
+        }
+        
         // Add piece to the board
         if (whitePlacing){
-            theBoard->addPiece(tolower(piece), position, player1);
-            cout << "Piece added: " << piece << " Position: " << letter_position << endl;
+            if ((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)){ // check if user is place pawn at row 1 or 8
+                cout << "Cannot place pawn at row 1 or row 8" << endl;
+            } else {
+                theBoard->addPiece(tolower(piece), position);
+                cout << "Piece added: " << piece << " Position: " << letter_position << endl;
+            }
         } else if (blackPlacing){
-            theBoard->addPiece(toupper(piece), position, player2);
-            cout << "Piece added: " << piece << " Position: " << letter_position << endl;
+            if ((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)){ // check if user is place pawn at row 1 or 8
+                cout << "Cannot place pawn at row 1 or row 8" << endl;
+            } else {
+                theBoard->addPiece(toupper(piece), position);
+                cout << "Piece added: " << piece << " Position: " << letter_position << endl;
+            }
         } else {
             cout << "No colour selected to place pieces. Enter '= colour' to let a player place pieces" << endl;
         }
@@ -313,12 +345,12 @@ void Controller::makeHumanMove(const string& playerColor, Player* player) {
                 theBoard->removePiece(tempStartPos);
                 // check if player is white, if so add piece for white player
                 if (playerColor == "white"){
-                    theBoard->addPiece(tolower(promotionPiece), tempEndPos, player);
+                    theBoard->addPiece(tolower(promotionPiece), tempEndPos);
                 } 
 
                 // check if player is black, if so add piece for black player
                 if (playerColor == "black"){
-                    theBoard->addPiece(toupper(promotionPiece), tempEndPos, player);
+                    theBoard->addPiece(toupper(promotionPiece), tempEndPos);
                 }
             } else {
                 // make the move inputted

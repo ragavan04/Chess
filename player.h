@@ -5,6 +5,7 @@
 #include <vector>
 #include "piece.h"
 #include <map>
+#include <unordered_map>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ class Player{
     protected:
         string colour;
         string playerType;
-        vector<Piece*> availablePieces;
+        unordered_map<char, int> pieceCount;
         vector<Piece*> lostPieces;
         map<Position, vector<Position>> availableMoves; 
     public:
@@ -25,10 +26,33 @@ class Player{
         void addToLostPieces(Piece* lostPiece) { lostPieces.push_back(lostPiece); }
         vector<Piece*> getLostPieces() { return lostPieces; }
         map<Position, vector<Position>> getAvailableMoves() { return availableMoves; }
-        vector<Piece*> getAvailablePieces() { return availablePieces; } 
-        void addToAvailablePieces(Piece* p) { availablePieces.push_back(p); }
-
         void addToAvailableMoves(Piece* piece);
+        
+        bool hasPlacedKing() const {
+            return pieceCount.find('k') != pieceCount.end() && pieceCount.at('k') > 0;
+        }
+
+        bool addPieceType(char piece) {
+            // Define the standard chess piece counts
+            unordered_map<char, int> standardCounts = {{'k', 1}, {'q', 1}, {'r', 2}, {'b', 2}, {'n', 2}, {'p', 8}};
+
+            // Increment the count for this piece
+            pieceCount[tolower(piece)]++;
+            cout << "incrementing...." << endl;
+            cout << "colour: "   << colour << endl;
+            
+            
+            // Check if the count exceeds the standard amount
+            if (pieceCount[tolower(piece)] > standardCounts[tolower(piece)]) {
+
+                pieceCount[tolower(piece)]--;  // Undo the addition
+                return false;  // Indicate that the addition was not allowed
+            }
+
+            return true;  // Indicate successful addition
+        }
+
+
         virtual ~Player() {}; // virtual dtor   
 };
 

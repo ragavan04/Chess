@@ -7,8 +7,6 @@ using namespace std;
 class Human : public Player{
     public:
     Human(const string& colour, string playerType);
-    void addToAvailableMoves(Piece* piece);
-
 
 };
 

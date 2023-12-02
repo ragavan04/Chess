@@ -7,6 +7,7 @@
 #include <map>
 #include <unordered_map>
 
+class board;
 using namespace std;
 
 class Player{
@@ -17,40 +18,23 @@ class Player{
         vector<Piece*> lostPieces;
         map<Position, vector<Position>> availableMoves; 
     public:
-        Player(const string& colour, string playerType) : colour{colour}, playerType{playerType}{}
+        Player(const string& colour, string playerType);
 
         // Acessor methods
-        void setColour(string newColour) { colour = newColour; }
-        string getColour() const { return colour; }
-        string getPlayerType() const { return playerType; }
-        void addToLostPieces(Piece* lostPiece) { lostPieces.push_back(lostPiece); }
-        vector<Piece*> getLostPieces() { return lostPieces; }
-        map<Position, vector<Position>> getAvailableMoves() { return availableMoves; }
-        void addToAvailableMoves(Piece* piece);
+        void setColour(string newColour);
+        string getColour() const;
+        string getPlayerType() const;
+        void addToLostPieces(Piece* lostPiece);
+        vector<Piece*> getLostPieces() const;
+        map<Position, vector<Position>> getAvailableMoves() const;
         
-        bool hasPlacedKing() const {
-            return pieceCount.find('k') != pieceCount.end() && pieceCount.at('k') > 0;
-        }
+        void renderAvailableMoves(Board* board);
 
-        bool addPieceType(char piece) {
-            // Define the standard chess piece counts
-            unordered_map<char, int> standardCounts = {{'k', 1}, {'q', 1}, {'r', 2}, {'b', 2}, {'n', 2}, {'p', 8}};
+        void printAvailableMoves() const;
+    
+        bool hasPlacedKing() const;
 
-            // Increment the count for this piece
-            pieceCount[tolower(piece)]++;
-            cout << "incrementing...." << endl;
-            cout << "colour: "   << colour << endl;
-            
-            
-            // Check if the count exceeds the standard amount
-            if (pieceCount[tolower(piece)] > standardCounts[tolower(piece)]) {
-
-                pieceCount[tolower(piece)]--;  // Undo the addition
-                return false;  // Indicate that the addition was not allowed
-            }
-
-            return true;  // Indicate successful addition
-        }
+        bool addPieceType(char piece);
 
 
         virtual ~Player() {}; // virtual dtor   

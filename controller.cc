@@ -117,6 +117,16 @@ void Controller::run(){
                 cout << "inside black player" << endl;
                 makeHumanMove("black", player2);
             }
+            /*PRINTING OUT ALL MOVES!!!!
+            player1->renderAvailableMoves(theBoard);
+            player2->renderAvailableMoves(theBoard);
+            cout << "player 1 availble moves:" << endl;
+            player1->printAvailableMoves();
+            cout << endl << endl;
+            cout << "player 2 availble moves:" << endl;
+            player2->printAvailableMoves();
+            */
+
 
             theBoard->switchTurns(); // switching the turn
         } else if (command == "setup") {

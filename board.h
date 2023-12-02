@@ -39,7 +39,7 @@ class Board {
         // bool isStalemate(Player &p) const; // checks if there is a stalemate present on the board
         void makeMove(Piece* p, Position pos); // makes a move on the board, for the piece p to the positon pos
         void undoMove(Position startPos, Position endPos);
-        void addPiece(char type, Position pos, Player* curPlayer);
+        void addPiece(char type, Position pos);
         void removePiece(Position pos);
         Position findKingPosition(string colour) const;
         bool isCheck(string colour);

@@ -49,16 +49,15 @@ void Board::standardBoardSetup(){
 
 void Board::testBoardSetup(){
 
-    // Setting up rooks
-    grid[0][7] = new Pawn(Piece::ROOK, "white", {0, 7}, *this);
-    grid[0][3] = new King(Piece::KING, "white", {0, 3}, *this);
+    grid[7][0] = new Rook(Piece::ROOK, "black", {7, 0}, *this);
+    grid[3][4] = new King(Piece::KING, "black", {7, 0}, *this);
+    grid[1][0] = new King(Piece::KING, "white", {0, 1}, *this);
+    grid[0][0] = new Rook(Piece::ROOK, "white", {0, 0}, *this);
 
 }
 
 
 void Board::makeMove(Piece *p, Position newPos){
-    if (p->isValid(newPos)) {   
-
         if(grid[p->getX()][p->getY()] != nullptr && grid[p->getX()][p->getY()]->getType() == Piece::KING) { 
             
             // Since king has been selected, check if a castle move is possible
@@ -146,7 +145,6 @@ void Board::makeMove(Piece *p, Position newPos){
         // Move the piece to the new position
         grid[newPos.posX][newPos.posY] = p;
 
-
         // Update the piece's internal position
         p->setPosition(newPos);
 
@@ -198,9 +196,6 @@ void Board::makeMove(Piece *p, Position newPos){
                 grid[p->getX() + 1][p->getY()] = nullptr;
                 cout << "deleted white pawn" << endl;
         }
-        }
-
-         
 }
 
 void Board::undoMove(Position startPos, Position endPos) {
@@ -289,8 +284,8 @@ Position Board::findKingPosition(string colour) const {
 }
 
 // Method to check if p1's king is currently in check
-bool Board::isCheck(string playerColour) const {
-    // Find the positions of the white and black kings
+bool Board::isCheck(string playerColour) {
+   // Find the positions of the white and black kings
     Position kingPos = {-1, -1};
     kingPos = findKingPosition(playerColour);
     vector<Position> possibleMoves;
@@ -303,18 +298,60 @@ bool Board::isCheck(string playerColour) const {
                 possibleMoves = grid[i][j]->getPossibleMoves(); 
                 for (const auto& move : possibleMoves) {
                     if (move.posX == kingPos.posX && move.posY == kingPos.posY) {
-                        return true; // P1's King is in check
+                        return true; // P1's King is in check by this position
                     }
                 }
             }
         }
     }
 
-    return false; // P1's King is not in check
+    return false;
+}
+
+bool Board::isInCheckAfterMove(Position currPos, Position newPos, string colour) {
+    makeMove(grid[currPos.posX][currPos.posY], newPos);
+    bool isInCheck = isCheck(colour);
+    undoMove(currPos, newPos);
+    return isInCheck;
+}
+
+vector<Position> Board::getPositionsCausingCheck(string playerColour) {
+    // Find the positions of the white and black kings
+    Position kingPos = {-1, -1};
+    kingPos = findKingPosition(playerColour);
+    vector<Position> possibleMoves;
+    vector<Position> positionsCausingCheck;
+    
+    // Check if any piece can capture the king 
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if ((grid[i][j] != nullptr) && (grid[i][j]->getType() != Piece::Type::KING) && (grid[i][j]->getColour() != playerColour)) {
+                // See if any possible move of the piece is the same as the king's position
+                possibleMoves = grid[i][j]->getPossibleMoves(); 
+                for (const auto& move : possibleMoves) {
+                    if (move.posX == kingPos.posX && move.posY == kingPos.posY) {
+                        positionsCausingCheck.push_back(move); // P1's King is in check by this position
+                    }
+                }
+            }
+        }
+    }
+
+    return positionsCausingCheck;
 }
 
 bool Board::isCheckmate(string playerColour) {
-    return false;
+    int counter;
+    Position kingPos = {-1, -1};
+    kingPos = findKingPosition(playerColour);
+    vector<Position> kingPossibleMoves = grid[kingPos.posX][kingPos.posY]->getPossibleMoves();
+    vector<Position> possibleMoves;
+    for (const auto& move : kingPossibleMoves) {
+        if (isInCheckAfterMove(kingPos, move, playerColour)) {
+            ++counter;
+        }
+    }
+    return (counter == kingPossibleMoves.size() && isCheck(playerColour));
 }
 
 vector<vector<Piece*>> Board::getState() const {

@@ -28,8 +28,6 @@ vector<Position> Rook::getPossibleMoves() const {
         } else if(theBoard.getState()[i][pos.posY] != nullptr && theBoard.getState()[i][pos.posY]->getColour() != colour) {
             temp.push_back(tempPos); 
             break;
-        } else if(theBoard.getState()[i][pos.posY] != nullptr && theBoard.getState()[i][pos.posY]->getColour() == colour) {
-            break;
         } 
     }
 
@@ -43,8 +41,6 @@ vector<Position> Rook::getPossibleMoves() const {
             temp.push_back(tempPos); 
         } else if(theBoard.getState()[i][pos.posY] != nullptr && theBoard.getState()[i][pos.posY]->getColour() != colour) {
             temp.push_back(tempPos); 
-            break;
-        } else if(theBoard.getState()[i][pos.posY] != nullptr && theBoard.getState()[i][pos.posY]->getColour() == colour) {
             break;
         }
     }
@@ -61,8 +57,6 @@ vector<Position> Rook::getPossibleMoves() const {
         } else if(theBoard.getState()[pos.posX][i] != nullptr && theBoard.getState()[pos.posX][i]->getColour() != colour) {
             temp.push_back(tempPos); 
             break;
-        } else if(theBoard.getState()[pos.posX][i] != nullptr && theBoard.getState()[pos.posX][i]->getColour() == colour) {
-            break;
         }
     }
 
@@ -78,9 +72,7 @@ vector<Position> Rook::getPossibleMoves() const {
         } else if(theBoard.getState()[pos.posX][i] != nullptr && theBoard.getState()[pos.posX][i]->getColour() != colour) {
             temp.push_back(tempPos); 
             break;
-        } else if(theBoard.getState()[pos.posX][i] != nullptr && theBoard.getState()[pos.posX][i]->getColour() == colour) {
-            break;
-        }
+        } 
     }
 
     return temp;

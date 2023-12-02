@@ -317,12 +317,11 @@ bool Board::isInCheckAfterMove(Position currPos, Position newPos, string colour)
     return isInCheck;
 }
 
-vector<Position> Board::getPositionsCausingCheck(string playerColour) {
+Position Board::getPositionCausingCheck(string playerColour) {
     // Find the positions of the white and black kings
     Position kingPos = {-1, -1};
     kingPos = findKingPosition(playerColour);
     vector<Position> possibleMoves;
-    vector<Position> positionsCausingCheck;
     
     // Check if any piece can capture the king 
     for (int i = 0; i < 8; ++i) {
@@ -332,14 +331,12 @@ vector<Position> Board::getPositionsCausingCheck(string playerColour) {
                 possibleMoves = grid[i][j]->getPossibleMoves(); 
                 for (const auto& move : possibleMoves) {
                     if (move.posX == kingPos.posX && move.posY == kingPos.posY) {
-                        positionsCausingCheck.push_back(move); // P1's King is in check by this position
+                        return Position{i,j}; // P1's King is in check by this position
                     }
                 }
             }
         }
     }
-
-    return positionsCausingCheck;
 }
 
 bool Board::isCheckmate(string playerColour) {

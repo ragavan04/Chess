@@ -5,6 +5,8 @@
 #include <vector>
 #include <memory>
 #include "player.h"
+#include "graphicsdisplay.h"
+// #include "window.h"
 class Piece;
 class Player;
 class View;
@@ -20,6 +22,7 @@ class Board {
     //Player player1; 
     //Player player2; 
     vector<View*> views;
+    //Xwindow xw;
 
     public:
         Board();

@@ -8,6 +8,7 @@
 #include "board.h"
 #include "player.h"
 #include "human.h"
+#include "graphicsdisplay.h"
 
 using namespace std;
 

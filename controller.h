@@ -8,14 +8,14 @@
 #include "board.h"
 #include "player.h"
 #include "human.h"
+#include "computer.h"
+#include "levelone.h"
 #include "graphicsdisplay.h"
 
 using namespace std;
 
 class Controller{
     Board* theBoard;
-    // Player player1;
-    // Player player2;
     View* TD;
     // unique_ptr<View> GD; 
     bool isWin;
@@ -35,6 +35,7 @@ class Controller{
         void setupMode(Player* player1, Player* player2);
         void processSetupCommand(const string& command, Player* player1, Player* player2);
         void makeHumanMove(const string& playerColor, Player* player);
+        void makeComputerMove(const string& playerColour, Player* player);
 };
 
 

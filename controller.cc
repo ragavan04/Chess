@@ -26,18 +26,19 @@ void Controller::run(){
             // Validate whitePlayer and blackPlayer
             bool validWhitePlayer = (whitePlayer == "human") || (whitePlayer.find("computer") == 0 && whitePlayer.size() == 11 && isdigit(whitePlayer[9]) && whitePlayer[9] >= '1' && whitePlayer[9] <= '4');
             bool validBlackPlayer = (blackPlayer == "human") || (blackPlayer.find("computer") == 0 && blackPlayer.size() == 11 && isdigit(blackPlayer[9]) && blackPlayer[9] >= '1' && blackPlayer[9] <= '4');
-            
+            int whiteDifficulty = 0;
+            int blackDifficulty = 0;
             if (!validWhitePlayer || !validBlackPlayer) {
                 cerr << "Invalid player type. Player must be 'human' or 'computer[1-4]'." << endl;
                 continue;
             } else {
                 cout << "White: " << whitePlayer << " Black: " << blackPlayer << endl;
                 if (whitePlayer.find("computer") == 0){
-                    int whiteDifficulty = whitePlayer[9] - '0';
+                    whiteDifficulty = whitePlayer[9] - '0';
                     cout << "White player difficulty: " << whiteDifficulty << endl;
                 } 
                 if (blackPlayer.find("computer") == 0){
-                    int blackDifficulty = blackPlayer[9] - '0';
+                    blackDifficulty = blackPlayer[9] - '0';
                     cout << "Black player difficulty: " << blackDifficulty << endl;
                 } 
             }
@@ -45,13 +46,17 @@ void Controller::run(){
             if (whitePlayer == "human"){
                 player1 = new Human{"white", "human"};
             } else {
-                // create computer
+                if (whiteDifficulty == 1) {
+                    player1 = new LevelOne{"white", "computer"};
+                }
             }
 
             if (blackPlayer == "human"){
                 player2 = new Human{"black", "human"};
             } else {
-                // create computer
+                if (whiteDifficulty == 1) {
+                    player2 = new LevelOne{"black", "computer"};
+                }
             }
 
             theBoard->notifyObservers();
@@ -101,25 +106,36 @@ void Controller::run(){
                 continue;
             }
 
-            // if ((curPiece != nullptr) && (curPiece->isValid(tempEndPos))){
-            //     theBoard->makeMove(curPiece, tempEndPos);
-            // } else {
-            //     cout << "Invalid move. Try a different move" << endl;
-            // }
-
-
             // player 1 turn control
-            if (theBoard->getTurn() == 0 && player1->getPlayerType() == "human") {
-                cout << "inside white player:   " << endl;
-                makeHumanMove("white", player1);
+            if (theBoard->getTurn() == 0) {
+                // check if player 1 is a human
+                if (player1->getPlayerType() == "human"){
+                    cout << "inside white player:   " << endl;
+                    makeHumanMove("white", player1);
+                }
+                // check if player 1 is a computer
+                if (player1->getPlayerType() == "computer"){
+                    makeComputerMove("white", player1);
+                }
+            
             // player 2 turn control
-            } else if (theBoard->getTurn() == 1 && player2->getPlayerType() == "human") {
-                cout << "inside black player" << endl;
-                makeHumanMove("black", player2);
+            } else if (theBoard->getTurn() == 1) {
+                // check if player 2 is a human
+                if (player2->getPlayerType() == "human"){
+                    cout << "inside black player" << endl;
+                    makeHumanMove("black", player2);
+                }
+                // check if player 2 is a comptuer
+                if (player2->getPlayerType() == "computer"){
+                    makeComputerMove("black", player2);
+                }
             }
-            /*PRINTING OUT ALL MOVES!!!!
+
             player1->renderAvailableMoves(theBoard);
             player2->renderAvailableMoves(theBoard);
+                       
+            
+            /*PRINTING OUT ALL MOVES!!!!
             cout << "player 1 availble moves:" << endl;
             player1->printAvailableMoves();
             cout << endl << endl;
@@ -132,10 +148,14 @@ void Controller::run(){
         } else if (command == "setup") {
             cout << "inside setup mode" << endl;
             setupMode(player1, player2);
+            player1->renderAvailableMoves(theBoard);
+            player2->renderAvailableMoves(theBoard);
             theBoard->notifyObservers();
             cout << *theBoard << endl;
         } else if (command == "standard"){
             theBoard->standardBoardSetup();
+            player1->renderAvailableMoves(theBoard);
+            player2->renderAvailableMoves(theBoard);
             theBoard->notifyObservers();
             cout << *theBoard << endl;
 
@@ -366,3 +386,33 @@ void Controller::makeHumanMove(const string& playerColor, Player* player) {
     theBoard->notifyObservers();
     cout << *theBoard << endl;
 }
+
+
+void Controller::makeComputerMove(const string& playerColour, Player* player){
+    int computerLevel = player->getComputerLevel();
+    cout << playerColour << "(Computer Level " << computerLevel << ")." << endl;
+
+    if (computerLevel == 1){
+        LevelOne* levelOneComputer = dynamic_cast<LevelOne*>(player);
+        if (levelOneComputer != nullptr) {
+            // player is a Level1Computer
+            pair<Position, Position>  move = levelOneComputer->algorithm();
+            
+            Position startingPos = move.first;  // get the position of the piece to be moved
+            Position endingPos = move.second; // get the ending position of the piece to be moved
+            cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
+            cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
+            Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
+            
+            theBoard->makeMove(curPiece, endingPos);
+
+            
+        
+        } 
+    }
+    theBoard->notifyObservers();
+    cout << *theBoard << endl;
+}
+
+
+

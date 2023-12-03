@@ -339,6 +339,157 @@ Position Board::getPositionCausingCheck(string playerColour) {
     }
 }
 
+bool Board::canBlock(Position attacker, Position target, string playerColour) {
+
+    Position kingPos = findKingPosition(playerColour);
+    vector<Position> possibleMoves = grid[attacker.posX][attacker.posY]->getPossibleMoves();
+
+    
+    // if the piece putting the king at check is directly above the king
+    if(kingPos.posX < target.posX && kingPos.posY == target.posY) {
+
+        for(int i = kingPos.posX + 1; i < target.posX; ++i) {
+            Position tempPos;
+            tempPos.posX = i;
+            tempPos.posY = kingPos.posY;
+            for (const auto& move : possibleMoves) {
+                if (move.posX == tempPos.posX && move.posY == tempPos.posY) {
+                    cout << "Check can be blocked at: (" << tempPos.posX << "," << tempPos.posY << ")" << endl;
+                    return true;
+                }
+            }            
+
+        }        
+
+    }
+
+    // if the piece putting the king at check is directly below the king
+    if(kingPos.posX > target.posX && kingPos.posY == target.posY) {
+
+        for(int i = kingPos.posX - 1; i > target.posX; --i) {
+            Position tempPos;
+            tempPos.posX = i;
+            tempPos.posY = kingPos.posY;
+            for (const auto& move : possibleMoves) {
+                if (move.posX == tempPos.posX && move.posY == tempPos.posY) {
+                    cout << "Check can be blocked at: (" << tempPos.posX << "," << tempPos.posY << ")" << endl;
+                    return true;
+                }
+            }            
+
+        }        
+
+    }
+
+    // if the piece putting the king at check is directly to the right of king
+    if(kingPos.posX == target.posX && kingPos.posY < target.posY) {
+
+        for(int i = kingPos.posY + 1; i < target.posY; ++i) {
+            Position tempPos;
+            tempPos.posY = i;
+            tempPos.posX = kingPos.posX;
+            for (const auto& move : possibleMoves) {
+                if (move.posX == tempPos.posX && move.posY == tempPos.posY) {
+                    cout << "Check can be blocked at: (" << tempPos.posX << "," << tempPos.posY << ")" << endl;
+                    return true;
+                }
+            }            
+
+        }        
+
+    }
+
+    // if the piece putting the king at check is directly left the king
+    if(kingPos.posX == target.posX && kingPos.posY > target.posY) {
+
+        for(int i = kingPos.posY - 1; i > target.posY; --i) {
+            Position tempPos;
+            tempPos.posY = i;
+            tempPos.posX = kingPos.posX;
+            for (const auto& move : possibleMoves) {
+                if (move.posX == tempPos.posX && move.posY == tempPos.posY) {
+                    cout << "Check can be blocked at: (" << tempPos.posX << "," << tempPos.posY << ")" << endl;
+                    return true;
+                }
+            }            
+
+        }        
+
+    }
+
+    // if the piece putting the king at check is diagonal (top right) of the king
+    if(kingPos.posX < target.posX && kingPos.posY < target.posY) {
+
+        for(int i = kingPos.posX + 1, j = kingPos.posY + 1; i < target.posX && j < target.posY; ++i,++j) {
+            Position tempPos;
+            tempPos.posX = i;
+            tempPos.posY = j;
+            for (const auto& move : possibleMoves) {
+                if (move.posX == tempPos.posX && move.posY == tempPos.posY) {
+                    cout << "Check can be blocked at: (" << tempPos.posX << "," << tempPos.posY << ")" << endl;
+                    return true;
+                }
+            }  
+        }
+
+    }
+
+    // if the piece putting the king at check is diagonal (top left) of the king
+    if(kingPos.posX < target.posX && kingPos.posY > target.posY) {
+
+        for(int i = kingPos.posX + 1, j = kingPos.posY - 1; i < target.posX && j > target.posY; ++i,--j) {
+            Position tempPos;
+            tempPos.posX = i;
+            tempPos.posY = j;
+            for (const auto& move : possibleMoves) {
+                if (move.posX == tempPos.posX && move.posY == tempPos.posY) {
+                    cout << "Check can be blocked at: (" << tempPos.posX << "," << tempPos.posY << ")" << endl;
+                    return true;
+                }
+            }  
+        }
+
+    } 
+
+    // if the piece putting the king at check is diagonal (bottom right) of the king
+    if(kingPos.posX > target.posX && kingPos.posY < target.posY) {
+
+        for(int i = kingPos.posX - 1, j = kingPos.posY + 1; i > target.posX && j < target.posY; --i,++j) {
+            Position tempPos;
+            tempPos.posX = i;
+            tempPos.posY = j;
+            for (const auto& move : possibleMoves) {
+                if (move.posX == tempPos.posX && move.posY == tempPos.posY) {
+                    cout << "Check can be blocked at: (" << tempPos.posX << "," << tempPos.posY << ")" << endl;
+                    return true;
+                }
+            }  
+        }
+
+    }
+
+    // if the piece putting the king at check is diagonal (bottom left) of the king
+    if(kingPos.posX > target.posX && kingPos.posY > target.posY) {
+
+        for(int i = kingPos.posX - 1, j = kingPos.posY - 1; i > target.posX && j > target.posY; --i,--j) {
+            Position tempPos;
+            tempPos.posX = i;
+            tempPos.posY = j;
+            for (const auto& move : possibleMoves) {
+                if (move.posX == tempPos.posX && move.posY == tempPos.posY) {
+                    cout << "Check can be blocked at: (" << tempPos.posX << "," << tempPos.posY << ")" << endl;
+                    return true;
+                }
+            }  
+        }
+
+    }
+
+    return false;
+}
+
+
+ // should we make these functions const??
 bool Board::canCapture(Position attacker, Position target) {
     vector<Position> possibleMoves = grid[attacker.posX][attacker.posY]->getPossibleMoves();
     for (const auto& move : possibleMoves) {
@@ -363,11 +514,11 @@ bool Board::isCheckmate(string playerColour) {
             ++counter;
         }
     }
-    Position threat = getPositionCausingCheck(playerColour);
+    Position threat = getPositionCausingCheck(playerColour); // 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; i < 8; ++j) {
-            if (canCapture(Position{i, j}, threat)) {
-                return false;
+            if (grid[i][j] != nullptr && (canCapture(Position{i, j}, threat) || canBlock(Position{i,j}, threat, playerColour))) { // do we have to check for colour of the piece as well?? 
+                return false;                                                                                                     // it could make it more efficient to skip over own pieces
             }
         }
     }

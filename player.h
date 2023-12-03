@@ -6,6 +6,7 @@
 #include "piece.h"
 #include <map>
 #include <unordered_map>
+#include "board.h"
 
 class board;
 using namespace std;
@@ -36,6 +37,7 @@ class Player{
 
         bool addPieceType(char piece);
 
+        virtual int getComputerLevel() const { return 0; } // Default implementation for non-computer players
 
         virtual ~Player() {}; // virtual dtor   
 };

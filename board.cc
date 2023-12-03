@@ -311,9 +311,21 @@ bool Board::isCheck(string playerColour) {
 }
 
 bool Board::isInCheckAfterMove(Position currPos, Position newPos, string colour) {
-    makeMove(grid[currPos.posX][currPos.posY], newPos);
-    bool isInCheck = isCheck(colour);
-    undoMove(currPos, newPos);
+    bool isInCheck;
+    if (grid[newPos.posX][newPos.posY] != nullptr) {
+        char tmp = grid[newPos.posX][newPos.posY]->displayChar();
+        removePiece(newPos);
+        addPiece(grid[currPos.posX][currPos.posY]->displayChar(), newPos);
+        removePiece(currPos);
+        isInCheck = isCheck(colour);
+        addPiece(grid[newPos.posX][newPos.posY]->displayChar(), currPos);
+        removePiece(newPos);
+        addPiece(tmp, newPos);
+    } else {
+        makeMove(grid[currPos.posX][currPos.posY], newPos);
+        isInCheck = isCheck(colour);
+        undoMove(currPos, newPos);
+    }
     return isInCheck;
 }
 

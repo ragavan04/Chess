@@ -136,7 +136,7 @@ void Board::makeMove(Piece *p, Position newPos){
              
         
         } // end of king check
-        
+
         // Clear the piece's previous position on the board
         grid[p->getX()][p->getY()] = nullptr;
 

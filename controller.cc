@@ -366,5 +366,3 @@ void Controller::makeHumanMove(const string& playerColor, Player* player) {
     theBoard->notifyObservers();
     cout << *theBoard << endl;
 }
-
-

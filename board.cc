@@ -339,7 +339,20 @@ Position Board::getPositionCausingCheck(string playerColour) {
     }
 }
 
+bool Board::canCapture(Position attacker, Position target) {
+    vector<Position> possibleMoves = grid[attacker.posX][attacker.posY]->getPossibleMoves();
+    for (const auto& move : possibleMoves) {
+        if (move.posX == target.posX && move.posY == target.posY) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool Board::isCheckmate(string playerColour) {
+    if (!isCheck(playerColour)) {
+        return false;
+    }
     int counter;
     Position kingPos = {-1, -1};
     kingPos = findKingPosition(playerColour);
@@ -350,7 +363,15 @@ bool Board::isCheckmate(string playerColour) {
             ++counter;
         }
     }
-    return (counter == kingPossibleMoves.size() && isCheck(playerColour));
+    Position threat = getPositionCausingCheck(playerColour);
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; i < 8; ++j) {
+            if (canCapture(Position{i, j}, threat)) {
+                return false;
+            }
+        }
+    }
+    return (counter == kingPossibleMoves.size());
 }
 
 vector<vector<Piece*>> Board::getState() const {

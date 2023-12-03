@@ -48,6 +48,7 @@ class Board {
         bool isCheck(string colour);
         bool isInCheckAfterMove(Position currPos, Position newPos, string colour);
         Position getPositionCausingCheck(string playerColour);
+        bool canCapture(Position attacker, Position target);
         bool isCheckmate(string playerColour);
         vector<vector<Piece*>> getState() const; // returns the grid
         // void clone(Piece::Type pieceType); // makes a clone of the given piece 

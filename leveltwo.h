@@ -4,7 +4,7 @@
 
 class LevelTwo : public Computer {
 public:
-    pair<Position, Position> algorithm() const override;
+    pair<Position, Position> algorithm(Board* board) const override;
 };
 
 #endif

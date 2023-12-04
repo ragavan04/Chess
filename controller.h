@@ -10,6 +10,7 @@
 #include "human.h"
 #include "computer.h"
 #include "levelone.h"
+#include "levelthree.h"
 #include "graphicsdisplay.h"
 
 using namespace std;

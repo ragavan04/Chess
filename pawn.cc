@@ -3,7 +3,7 @@
 
 
 Pawn::Pawn(Type pieceType, string colour, Position pos, Board& board)
-        : Piece(pieceType, colour, pos, board), moved{false}, enpassant{false}, oneTimeToggle{true} {}
+        : Piece(pieceType, colour, pos, board, 1), moved{false}, enpassant{false}, oneTimeToggle{true}  {}
 
 
 vector<Position> Pawn::getPossibleMoves() const {
@@ -71,7 +71,7 @@ vector<Position> Pawn::getPossibleMoves() const {
         }
 
         if((pos.posX > 0) && theBoard.getState()[pos.posX - 1][pos.posY] == nullptr) {
-            cout << "pawn can move one space" << endl;
+            //cout << "pawn can move one space" << endl;
             Position tempPos{pos.posX - 1,pos.posY};
             temp.push_back(tempPos);      
         }

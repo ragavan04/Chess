@@ -4,7 +4,7 @@
 
 using namespace std;
 
-pair<Position, Position> LevelOne::algorithm() const {
+pair<Position, Position> LevelOne::algorithm(Board* board) const {
     // Get available moves from the map
     map<Position, vector<Position>> availableMoves = getAvailableMoves();
 

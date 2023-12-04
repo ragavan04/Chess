@@ -3,7 +3,7 @@
 
 
 Rook::Rook(Type pieceType, string colour, Position pos, Board& board)
-        : Piece(pieceType, colour, pos, board), moved{false} {}
+        : Piece(pieceType, colour, pos, board, 5), moved{false} {}
 
 
 
@@ -27,10 +27,8 @@ vector<Position> Rook::getPossibleMoves() const {
             temp.push_back(tempPos); 
         } else if(theBoard.getState()[i][pos.posY] != nullptr && theBoard.getState()[i][pos.posY]->getColour() != colour) {
             temp.push_back(tempPos); 
-            cout << "capture piece found" << endl;
             break;
         } else if(theBoard.getState()[i][pos.posY] != nullptr && theBoard.getState()[i][pos.posY]->getColour() == colour) {
-            cout << "own piece found piece found" << endl; 
             break;
         } 
     }
@@ -45,10 +43,8 @@ vector<Position> Rook::getPossibleMoves() const {
             temp.push_back(tempPos); 
         } else if(theBoard.getState()[i][pos.posY] != nullptr && theBoard.getState()[i][pos.posY]->getColour() != colour) {
             temp.push_back(tempPos);
-            cout << "capture piece found" << endl; 
             break;
         } else if(theBoard.getState()[i][pos.posY] != nullptr && theBoard.getState()[i][pos.posY]->getColour() == colour) {
-            cout << "own piece found piece found" << endl;
             break;
         }
     }
@@ -64,10 +60,8 @@ vector<Position> Rook::getPossibleMoves() const {
             temp.push_back(tempPos); 
         } else if(theBoard.getState()[pos.posX][i] != nullptr && theBoard.getState()[pos.posX][i]->getColour() != colour) {
             temp.push_back(tempPos);
-            cout << "capture piece found" << endl;  
             break;
         } else if(theBoard.getState()[pos.posX][i] != nullptr && theBoard.getState()[pos.posX][i]->getColour() == colour) {
-            cout << "own piece found piece found" << endl;
             break;
         }
     }
@@ -83,10 +77,8 @@ vector<Position> Rook::getPossibleMoves() const {
             temp.push_back(tempPos); 
         } else if(theBoard.getState()[pos.posX][i] != nullptr && theBoard.getState()[pos.posX][i]->getColour() != colour) {
             temp.push_back(tempPos); 
-            cout << "capture piece found" << endl; 
             break;
         } else if(theBoard.getState()[pos.posX][i] != nullptr && theBoard.getState()[pos.posX][i]->getColour() == colour) {
-            cout << "own piece found piece found" << endl;
             break;
         }
     }

@@ -203,10 +203,10 @@ void Controller::run(){
                 player1->renderAvailableMoves(theBoard);
                 player2->renderAvailableMoves(theBoard);
                 theBoard->notifyObservers();
+                cout << *theBoard << endl;
             } else {
                 cout << "1 or more player not initalized" << endl;
             }
-            cout << *theBoard << endl;
 
 
         } else if (command == "test"){
@@ -302,8 +302,8 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
             theBoard->addPiece(tolower(piece), position);
             cout << "Piece added: " << piece << " Position: " << letter_position << endl;
         } else if (blackPlacing){
-                theBoard->addPiece(toupper(piece), position);
-                cout << "Piece added: " << piece << " Position: " << letter_position << endl;
+            theBoard->addPiece(toupper(piece), position);
+            cout << "Piece added: " << piece << " Position: " << letter_position << endl;
         } else {
             cout << "No colour selected to place pieces. Enter '= colour' to let a player place pieces" << endl;
         }

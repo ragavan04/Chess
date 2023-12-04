@@ -39,7 +39,7 @@ class Player{
 
         virtual int getComputerLevel() const { return 0; } // Default implementation for non-computer players
 
-        virtual ~Player() {}; // virtual dtor   
+        virtual ~Player(); // virtual dtor   
 };
 
 

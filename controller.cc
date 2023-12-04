@@ -45,28 +45,35 @@ void Controller::run(){
 
             if (whitePlayer == "human"){
                 player1 = new Human{"white", "human"};
+                cout << "white human created" << endl;
             } else {
                 if (whiteDifficulty == 1) {
                     player1 = new LevelOne{"white", "computer"};
+                    cout << "white lvl 1 created" << endl;
                 }
                 if (whiteDifficulty == 3){
                     player1 = new LevelThree("white", "computer");
+                    cout << "white lvl 3 created" << endl;
                 }
             }
 
             if (blackPlayer == "human"){
                 player2 = new Human{"black", "human"};
+                cout << "black human created" << endl;
             } else {
                 if (blackDifficulty == 1) {
                     player2 = new LevelOne{"black", "computer"};
+                    cout << "black lvl 1 created" << endl;
                 }
                 if (blackDifficulty == 3){
                     player2 = new LevelThree("black", "computer");
+                    cout << "black lvl 3 created" << endl;
                 }
             }
 
             theBoard->notifyObservers();
             cout << *theBoard;
+            cout << "board dref" << endl;
 
 
             // Start a new game
@@ -95,9 +102,12 @@ void Controller::run(){
                     cout << "White Wins!" << endl;
                     player1Score += 1;
                 }
-                displayScore();
                 theBoard->clearBoard();
                 cout << "New game started" << endl;
+                delete player1;
+                player1 = nullptr;
+                delete player2;
+                player2 = nullptr;
 
             } else {
                 cout << "No game in progress, cannot end game" << endl;
@@ -137,6 +147,31 @@ void Controller::run(){
                 }
             }
 
+            
+            if (theBoard->isCheckmate("white")){
+                cout << "Checkmate! Black wins!" << endl;
+                theBoard->clearBoard();
+                cout << "New game started" << endl;
+                continue;
+            }
+
+            
+            if (theBoard->isCheckmate("black")){
+                cout << "Checkmate! White wins!" << endl;
+                theBoard->clearBoard();
+                cout << "New game started" << endl;
+                continue;
+            }
+
+            if (theBoard->isCheck("white")){
+                cout << "White is in check" << endl; 
+            } 
+
+            if (theBoard->isCheck("black")){
+                cout << "Black is in check" << endl;
+            }
+
+
             player1->renderAvailableMoves(theBoard);
             player2->renderAvailableMoves(theBoard);
                        
@@ -153,16 +188,24 @@ void Controller::run(){
             theBoard->switchTurns(); // switching the turn
         } else if (command == "setup") {
             cout << "inside setup mode" << endl;
-            setupMode(player1, player2);
-            player1->renderAvailableMoves(theBoard);
-            player2->renderAvailableMoves(theBoard);
-            theBoard->notifyObservers();
-            cout << *theBoard << endl;
+            if (player1 != nullptr && player2 != nullptr){
+                setupMode(player1, player2);
+                player1->renderAvailableMoves(theBoard);
+                player2->renderAvailableMoves(theBoard);
+                theBoard->notifyObservers();
+                cout << *theBoard << endl;
+            } else {
+                cout << "1 or more player not initalized" << endl;
+            }
         } else if (command == "standard"){
-            theBoard->standardBoardSetup();
-            player1->renderAvailableMoves(theBoard);
-            player2->renderAvailableMoves(theBoard);
-            theBoard->notifyObservers();
+            if (player1 != nullptr && player2 != nullptr){
+                theBoard->standardBoardSetup();
+                player1->renderAvailableMoves(theBoard);
+                player2->renderAvailableMoves(theBoard);
+                theBoard->notifyObservers();
+            } else {
+                cout << "1 or more player not initalized" << endl;
+            }
             cout << *theBoard << endl;
 
 
@@ -176,18 +219,6 @@ void Controller::run(){
     } 
 }
 
-
-// Player Controller::setupPlayer(const string playerType, Player::Colour colour) {
-//     if (playerType == "human") {
-//         return Player(/* parameters for human player */);
-//     } else if (playerType.find("computer") == 0) {
-//         // Extract difficulty level and create a computer player
-//         int difficulty = std::stoi(playerType.substr(8)); // Assuming format "computerX"
-//         return Player(/* parameters for computer player with difficulty */);
-//     }
-//     // if input is unrecognized, i.e not human or computer
-//     return Player(/* parameters for invalid*/);
-// }
 
 void Controller::displayScore() const{
     cout << "Final Score:" << endl;
@@ -235,38 +266,44 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
    
     Position position = convertCoords(letter_position);
     
-    if (action == '+' && (position.posX != -1 && position.posY != -1)) {
+    if (action == '='){
+        if (colour == "white"){
+            whitePlacing = true;
+            blackPlacing = false;
+        } else if (colour == "black"){
+            whitePlacing = false;
+            blackPlacing = true;
+        } else {
+            cout << "Invalid colour" << endl;
+        }
+    } else if (action == '+' && (position.posX != -1 && position.posY != -1)) {
         // Check if the piece can be added based on the count
         
-        bool canAddPiece = (whitePlacing ? player1->addPieceType(piece) : player2->addPieceType(piece));
-        
-        // bool canAddPiece;
-        // if (whitePlacing){
-        //     canAddPiece = player1->addPieceType(piece);
-        // } else if (blackPlacing){
-        //     canAddPiece = player2->addPieceType(piece);
-        // }
+        bool canAddPiece = false;
+        if (whitePlacing && !theBoard->isCheck("black") && !theBoard->isCheck("white") && !((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)) && player1->addPieceType(piece)) canAddPiece = true;
+        if (blackPlacing && !theBoard->isCheck("black") && !theBoard->isCheck("white") && !((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)) && player2->addPieceType(piece)) canAddPiece = true;
 
-        if (!canAddPiece) {
+        if (!whitePlacing && !blackPlacing){
+            cout << "no colour selcted" << endl;
+            return;
+        } else if (theBoard->isCheck("white") || theBoard->isCheck("black")){
+            cout << "Cannot place king in check in setup. Please remove the piece commiting the check before continuning" << endl;
+            return;
+        } else if ((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)){
+            cout << "Cannot place pawn at row 1 or row 8" << endl;
+            return;
+        } else if (!canAddPiece) {
             cout << "Exceeded the standard amount for this piece type." << endl;
             return;
         }
         
         // Add piece to the board
         if (whitePlacing){
-            if ((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)){ // check if user is place pawn at row 1 or 8
-                cout << "Cannot place pawn at row 1 or row 8" << endl;
-            } else {
-                theBoard->addPiece(tolower(piece), position);
-                cout << "Piece added: " << piece << " Position: " << letter_position << endl;
-            }
+            theBoard->addPiece(tolower(piece), position);
+            cout << "Piece added: " << piece << " Position: " << letter_position << endl;
         } else if (blackPlacing){
-            if ((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)){ // check if user is place pawn at row 1 or 8
-                cout << "Cannot place pawn at row 1 or row 8" << endl;
-            } else {
                 theBoard->addPiece(toupper(piece), position);
                 cout << "Piece added: " << piece << " Position: " << letter_position << endl;
-            }
         } else {
             cout << "No colour selected to place pieces. Enter '= colour' to let a player place pieces" << endl;
         }
@@ -291,16 +328,6 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
         }
         
     
-    } else if (action == '='){
-        if (colour == "white"){
-            whitePlacing = true;
-            blackPlacing = false;
-        } else if (colour == "black"){
-            whitePlacing = false;
-            blackPlacing = true;
-        } else {
-            cout << "Invalid colour" << endl;
-        }
     }
 }
 

@@ -339,6 +339,44 @@ Position Board::getPositionCausingCheck(string playerColour) {
     }
 }
 
+bool Board::isStalemate(string playerColour) {
+
+    int checkCount = 0;
+
+    // if a check exists, a stalemate cannot exist
+    if(isCheck(playerColour)) {
+        return false;
+    }
+
+    // check for each pieces available moves
+    for(int i = 0; i < 8; ++i) {
+        for(int j = 0; j < 8; ++j) {
+
+            if(grid[i][j] != nullptr && grid[i][j]->getColour() == playerColour) {
+
+                vector<Position> moves = grid[i][j]->getPossibleMoves();
+                if(!moves.empty()) {
+                    return false;
+                }
+            } 
+        }
+    }
+
+    Position kingPos = findKingPosition(playerColour);
+    vector<Position> kingMoves = grid[kingPos.posX][kingPos.posY]->getPossibleMoves();
+
+
+    for(size_t i = 0; i < kingMoves.size(); ++i) {
+        if(isInCheckAfterMove(kingPos,kingMoves[i],playerColour)) {
+            checkCount += 1;
+        }
+
+    }
+    
+    return (checkCount == kingMoves.size());
+    
+}
+
 bool Board::canBlock(Position attacker, Position target, string playerColour) {
 
     Position kingPos = findKingPosition(playerColour);

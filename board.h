@@ -48,6 +48,7 @@ class Board {
         bool isCheck(string colour);
         bool isInCheckAfterMove(Position currPos, Position newPos, string colour);
         Position getPositionCausingCheck(string playerColour);
+        bool isStalemate(string playerColour);
         bool canBlock(Position attacker, Position target, string playerColour);
         bool canCapture(Position attacker, Position target);
         bool isCheckmate(string playerColour);

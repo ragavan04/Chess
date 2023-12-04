@@ -54,7 +54,6 @@ class Piece{
 };
 
 
-/////////////////////////////////////// MAKE THESE VIRTUAL LATER
 
 
 #endif

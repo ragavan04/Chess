@@ -104,10 +104,6 @@ void Controller::run(){
                 }
                 theBoard->clearBoard();
                 cout << "New game started" << endl;
-                delete player1;
-                player1 = nullptr;
-                delete player2;
-                player2 = nullptr;
 
             } else {
                 cout << "No game in progress, cannot end game" << endl;

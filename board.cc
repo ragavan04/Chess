@@ -573,14 +573,15 @@ void Board::clearBoard() {
             grid[i][j] = nullptr;
         }
     }
-    for (auto view : views) {
-        delete view;
-    }
-    views.clear();
     turn = 0;
     isWin = false;
 }
 
 Board::~Board() {
     clearBoard();
+    for (auto view : views) {
+        delete view;
+    }
+    views.clear();
+    
 }

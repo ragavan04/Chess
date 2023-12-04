@@ -84,3 +84,10 @@ bool Player::addPieceType(char piece) {
     return true;  // Indicate successful addition
 }
 
+Player::~Player() {
+    // Assuming lostPieces holds dynamically allocated Piece objects
+    for (auto piece : lostPieces) {
+        delete piece;
+    }
+    lostPieces.clear();
+}

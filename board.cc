@@ -42,11 +42,11 @@ void Board::standardBoardSetup(){
     grid[7][5] = new Bishop(Piece::BISHOP, "black", {7, 5}, *this);
 
     // Setting up queens
-    grid[0][3] = new Queen(Piece::QUEEN, "white", {0, 3}, *this);
+    grid[0][4] = new Queen(Piece::QUEEN, "white", {0, 3}, *this);
     grid[7][3] = new Queen(Piece::QUEEN, "black", {7, 3}, *this);
 
     // Setting up kings
-    grid[0][4] = new King(Piece::KING, "white", {0, 4}, *this);
+    grid[0][3] = new King(Piece::KING, "white", {0, 4}, *this);
     grid[7][4] = new King(Piece::KING, "black", {7, 4}, *this);
 }
 
@@ -311,21 +311,9 @@ bool Board::isCheck(string playerColour) {
 }
 
 bool Board::isInCheckAfterMove(Position currPos, Position newPos, string colour) {
-    bool isInCheck;
-    if (grid[newPos.posX][newPos.posY] != nullptr) {
-        char tmp = grid[newPos.posX][newPos.posY]->displayChar();
-        removePiece(newPos);
-        addPiece(grid[currPos.posX][currPos.posY]->displayChar(), newPos);
-        removePiece(currPos);
-        isInCheck = isCheck(colour);
-        addPiece(grid[newPos.posX][newPos.posY]->displayChar(), currPos);
-        removePiece(newPos);
-        addPiece(tmp, newPos);
-    } else {
-        makeMove(grid[currPos.posX][currPos.posY], newPos);
-        isInCheck = isCheck(colour);
-        undoMove(currPos, newPos);
-    }
+    makeMove(grid[currPos.posX][currPos.posY], newPos);
+    bool isInCheck = isCheck(colour);
+    undoMove(currPos, newPos);
     return isInCheck;
 }
 

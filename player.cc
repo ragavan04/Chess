@@ -46,6 +46,35 @@ void Player::renderAvailableMoves(Board* board) {
     }  
 }
 
+// void Player::renderAvailableMoves(Board* board) {
+//     availableMoves.clear(); // Clearing the existing moves
+
+//     bool kingInCheck = board->isCheck(this->getColour());
+
+//     for (int x = 0; x < 8; x++) { 
+//         for (int y = 0; y < 8; y++) {
+//             Position pos = {x, y};
+//             Piece* piece = board->getState()[x][y];
+//             if (piece != nullptr && piece->getColour() == this->getColour()) {
+//                 vector<Position> moves = piece->getPossibleMoves();
+//                 vector<Position> validMoves;
+
+//                 for (const Position& move : moves) {
+//                     if (!kingInCheck || board->isInCheckAfterMove(pos, move, this->getColour())) {
+//                         validMoves.push_back(move);
+//                     }
+//                 }
+
+//                 if (!validMoves.empty()) {
+//                     availableMoves[pos] = validMoves;
+//                 }
+//             }
+//         }
+//     }  
+// }
+
+
+
 void Player::printAvailableMoves() const {
     for (const auto& pair : availableMoves) {
         const Position& startPos = pair.first;

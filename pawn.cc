@@ -19,7 +19,7 @@ vector<Position> Pawn::getPossibleMoves() const {
 
     // if the pawn is white, it can only move down on the board
     if(getColour() == "white" && pos.posX < 7) { 
-        if((pos.posX < 6) && !moved && theBoard.getState()[pos.posX + 2][pos.posY] == nullptr) {
+        if((pos.posX < 6) && !moved && theBoard.getState()[pos.posX + 1][pos.posY] == nullptr && theBoard.getState()[pos.posX + 2][pos.posY] == nullptr) {
             Position tempPos{pos.posX + 2,pos.posY};
             temp.push_back(tempPos);        
         }
@@ -65,7 +65,7 @@ vector<Position> Pawn::getPossibleMoves() const {
     }
 
      if(getColour() == "black" && pos.posX > 0) { 
-        if((pos.posX > 1) && !moved && theBoard.getState()[pos.posX - 2][pos.posY] == nullptr) {
+        if((pos.posX > 1) && !moved && theBoard.getState()[pos.posX - 1][pos.posY] == nullptr && theBoard.getState()[pos.posX - 2][pos.posY] == nullptr) {
             Position tempPos{pos.posX - 2,pos.posY};
             temp.push_back(tempPos);        
         }

@@ -4,7 +4,7 @@
 
 
 King::King(Type pieceType, string colour, Position pos, Board& board)
-    : Piece(pieceType, colour, pos, board), moved{false} {}
+    : Piece(pieceType, colour, pos, board, 100), moved{false} {}
 
 vector<Position> King::getPossibleMoves() const {
     vector<Position> moves;

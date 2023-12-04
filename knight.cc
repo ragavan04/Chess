@@ -4,7 +4,7 @@ using namespace std;
 
 // Ctor for Knight
 Knight::Knight(Type pieceType, string colour, Position pos, Board& board)
-        : Piece(pieceType, colour, pos, board) {}
+        : Piece(pieceType, colour, pos, board, 3) {}
 
 // Returns a vector of possible positions that the Knight can move on the board
 vector<Position> Knight::getPossibleMoves() const {

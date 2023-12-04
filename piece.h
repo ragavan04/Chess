@@ -17,6 +17,10 @@ struct Position{
         if (posX == other.posX) return posY < other.posY;
         return posX < other.posX;
     }
+    friend bool operator==(const Position& lhs, const Position& rhs) {
+        return lhs.posX == rhs.posX && lhs.posY == rhs.posY;
+    }
+
 };
 
 class Piece{
@@ -29,10 +33,11 @@ class Piece{
         string colour;
         Position pos;
         Board& theBoard;
+        int score;
         
 
     public:
-        Piece(Type pieceType, string colour, Position pos, Board& board);
+        Piece(Type pieceType, string colour, Position pos, Board& board, int score);
 
         // Accessor methods
         int getX() const;
@@ -40,6 +45,7 @@ class Piece{
         void setPosition(const Position& position);
         string getColour() const;
         Type getType() const;
+        int getScoreValue() const;
 
         virtual vector<Position> getPossibleMoves() const = 0;
         bool isValid(Position newPos) const;

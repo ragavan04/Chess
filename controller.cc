@@ -49,13 +49,19 @@ void Controller::run(){
                 if (whiteDifficulty == 1) {
                     player1 = new LevelOne{"white", "computer"};
                 }
+                if (whiteDifficulty == 3){
+                    player1 = new LevelThree("white", "computer");
+                }
             }
 
             if (blackPlayer == "human"){
                 player2 = new Human{"black", "human"};
             } else {
-                if (whiteDifficulty == 1) {
+                if (blackDifficulty == 1) {
                     player2 = new LevelOne{"black", "computer"};
+                }
+                if (blackDifficulty == 3){
+                    player2 = new LevelThree("black", "computer");
                 }
             }
 
@@ -396,7 +402,7 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
         LevelOne* levelOneComputer = dynamic_cast<LevelOne*>(player);
         if (levelOneComputer != nullptr) {
             // player is a Level1Computer
-            pair<Position, Position>  move = levelOneComputer->algorithm();
+            pair<Position, Position>  move = levelOneComputer->algorithm(theBoard);
             
             Position startingPos = move.first;  // get the position of the piece to be moved
             Position endingPos = move.second; // get the ending position of the piece to be moved
@@ -404,10 +410,23 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
             
-            theBoard->makeMove(curPiece, endingPos);
+            theBoard->makeMove(curPiece, endingPos);        
+        } 
+    }
 
+    if (computerLevel == 3){
+         LevelThree* levelThreeComputer = dynamic_cast<LevelThree*>(player);
+        if (levelThreeComputer != nullptr) {
+            // player is a Level1Computer
+            pair<Position, Position>  move = levelThreeComputer->algorithm(theBoard);
             
-        
+            Position startingPos = move.first;  // get the position of the piece to be moved
+            Position endingPos = move.second; // get the ending position of the piece to be moved
+            cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
+            cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
+            Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
+            
+            theBoard->makeMove(curPiece, endingPos);        
         } 
     }
     theBoard->notifyObservers();

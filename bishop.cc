@@ -2,7 +2,7 @@
 #include "board.h"
 
 Bishop::Bishop(Type pieceType, string colour, Position pos, Board& board)
-    : Piece(pieceType, colour, pos, board) {}
+    : Piece(pieceType, colour, pos, board, 3) {}
 
 vector<Position> Bishop::getPossibleMoves() const {
     vector<Position> possibleMoves;

@@ -4,7 +4,7 @@ using namespace std;
 
 // Ctor for Queen
 Queen::Queen(Type pieceType, string colour, Position pos, Board& board)
-        : Piece(pieceType, colour, pos, board) {}
+        : Piece(pieceType, colour, pos, board, 9) {}
 
 // Returns a vector of possible positions that the Queen can move on the board
 vector<Position> Queen::getPossibleMoves() const {

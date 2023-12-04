@@ -11,31 +11,51 @@ vector<Position> Queen::getPossibleMoves() const {
     // Create vector to be populated
     vector<Position> possibleMoves;
 
-    // Horizontal moves
-    for (int i = 0; i < 8; ++i) {
-        if (i != pos.posY) {
-            if (theBoard.getState()[pos.posX][i] == nullptr) {
-                possibleMoves.push_back(Position{ pos.posX, i }); // Horizontal move
-            } else if (theBoard.getState()[pos.posX][i]->getColour() != getColour()) {
-                possibleMoves.push_back(Position{ pos.posX, i }); // Horizontal move
-                break;
-            } else {
-                break;
-            }
+    // West
+    for (int i = pos.posY - 1; i >= 0; --i) {
+        if (theBoard.getState()[pos.posX][i] == nullptr) {
+            possibleMoves.push_back(Position{ pos.posX, i });
+        } else if (theBoard.getState()[pos.posX][i]->getColour() != getColour()) {
+            possibleMoves.push_back(Position{ pos.posX, i });
+            break;
+        } else {
+            break;
         }
     }
 
-    // Vertical moves
-    for (int i = 0; i < 8; ++i) {
-        if (i != pos.posX) {
-            if (theBoard.getState()[i][pos.posY] == nullptr) {
-                possibleMoves.push_back(Position{ i, pos.posY }); // Vertical move
-            } else if (theBoard.getState()[i][pos.posY]->getColour() != getColour()) {
-                possibleMoves.push_back(Position{ i, pos.posY }); // Vertical move
-                break;
-            } else {
-                break;
-            }
+    // East
+    for (int i = pos.posY + 1; i < 8; ++i) {
+        if (theBoard.getState()[pos.posX][i] == nullptr) {
+            possibleMoves.push_back(Position{ pos.posX, i });
+        } else if (theBoard.getState()[pos.posX][i]->getColour() != getColour()) {
+            possibleMoves.push_back(Position{ pos.posX, i });
+            break;
+        } else {
+            break;
+        }
+    }
+
+    // North
+    for (int i = pos.posX - 1; i >= 0; --i) {
+        if (theBoard.getState()[i][pos.posY] == nullptr) {
+            possibleMoves.push_back(Position{ i, pos.posY });
+        } else if (theBoard.getState()[i][pos.posY]->getColour() != getColour()) {
+            possibleMoves.push_back(Position{ i, pos.posY });
+            break;
+        } else {
+            break;
+        }
+    }
+
+    // South
+    for (int i = pos.posX + 1; i < 8; ++i) {
+        if (theBoard.getState()[i][pos.posY] == nullptr) {
+            possibleMoves.push_back(Position{ i, pos.posY });
+        } else if (theBoard.getState()[i][pos.posY]->getColour() != getColour()) {
+            possibleMoves.push_back(Position{ i, pos.posY });
+            break;
+        } else {
+            break;
         }
     }
 

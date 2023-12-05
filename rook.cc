@@ -14,8 +14,6 @@ vector<Position> Rook::getPossibleMoves() const {
     string oppColour;
     vector<Position> temp; 
 
-    
-    ////////////// INCLUDE CASTLING
 
     // checking west side of rook
     for(int i = pos.posX - 1; i >= 0; --i) {

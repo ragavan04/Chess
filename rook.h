@@ -11,7 +11,6 @@ public:
     // Override the getPossibleMoves method for the Knight
     vector<Position> getPossibleMoves() const override;
 
-    // Override the isValid method for the Knight
     char displayChar() const;
 };
 

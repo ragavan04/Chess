@@ -13,7 +13,7 @@ public:
     pair<Position, Position> algorithm(Board* board) const override;
     int evaluateMove(const pair<Position, Position> &move, Board* board) const;
     bool avoidsCapture(const pair<Position, Position> &move, Board* board, const string& playerColour) const;
-    int getComputerLevel() const override { return 4; }
+    int getComputerLevel() const override { return 3; }
 };
 
 #endif

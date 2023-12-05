@@ -29,23 +29,6 @@ std::map<Position, std::vector<Position>> Player::getAvailableMoves() const {
     return availableMoves;
 }
 
-// void Player::renderAvailableMoves(Board* board) {
-//     availableMoves.clear(); // Clearing the existing moves
-
-//     for (int x = 0; x < 8; x++) { 
-//         for (int y = 0; y < 8; y++) {
-//             Position pos = {x, y};
-//             Piece* piece = board->getState()[x][y];
-//             if (piece != nullptr && piece->getColour() == this->getColour()) {
-//                 // Get possible moves for this piece
-//                 vector<Position> moves = piece->getPossibleMoves();
-//                 // Add to the map
-//                 availableMoves[pos] = moves;
-//             }
-//         }
-//     }  
-// }
-
 
 void Player::renderAvailableMoves(Board* board) {
     availableMoves.clear(); // Clear previous moves

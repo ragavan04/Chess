@@ -166,7 +166,14 @@ void Controller::run(){
             if (theBoard->isCheck("black")){
                 cout << "Black is in check" << endl;
             }
+            
+            if (theBoard->isStalemate("white")){
+                cout << "Stalemate" << endl; 
+            }
 
+            if (theBoard->isStalemate("black")){
+                cout << "Stalemate" << endl; 
+            }
 
             player1->renderAvailableMoves(theBoard);
             player2->renderAvailableMoves(theBoard);

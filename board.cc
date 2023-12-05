@@ -88,7 +88,7 @@ void Board::makeMove(Piece *p, Position newPos){
                                 Position newTempPos{newPos.posX,newPos.posY + 1};
                                 grid[newTempPos.posX][newTempPos.posY] = rook;
                                 rook->setPosition(newTempPos);
-                                delete grid[king->getX()][i];
+                                grid[p->getX()][p->getY()];
                                 rook->setMove();
                             }
 
@@ -142,6 +142,7 @@ void Board::makeMove(Piece *p, Position newPos){
         } // end of king check
 
         // Clear the piece's previous position on the board
+        
         grid[p->getX()][p->getY()] = nullptr;
 
         // Capture handling if there is a piece at newPos
@@ -205,20 +206,48 @@ void Board::makeMove(Piece *p, Position newPos){
         }
 }
 
-void Board::undoMove(Position startPos, Position endPos) {
+void Board::undoMove(Piece* dup,bool captured, Position startPos, Position endPos) {
     // Get the piece at the end position
-    Piece* movedPiece = grid[endPos.posX][endPos.posY];
+    // Piece* movedPiece = grid[endPos.posX][endPos.posY];
 
-    // Move the piece back to its original position
+    // // Move the piece back to its original position
+    // grid[startPos.posX][startPos.posY] = movedPiece;
+    // grid[endPos.posX][endPos.posY] = nullptr;
+
+    // // Update the piece's position
+    // if (movedPiece) {
+    //     movedPiece->setPosition(startPos);
+    // }
+
+    Piece *movedPiece = grid[endPos.posX][endPos.posY];
     grid[startPos.posX][startPos.posY] = movedPiece;
-    grid[endPos.posX][endPos.posY] = nullptr;
 
-    // Update the piece's position
-    if (movedPiece) {
+    if(movedPiece != nullptr) {
         movedPiece->setPosition(startPos);
     }
 
-    notifyObservers(startPos.posX, startPos.posY, endPos.posX, endPos.posY);
+    // if(captured == nullptr) {
+    //     grid[endPos.posX][endPos.posY] = nullptr;
+
+    // } else if(captured != nullptr) {
+    //     cout << "captured move has been put back at (" << endPos.posX << "," << endPos.posY << ")" << endl;
+    //     grid[endPos.posX][endPos.posY] = captured;
+    //     captured->setPosition(endPos);
+    // }
+
+    if(!captured) {
+       grid[endPos.posX][endPos.posY] = nullptr; 
+    } else if(captured) {
+        grid[endPos.posX][endPos.posY] = dup;
+        dup->setPosition(endPos);
+    }
+
+
+    if(grid[endPos.posX][endPos.posY] != nullptr) {
+        cout << grid[endPos.posX][endPos.posY]->displayChar() << " has been stored properly" << endl;
+    }
+
+    //notifyObservers();
 }
 
 
@@ -287,6 +316,7 @@ Position Board::findKingPosition(string colour) const {
             }
         }
     }
+    return Position{-1,-1};
 }
 
 // Method to check if p1's king is currently in check
@@ -294,6 +324,10 @@ bool Board::isCheck(string playerColour) {
    // Find the positions of the white and black kings
     Position kingPos = {-1, -1};
     kingPos = findKingPosition(playerColour);
+    if(kingPos.posX == -1 && kingPos.posY == -1) {
+        return false;
+    }
+
     vector<Position> possibleMoves;
     
     // Check if any piece can capture the king 
@@ -314,17 +348,89 @@ bool Board::isCheck(string playerColour) {
     return false;
 }
 
-bool Board::isInCheckAfterMove(Position currPos, Position newPos, string colour) {
-    makeMove(grid[currPos.posX][currPos.posY], newPos);
-    bool isInCheck = isCheck(colour);
-    undoMove(currPos, newPos);
-    return isInCheck;
+
+Piece* Board::duplicate(Piece* p) {
+
+
+    if(p->getType() == Piece::PAWN) {
+        Pawn* oldPawn = dynamic_cast<Pawn*>(p);
+        Pawn* newPawn = new Pawn(Piece::BISHOP,p->getColour(),Position{p->getX(),p->getY()}, *this); 
+
+        if(oldPawn->getEnpassant()) {
+            newPawn->setEnpassantTrue();    
+        } else {
+            newPawn->setEnpassantFalse();
+        }
+
+        if(oldPawn->getMoved()) {
+            newPawn->setMove();
+        }
+
+        if(!oldPawn->getToggle()) {
+            newPawn->setToggle();
+        }
+        
+        return newPawn;
+
+    } else if(p->getType() == Piece::BISHOP) {    
+        return new Bishop(Piece::BISHOP,p->getColour(),Position{p->getX(),p->getY()}, *this);
+    } else if(p->getType() == Piece::KING) {
+        King* oldKing = dynamic_cast<King*>(p);
+        King* newKing = new King(Piece::BISHOP,p->getColour(),Position{p->getX(),p->getY()}, *this); 
+
+        if(oldKing->getMove()) {
+            newKing->setMove();
+        }
+        
+        return newKing;
+    } else if(p->getType() == Piece::KNIGHT) {
+        return new Knight(Piece::BISHOP,p->getColour(),Position{p->getX(),p->getY()}, *this); 
+    } else if(p->getType() == Piece::QUEEN) {
+        return new Queen(Piece::BISHOP,p->getColour(),Position{p->getX(),p->getY()}, *this);
+    } else if(p->getType() == Piece::ROOK) {
+        Rook* oldRook = dynamic_cast<Rook*>(p);
+        Rook* newRook = new Rook(Piece::BISHOP,p->getColour(),Position{p->getX(),p->getY()}, *this); 
+
+        if(oldRook->getMove()) {
+            newRook->setMove();
+        }
+        return newRook;
+    } 
+
 }
+
+
+
+bool Board::isInCheckAfterMove(Position currPos, Position newPos, string colour) {
+    // makeMove(grid[currPos.posX][currPos.posY], newPos);
+    // bool isInCheck = isCheck(colour);
+    // undoMove(currPos, newPos);
+    // return isInCheck;
+    bool captured = false;
+    Piece* dup;
+    if(grid[newPos.posX][newPos.posY] != nullptr) {
+        cout << "capture stored " << grid[newPos.posX][newPos.posY]->displayChar() << endl;
+        captured = true;  
+        dup = duplicate(grid[newPos.posX][newPos.posY]); 
+        cout << "Duplicate piece is: " << dup->displayChar() << endl;
+    }
+
+    makeMove(grid[currPos.posX][currPos.posY],newPos);
+    bool isInCheck = isCheck(colour);
+    undoMove(dup,captured,currPos,newPos);
+    return isInCheck;    
+}
+
+
+
 
 Position Board::getPositionCausingCheck(string playerColour) {
     // Find the positions of the white and black kings
     Position kingPos = {-1, -1};
-    kingPos = findKingPosition(playerColour);
+    kingPos = findKingPosition(playerColour); 
+    if(kingPos.posX == -1 && kingPos.posY == -1) {
+        return Position{-1,-1};
+    }
     vector<Position> possibleMoves;
     
     // Check if any piece can capture the king 
@@ -341,6 +447,8 @@ Position Board::getPositionCausingCheck(string playerColour) {
             }
         }
     }
+
+    return Position{-1,-1};
 }
 
 bool Board::isStalemate(string playerColour) {
@@ -356,7 +464,7 @@ bool Board::isStalemate(string playerColour) {
     for(int i = 0; i < 8; ++i) {
         for(int j = 0; j < 8; ++j) {
 
-            if(grid[i][j] != nullptr && grid[i][j]->getColour() == playerColour) {
+            if(grid[i][j] != nullptr && grid[i][j]->getColour() == playerColour && grid[i][j]->getType() != Piece::KING) {
 
                 vector<Position> moves = grid[i][j]->getPossibleMoves();
                 if(!moves.empty()) {
@@ -367,6 +475,9 @@ bool Board::isStalemate(string playerColour) {
     }
 
     Position kingPos = findKingPosition(playerColour);
+    if(kingPos.posX == -1 && kingPos.posY == -1) {
+        return false;
+    }
     vector<Position> kingMoves = grid[kingPos.posX][kingPos.posY]->getPossibleMoves();
 
 
@@ -384,6 +495,9 @@ bool Board::isStalemate(string playerColour) {
 bool Board::canBlock(Position attacker, Position target, string playerColour) {
 
     Position kingPos = findKingPosition(playerColour);
+    if(kingPos.posX == -1 && kingPos.posY == -1) {
+        return false;
+    }
     vector<Position> possibleMoves = grid[attacker.posX][attacker.posY]->getPossibleMoves();
 
     
@@ -533,7 +647,10 @@ bool Board::canBlock(Position attacker, Position target, string playerColour) {
 
  // should we make these functions const??
 bool Board::canCapture(Position attacker, Position target) {
-    vector<Position> possibleMoves = grid[attacker.posX][attacker.posY]->getPossibleMoves();
+    vector<Position> possibleMoves; 
+    if(grid[attacker.posX][attacker.posY] != nullptr) {
+        possibleMoves = grid[attacker.posX][attacker.posY]->getPossibleMoves();
+    }
     for (const auto& move : possibleMoves) {
         if (move.posX == target.posX && move.posY == target.posY) {
             return true;
@@ -546,9 +663,12 @@ bool Board::isCheckmate(string playerColour) {
     if (!isCheck(playerColour)) {
         return false;
     }
-    int counter;
+    int counter = 0;
     Position kingPos = {-1, -1};
     kingPos = findKingPosition(playerColour);
+    if(kingPos.posX == -1 && kingPos.posY == -1) {
+        return false;
+    }
     vector<Position> kingPossibleMoves = grid[kingPos.posX][kingPos.posY]->getPossibleMoves();
     vector<Position> possibleMoves;
     for (const auto& move : kingPossibleMoves) {
@@ -556,14 +676,20 @@ bool Board::isCheckmate(string playerColour) {
             ++counter;
         }
     }
-    Position threat = getPositionCausingCheck(playerColour); // 
+    Position threat = getPositionCausingCheck(playerColour); //
+    
+    if(threat.posX == -1 && threat.posY == -1) {
+        return false;
+    }
+
     for (int i = 0; i < 8; ++i) {
-        for (int j = 0; i < 8; ++j) {
+        for (int j = 0; j < 8; ++j) {
             if (grid[i][j] != nullptr && (canCapture(Position{i, j}, threat) || canBlock(Position{i,j}, threat, playerColour))) { // do we have to check for colour of the piece as well?? 
                 return false;                                                                                                     // it could make it more efficient to skip over own pieces
             }
         }
     }
+
     return (counter == kingPossibleMoves.size());
 }
 

@@ -42,7 +42,7 @@ int LevelThree::evaluateMove(const std::pair<Position, Position> &move, Board* b
     Piece* targetPiece = board->getState()[end.posX][end.posY];
 
     // Score for capturing a piece
-    if (targetPiece != nullptr && targetPiece->getColour() != movingPiece->getColour()) {
+    if (targetPiece != nullptr && movingPiece != nullptr && targetPiece->getColour() != movingPiece->getColour()) {
         score += targetPiece->getScoreValue();
     }
 
@@ -70,28 +70,41 @@ int LevelThree::evaluateMove(const std::pair<Position, Position> &move, Board* b
 
 bool LevelThree::moveAvoidsCapture(const std::pair<Position, Position> &move, Board* board, const std::string& playerColour) const {
     Piece* movedPiece = board->getState()[move.first.posX][move.first.posY];
+    Piece *captured = nullptr;
 
-    // Temporarily make the move
-    board->makeMove(movedPiece, move.second);
+    // // Temporarily make the move
 
-    // Check if any opponent's piece can capture the moved piece
+    // // checks if there is a piece that exists when trying to move the piece
+    // if(board->getState()[move.second.posX][move.second.posY] != nullptr) {
+    //     cout << board->getState()[move.second.posX][move.second.posY]->displayChar() << endl;
+    //     cout << "the piece at the moved position is not a NULLPTR" << endl;
+    //     captured = board->getState()[move.second.posX][move.second.posY]; 
+    // }
+
+    // if(captured != nullptr) {
+    //     cout << "Captured piece is confirmed not nullptr" << endl;
+    // }
+
+    // board->makeMove(movedPiece, move.second);
+
+    // // Check if any opponent's piece can capture the moved piece
     bool isSafe = true;
-    for (int x = 0; x < 8; x++) {
-        for (int y = 0; y < 8; y++) {
-            Piece* potentialAttacker = board->getState()[x][y];
-            if (potentialAttacker != nullptr && potentialAttacker->getColour() != playerColour) {
-                Position attackerPosition = {x, y};
-                if (board->canCapture(attackerPosition, move.second)) {
-                    isSafe = false;
-                    break;
-                }
-            }
-        }
-        if (!isSafe) break;
-    }
+    // for (int x = 0; x < 8; x++) {
+    //     for (int y = 0; y < 8; y++) {
+    //         Piece* potentialAttacker = board->getState()[x][y];
+    //         if (potentialAttacker != nullptr && potentialAttacker->getColour() != playerColour) {
+    //             Position attackerPosition = {x, y};
+    //             if (board->canCapture(attackerPosition, move.second)) {
+    //                 isSafe = false;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     if (!isSafe) break;
+    // }
 
-    // Revert the move
-    board->undoMove(move.first, move.second);
+    // // Revert the move
+    // board->undoMove(captured,move.first,move.second);
 
     return isSafe;
 }

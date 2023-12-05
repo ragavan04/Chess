@@ -99,7 +99,6 @@ bool Player::addPieceType(char piece) {
 
     // Increment the count for this piece
     pieceCount[tolower(piece)]++;
-    cout << "incrementing...." << endl;
     cout << "colour: "   << colour << endl;
     
     

@@ -37,7 +37,8 @@ class Board {
         // bool isCheck(Player &p); // checks if there is a check present on the board
         // bool isStalemate(Player &p) const; // checks if there is a stalemate present on the board
         void makeMove(Piece* p, Position pos); // makes a move on the board, for the piece p to the positon pos
-        void undoMove(Position startPos, Position endPos);
+        void undoMove(Piece* dup,bool captured, Position startPos, Position endPos);
+        Piece* duplicate(Piece *p);
         void addPiece(char type, Position pos);
         void removePiece(Position pos);
         Position findKingPosition(string colour) const;

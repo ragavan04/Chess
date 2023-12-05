@@ -7,6 +7,8 @@ Controller::Controller() : theBoard{new Board}, isWin{false}, player1Score{0}, p
 
 Controller::~Controller() {
     theBoard->clearBoard();
+    delete theBoard;
+
 }
 
 void Controller::run(){
@@ -58,7 +60,8 @@ void Controller::run(){
                 }
                 if (whiteDifficulty == 2) {
                     player1 = new LevelTwo{"white", "computer"};
-                    cout << "white lvl 2 created" << endl;
+                    cout << "white level 2 created" << endl;
+
                 }
                 if (whiteDifficulty == 3){
                     player1 = new LevelThree("white", "computer");
@@ -84,7 +87,7 @@ void Controller::run(){
                 }
                 if (blackDifficulty == 2){
                     player2 = new LevelTwo("black", "computer");
-                    cout << "black lvl 2 created" << endl;
+                    cout << "black level 2 created" << endl;
                 }
                 if (blackDifficulty == 3){
                     player2 = new LevelThree("black", "computer");
@@ -95,7 +98,7 @@ void Controller::run(){
                     cout << "black level 4 created" << endl;
                 }
                 if (blackDifficulty == 5){
-                    player2 = new LevelThree("black", "computer");
+                    player2 = new LevelFive("black", "computer");
                     cout << "black level 5 created" << endl;
                 }
             }
@@ -242,6 +245,9 @@ void Controller::run(){
             std::cout << "Invalid command." << std::endl;
         }
     } 
+    delete player1;
+    delete player2;
+    
 }
 
 
@@ -494,8 +500,6 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             
             startingPos = move.first;  // get the position of the piece to be moved
             endingPos = move.second; // get the ending position of the piece to be moved
-            cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
-            cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
             
             theBoard->makeMove(curPiece, endingPos);        
@@ -510,8 +514,6 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             
             startingPos = move.first;  // get the position of the piece to be moved
             endingPos = move.second; // get the ending position of the piece to be moved
-            cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
-            cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
             
             theBoard->makeMove(curPiece, endingPos);        
@@ -526,8 +528,6 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             
             startingPos = move.first;  // get the position of the piece to be moved
             endingPos = move.second; // get the ending position of the piece to be moved
-            cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
-            cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
             
             theBoard->makeMove(curPiece, endingPos);        
@@ -542,8 +542,6 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             
              startingPos = move.first;  // get the position of the piece to be moved
             endingPos = move.second; // get the ending position of the piece to be moved
-            cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
-            cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
             
             theBoard->makeMove(curPiece, endingPos);  
@@ -559,8 +557,6 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             
             startingPos = move.first;  // get the position of the piece to be moved
             endingPos = move.second; // get the ending position of the piece to be moved
-            cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
-            cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
             
             theBoard->makeMove(curPiece, endingPos);  

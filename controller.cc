@@ -294,8 +294,13 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
         // Check if the piece can be added based on the count
         
         bool canAddPiece = false;
-        if ((whitePlacing && !blackPlacing) && !((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)) && player1->addPieceType(piece)) canAddPiece = true;
-        if ((blackPlacing && !whitePlacing) && !((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)) && player2->addPieceType(piece)) canAddPiece = true;
+        if ((whitePlacing && !blackPlacing) && !((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7))) {
+            player1->addPieceType(piece); 
+            canAddPiece = true;}
+        if ((blackPlacing && !whitePlacing) && !((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7))) {
+             player2->addPieceType(piece); 
+             canAddPiece = true;
+        }
 
         if ((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)){
             cout << "Cannot place pawn at row 1 or row 8" << endl;
@@ -315,7 +320,7 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
                 theBoard->removePiece(position);
                 cout << "Cannot place king in check in setup. Piece is not added." << endl;
             }
-            theBoard->notifyObservers(0, 0, position.posX, position.posY);
+            theBoard->notifyObservers(7, 7, position.posX, position.posY);
             cout << *theBoard << endl;
             cout << "Piece added: " << piece << " Position: " << letter_position << endl;
         } else if (blackPlacing){
@@ -327,7 +332,7 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
                 theBoard->removePiece(position);
                 cout << "Cannot place king in check in setup. Piece is not added." << endl;
             }
-            theBoard->notifyObservers(0, 0, position.posX, position.posY);
+            theBoard->notifyObservers(7, 7, position.posX, position.posY);
             cout << *theBoard << endl;
             cout << "Piece added: " << piece << " Position: " << letter_position << endl;
         } else {
@@ -337,9 +342,9 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
     } else if (action == '-' && (position.posX != -1 && position.posY != -1)) {
         if (whitePlacing){
             if (theBoard->getState()[position.posX][position.posY] != nullptr && theBoard->getState()[position.posX][position.posY]->getColour() == "white"){
-                theBoard->removePiece(position);
                 player1->removePieceType(theBoard->getState()[position.posX][position.posY]->getType());
-                theBoard->notifyObservers(0, 0, position.posX, position.posY);
+                theBoard->removePiece(position);
+                theBoard->notifyObservers(7, 7, position.posX, position.posY);
                 cout << *theBoard << endl;
                 cout << "piece remove: " << letter_position <<  endl;
             } else {
@@ -349,10 +354,10 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
 
         if (blackPlacing){
             if (theBoard->getState()[position.posX][position.posY] != nullptr &&  theBoard->getState()[position.posX][position.posY]->getColour() == "black"){
+                player2->removePieceType(theBoard->getState()[position.posX][position.posY]->getType());
                 theBoard->removePiece(position);
-                player1->removePieceType(theBoard->getState()[position.posX][position.posY]->getType());
                 cout << "piece remove: " << letter_position <<  endl;
-                theBoard->notifyObservers(0, 0, position.posX, position.posY);
+                theBoard->notifyObservers(7, 7, position.posX, position.posY);
                 cout << *theBoard << endl;
             } else {
                 cout << "Cannot remove a piece thats not yours or an empty position." << endl;

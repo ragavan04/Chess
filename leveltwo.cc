@@ -34,7 +34,7 @@ pair<Position, Position> LevelTwo::algorithm(Board* board) const {
     }
 
     if(firstMoveScore == maxScore) {
-         LevelOne::algorithm(board);
+         bestMove = LevelOne::algorithm(board);
     }
 
 

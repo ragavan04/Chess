@@ -41,11 +41,11 @@ void Board::standardBoardSetup(){
     grid[7][5] = new Bishop(Piece::BISHOP, "black", {7, 5}, *this);
 
     // Setting up queens
-    grid[0][4] = new Queen(Piece::QUEEN, "white", {0, 3}, *this);
+    grid[0][3] = new Queen(Piece::QUEEN, "white", {0, 3}, *this);
     grid[7][3] = new Queen(Piece::QUEEN, "black", {7, 3}, *this);
 
     // Setting up kings
-    grid[0][3] = new King(Piece::KING, "white", {0, 4}, *this);
+    grid[0][4] = new King(Piece::KING, "white", {0, 4}, *this);
     grid[7][4] = new King(Piece::KING, "black", {7, 4}, *this);
 }
 

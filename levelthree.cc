@@ -125,7 +125,7 @@ bool LevelThree::moveAvoidsCapture(const std::pair<Position, Position> &move, Bo
         dup = board->duplicate(board->getState()[move.second.posX][move.second.posY]); 
     }
 
-    board->makeMove(movedPiece, move.second);
+    board->makeMove(movedPiece, temp);
 
     // Check if any opponent's piece can capture the moved piece
     bool isSafe = true;
@@ -144,7 +144,7 @@ bool LevelThree::moveAvoidsCapture(const std::pair<Position, Position> &move, Bo
     }
 
     // // Revert the move
-    board->undoMove(dup,captured,move.first,move.second);
+    board->undoMove(dup,captured,move.first,temp);
 
     return isSafe;
 }

@@ -11,6 +11,7 @@
 #include "computer.h"
 #include "levelone.h"
 #include "levelthree.h"
+#include "levelfour.h"
 #include "graphicsdisplay.h"
 
 using namespace std;

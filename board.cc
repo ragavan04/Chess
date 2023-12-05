@@ -61,6 +61,11 @@ void Board::testBoardSetup(){
 
 
 void Board::makeMove(Piece *p, Position newPos){
+    if (p == nullptr) {
+        // Handle null piece appropriately, perhaps by logging and returning early
+        cout << "Attempted to move a null piece." << std::endl;
+        
+    }
         if(grid[p->getX()][p->getY()] != nullptr && grid[p->getX()][p->getY()]->getType() == Piece::KING) { 
             
             // Since king has been selected, check if a castle move is possible

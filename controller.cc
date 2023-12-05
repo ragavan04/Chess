@@ -55,6 +55,10 @@ void Controller::run(){
                     player1 = new LevelThree("white", "computer");
                     cout << "white lvl 3 created" << endl;
                 }
+                if (whiteDifficulty == 4){
+                    player1 = new LevelFour("white", "computer");
+                    cout << "white lvl 4 created" << endl;
+                }
             }
 
             if (blackPlayer == "human"){
@@ -68,6 +72,10 @@ void Controller::run(){
                 if (blackDifficulty == 3){
                     player2 = new LevelThree("black", "computer");
                     cout << "black lvl 3 created" << endl;
+                }
+                if (blackDifficulty == 4){
+                    player2 = new LevelFour("black", "computer");
+                    cout << "black lvl 4 created" << endl;
                 }
             }
 
@@ -448,6 +456,27 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
             cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
+            
+            theBoard->makeMove(curPiece, endingPos);        
+        } 
+    }
+
+    if (computerLevel == 4){
+         LevelFour* levelFourComputer = dynamic_cast<LevelFour*>(player);
+        if (levelFourComputer != nullptr) {
+            // player is a Level1Computer
+            pair<Position, Position>  move = levelFourComputer->algorithm(theBoard);
+            
+            Position startingPos = move.first;  // get the position of the piece to be moved
+            Position endingPos = move.second; // get the ending position of the piece to be moved
+            cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
+            cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
+            Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
+            if(curPiece != nullptr) {
+                cout << "CUR FUCKIN PIECE" <<curPiece->displayChar() << endl;
+            } else {
+                cout << "NULL FUCKIN POINTER" << endl;
+            }
             
             theBoard->makeMove(curPiece, endingPos);        
         } 

@@ -65,30 +65,64 @@ void Board::makeMove(Piece *p, Position newPos){
         cout << "Attempted to move a null piece." << std::endl;
         
     }
-        if(grid[p->getX()][p->getY()] != nullptr && grid[p->getX()][p->getY()]->getType() == Piece::KING) { 
+
+    if(grid[p->getX()][p->getY()] != nullptr && grid[p->getX()][p->getY()]->getType() == Piece::KING) { 
+        
+        // Since king has been selected, check if a castle move is possible
+        King *king = dynamic_cast<King*>(p);
+
+        // check if king has been moved before and the selected position is two spaces to the left of king
+        if(!king->getMove() && (newPos.posY == king->getY() - 2) && grid[p->getX()][p->getY() - 1]->getType() != Piece::ROOK) {            
             
-            // Since king has been selected, check if a castle move is possible
-            King *king = dynamic_cast<King*>(p);
+            // check if king is at least at position c
+            if((king->getY() > 1) && !king->getMove()) {
 
-            // check if king has been moved before and the selected position is two spaces to the left of king
-            if(!king->getMove() && (newPos.posY == king->getY() - 2)) {            
-                
-                // check if king is at least at position c
-                if((king->getY() > 1) && !king->getMove()) {
+                // iterate through the left side of the king to find a rook, if pieces are found, castle is not possible
+                for(int i = king->getY() - 1; i >= 0; --i) {
+                    if(grid[king->getX()][i] != nullptr && grid[king->getX()][i]->getType() == Piece::ROOK) {
+                        // if rook has been found, check if it has been moved
+                        Rook *rook = dynamic_cast<Rook*>(grid[king->getX()][i]);
 
+                        if(!rook->getMove()) {
+                            // if it hasn't been moved and there are no pieces, in the way, castle is valid
+                            grid[king->getX()][i] = nullptr;
+                            Position newTempPos{newPos.posX,newPos.posY + 1};
+                            grid[newTempPos.posX][newTempPos.posY] = rook;
+                            rook->setPosition(newTempPos);
+                            grid[p->getX()][p->getY()];
+                            rook->setMove();
+                        }
+
+                        break;
+                    } else if(grid[king->getX()][i] != nullptr) {
+                        // a piece has been found that is not a rook, therefore castle is not valid
+                        break;
+                    }
+                }
+            }
+            }
+
+        if(!king->getMove() && (newPos.posY == king->getY() + 2)) {
+            
+            // check if king has been moved before and the selected position is two spaces to the right of king
+            if(!king->getMove() && (newPos.posY == king->getY() + 2) && grid[p->getX()][p->getY() + 1]->getType() != Piece::ROOK) {            
+                // check if king is at least at position f 
+                if((king->getY() < 6) && !king->getMove()) {
                     // iterate through the left side of the king to find a rook, if pieces are found, castle is not possible
-                    for(int i = king->getY() - 2; i >= 0; --i) {
+                    for(int i = king->getY() + 1; i < 8; ++i) {
+                        
                         if(grid[king->getX()][i] != nullptr && grid[king->getX()][i]->getType() == Piece::ROOK) {
                             // if rook has been found, check if it has been moved
                             Rook *rook = dynamic_cast<Rook*>(grid[king->getX()][i]);
 
                             if(!rook->getMove()) {
                                 // if it hasn't been moved and there are no pieces, in the way, castle is valid
+                                cout << "Entering rook condition" << endl;
                                 grid[king->getX()][i] = nullptr;
-                                Position newTempPos{newPos.posX,newPos.posY + 1};
+                                Position newTempPos{newPos.posX,newPos.posY - 1};
                                 grid[newTempPos.posX][newTempPos.posY] = rook;
                                 rook->setPosition(newTempPos);
-                                grid[p->getX()][p->getY()];
+                                delete grid[king->getX()][i];
                                 rook->setMove();
                             }
 
@@ -99,111 +133,78 @@ void Board::makeMove(Piece *p, Position newPos){
                         }
                     }
                 }
-             }
 
-            if(!king->getMove() && (newPos.posY == king->getY() + 2)) {
-               
-                // check if king has been moved before and the selected position is two spaces to the right of king
-                if(!king->getMove() && (newPos.posY == king->getY() + 2)) {            
-                    // check if king is at least at position f 
-                    if((king->getY() < 6) && !king->getMove()) {
-                        // iterate through the left side of the king to find a rook, if pieces are found, castle is not possible
-                        for(int i = king->getY() + 2; i < 8; ++i) {
-                            
-                            if(grid[king->getX()][i] != nullptr && grid[king->getX()][i]->getType() == Piece::ROOK) {
-                                // if rook has been found, check if it has been moved
-                                Rook *rook = dynamic_cast<Rook*>(grid[king->getX()][i]);
-
-                                if(!rook->getMove()) {
-                                    // if it hasn't been moved and there are no pieces, in the way, castle is valid
-                                    cout << "Entering rook condition" << endl;
-                                    grid[king->getX()][i] = nullptr;
-                                    Position newTempPos{newPos.posX,newPos.posY - 1};
-                                    grid[newTempPos.posX][newTempPos.posY] = rook;
-                                    rook->setPosition(newTempPos);
-                                    delete grid[king->getX()][i];
-                                    rook->setMove();
-                                }
-
-                                break;
-                            } else if(grid[king->getX()][i] != nullptr) {
-                                // a piece has been found that is not a rook, therefore castle is not valid
-                                break;
-                            }
-                        }
-                    }
+            }               
     
-                }               
+        } // end of if statement
         
-            } // end of if statement
             
-             
-        
-        } // end of king check
+    
+    } // end of king check
 
-        // Clear the piece's previous position on the board
-        
-        grid[p->getX()][p->getY()] = nullptr;
+    // Clear the piece's previous position on the board
+    
+    grid[p->getX()][p->getY()] = nullptr;
 
-        // Capture handling if there is a piece at newPos
-        if (grid[newPos.posX][newPos.posY] != nullptr) {
-            delete grid[newPos.posX][newPos.posY]; 
+    // Capture handling if there is a piece at newPos
+    if (grid[newPos.posX][newPos.posY] != nullptr) {
+        delete grid[newPos.posX][newPos.posY]; 
+    }
+
+    // Move the piece to the new position
+    grid[newPos.posX][newPos.posY] = p;
+
+    // Update the piece's internal position
+    p->setPosition(newPos);
+
+    if(grid[p->getX()][p->getY()] != nullptr && grid[newPos.posX][newPos.posY]->getType() == Piece::KING) {
+        King *king = dynamic_cast<King*>(p);
+        if(!king->getMove()) { 
+        king->setMove(); 
         }
+    }
 
-        // Move the piece to the new position
-        grid[newPos.posX][newPos.posY] = p;
-
-        // Update the piece's internal position
-        p->setPosition(newPos);
-
-        if(grid[p->getX()][p->getY()] != nullptr && grid[newPos.posX][newPos.posY]->getType() == Piece::KING) {
-           King *king = dynamic_cast<King*>(p);
-           if(!king->getMove()) { 
-            king->setMove(); 
-           }
-        }
-
-        if(grid[p->getX()][p->getY()] != nullptr && grid[p->getX()][p->getY()]->getType() == Piece::ROOK) {
-                    
-            Rook *rook = dynamic_cast<Rook*>(p);
-            if(!rook->getMove()) {
-                rook->setMove();
-            }
-
-        }
-
-        // en passant is valid after it has been moved twice ///////// -------> change grid[newPos.posX][newPos.posY] to just p
-        if(grid[p->getX()][p->getY()] != nullptr && grid[newPos.posX][newPos.posY]->getType() == Piece::PAWN) {
-            
-            Pawn *pawn = dynamic_cast<Pawn*>(p);
-            pawn->setMove();
-
-
-            // make sure to test this... seems a little off
-            if(pawn->getToggle() && (newPos.posX == pawn->getX() + 2)) {
-                pawn->setEnpassantTrue();
-                pawn->setToggle();
-            } else {
-                pawn->setEnpassantFalse();
-            }
-
-        }
-             
-            
-        if((p->getX() > 0) && p->getType() == Piece::PAWN && (grid[p->getX() - 1][p->getY()] != nullptr) 
-                && (p->getColour() == "white" && (grid[p->getX() - 1][p->getY()]->getType() == Piece::PAWN))) {
-                delete grid[p->getX() - 1][p->getY()];
-                grid[p->getX() - 1][p->getY()] = nullptr;
-                cout << "deleted black pawn" << endl;
-        }
+    if(grid[p->getX()][p->getY()] != nullptr && grid[p->getX()][p->getY()]->getType() == Piece::ROOK) {
                 
-            
-        if((p->getX() < 7) && p->getType() == Piece::PAWN && (grid[p->getX() + 1][p->getY()] != nullptr) 
-                && (p->getColour() == "black" && (grid[p->getX() + 1][p->getY()]->getType() == Piece::PAWN))) {
-                delete grid[p->getX() + 1][p->getY()];
-                grid[p->getX() + 1][p->getY()] = nullptr;
-                cout << "deleted white pawn" << endl;
+        Rook *rook = dynamic_cast<Rook*>(p);
+        if(!rook->getMove()) {
+            rook->setMove();
         }
+
+    }
+
+    // en passant is valid after it has been moved twice ///////// -------> change grid[newPos.posX][newPos.posY] to just p
+    if(grid[p->getX()][p->getY()] != nullptr && grid[newPos.posX][newPos.posY]->getType() == Piece::PAWN) {
+        
+        Pawn *pawn = dynamic_cast<Pawn*>(p);
+        pawn->setMove();
+
+
+        // make sure to test this... seems a little off
+        if(pawn->getToggle() && (newPos.posX == pawn->getX() + 2)) {
+            pawn->setEnpassantTrue();
+            pawn->setToggle();
+        } else {
+            pawn->setEnpassantFalse();
+        }
+
+    }
+            
+        
+    if((p->getX() > 0) && p->getType() == Piece::PAWN && (grid[p->getX() - 1][p->getY()] != nullptr) 
+            && (p->getColour() == "white" && (grid[p->getX() - 1][p->getY()]->getType() == Piece::PAWN))) {
+            delete grid[p->getX() - 1][p->getY()];
+            grid[p->getX() - 1][p->getY()] = nullptr;
+            cout << "deleted black pawn" << endl;
+    }
+            
+        
+    if((p->getX() < 7) && p->getType() == Piece::PAWN && (grid[p->getX() + 1][p->getY()] != nullptr) 
+            && (p->getColour() == "black" && (grid[p->getX() + 1][p->getY()]->getType() == Piece::PAWN))) {
+            delete grid[p->getX() + 1][p->getY()];
+            grid[p->getX() + 1][p->getY()] = nullptr;
+            cout << "deleted white pawn" << endl;
+    }
 }
 
 void Board::undoMove(Piece* dup,bool captured, Position startPos, Position endPos) {
@@ -240,11 +241,6 @@ void Board::undoMove(Piece* dup,bool captured, Position startPos, Position endPo
     } else if(captured) {
         grid[endPos.posX][endPos.posY] = dup;
         dup->setPosition(endPos);
-    }
-
-
-    if(grid[endPos.posX][endPos.posY] != nullptr) {
-        cout << grid[endPos.posX][endPos.posY]->displayChar() << " has been stored properly" << endl;
     }
 
     notifyObservers(startPos.posX, startPos.posY, endPos.posX, endPos.posY);
@@ -354,7 +350,7 @@ Piece* Board::duplicate(Piece* p) {
 
     if(p->getType() == Piece::PAWN) {
         Pawn* oldPawn = dynamic_cast<Pawn*>(p);
-        Pawn* newPawn = new Pawn(Piece::BISHOP,p->getColour(),Position{p->getX(),p->getY()}, *this); 
+        Pawn* newPawn = new Pawn(Piece::PAWN,p->getColour(),Position{p->getX(),p->getY()}, *this); 
 
         if(oldPawn->getEnpassant()) {
             newPawn->setEnpassantTrue();    
@@ -376,7 +372,7 @@ Piece* Board::duplicate(Piece* p) {
         return new Bishop(Piece::BISHOP,p->getColour(),Position{p->getX(),p->getY()}, *this);
     } else if(p->getType() == Piece::KING) {
         King* oldKing = dynamic_cast<King*>(p);
-        King* newKing = new King(Piece::BISHOP,p->getColour(),Position{p->getX(),p->getY()}, *this); 
+        King* newKing = new King(Piece::KING,p->getColour(),Position{p->getX(),p->getY()}, *this); 
 
         if(oldKing->getMove()) {
             newKing->setMove();
@@ -384,12 +380,12 @@ Piece* Board::duplicate(Piece* p) {
         
         return newKing;
     } else if(p->getType() == Piece::KNIGHT) {
-        return new Knight(Piece::BISHOP,p->getColour(),Position{p->getX(),p->getY()}, *this); 
+        return new Knight(Piece::KNIGHT,p->getColour(),Position{p->getX(),p->getY()}, *this); 
     } else if(p->getType() == Piece::QUEEN) {
-        return new Queen(Piece::BISHOP,p->getColour(),Position{p->getX(),p->getY()}, *this);
+        return new Queen(Piece::QUEEN,p->getColour(),Position{p->getX(),p->getY()}, *this);
     } else if(p->getType() == Piece::ROOK) {
         Rook* oldRook = dynamic_cast<Rook*>(p);
-        Rook* newRook = new Rook(Piece::BISHOP,p->getColour(),Position{p->getX(),p->getY()}, *this); 
+        Rook* newRook = new Rook(Piece::ROOK,p->getColour(),Position{p->getX(),p->getY()}, *this); 
 
         if(oldRook->getMove()) {
             newRook->setMove();
@@ -409,10 +405,8 @@ bool Board::isInCheckAfterMove(Position currPos, Position newPos, string colour)
     bool captured = false;
     Piece* dup;
     if(grid[newPos.posX][newPos.posY] != nullptr) {
-        cout << "capture stored " << grid[newPos.posX][newPos.posY]->displayChar() << endl;
         captured = true;  
         dup = duplicate(grid[newPos.posX][newPos.posY]); 
-        cout << "Duplicate piece is: " << dup->displayChar() << endl;
     }
 
     makeMove(grid[currPos.posX][currPos.posY],newPos);

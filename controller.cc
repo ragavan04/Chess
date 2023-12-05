@@ -540,20 +540,14 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             // player is a Level1Computer
             pair<Position, Position>  move = levelFourComputer->algorithm(theBoard);
             
-            Position startingPos = move.first;  // get the position of the piece to be moved
-            Position endingPos = move.second; // get the ending position of the piece to be moved
+             startingPos = move.first;  // get the position of the piece to be moved
+            endingPos = move.second; // get the ending position of the piece to be moved
             cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
             cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
-            cout << "reached" << endl;
-            if (curPiece != nullptr) {
-                cout << "Current Piece: " << curPiece->displayChar() << endl;
-                theBoard->makeMove(curPiece, endingPos);
-            } else {
-                cout << "No piece at starting position (" << startingPos.posX << ", " << startingPos.posY << ")" << endl;
-            }
+            
+            theBoard->makeMove(curPiece, endingPos);  
 
-        theBoard->makeMove(curPiece, endingPos);        
         } 
     }
 
@@ -563,20 +557,14 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             // player is a Level1Computer
             pair<Position, Position>  move = levelFiveComputer->algorithm(theBoard);
             
-            Position startingPos = move.first;  // get the position of the piece to be moved
-            Position endingPos = move.second; // get the ending position of the piece to be moved
+            startingPos = move.first;  // get the position of the piece to be moved
+            endingPos = move.second; // get the ending position of the piece to be moved
             cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
             cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
-            cout << "reached" << endl;
-            if (curPiece != nullptr) {
-                cout << "Current Piece: " << curPiece->displayChar() << endl;
-                theBoard->makeMove(curPiece, endingPos);
-            } else {
-                cout << "No piece at starting position (" << startingPos.posX << ", " << startingPos.posY << ")" << endl;
-            }
-
-        theBoard->makeMove(curPiece, endingPos);        
+            
+            theBoard->makeMove(curPiece, endingPos);  
+       
         } 
     }
 

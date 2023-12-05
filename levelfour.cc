@@ -98,20 +98,21 @@ bool LevelFour::moveAvoidsCapture(const std::pair<Position, Position> &move, Boa
     Piece* dup;
     Position temp = move.second;
 
-    // // Temporarily make the move
 
-    // // checks if there is a piece that exists when trying to move the piece
+    // checks if there is a piece that exists when trying to move the piece
     if(board->getState()[temp.posX][temp.posY] != nullptr) {
         dup = board->duplicate(board->getState()[temp.posX][temp.posY]);
         captured = true; 
     }
 
+    // stores a copy of the piece if it is a king pawn or rook
     if(board->getState()[move.first.posX][move.first.posY]->getType() == Piece::KING || 
         board->getState()[move.first.posX][move.first.posY]->getType() == Piece::PAWN || 
         board->getState()[move.first.posX][move.first.posY]->getType() == Piece::ROOK) {
         copy = board->getState()[move.first.posX][move.first.posY];
     }
-
+    
+    // Temporarily make the move
     board->makeMove(movedPiece, temp);
 
     // Check if any opponent's piece can capture the moved piece
@@ -130,7 +131,7 @@ bool LevelFour::moveAvoidsCapture(const std::pair<Position, Position> &move, Boa
         if (!isSafe) break;
     }
 
-    // // Revert the move
+    // Revert the move
     board->undoMove(dup,captured,move.first,temp);
     
     if(copy != nullptr) {

@@ -113,19 +113,19 @@ int LevelThree::evaluateMove(const std::pair<Position, Position> &move, Board* b
 bool LevelThree::moveAvoidsCapture(const std::pair<Position, Position> &move, Board* board, const std::string& playerColour) const {
     Piece* movedPiece = board->getState()[move.first.posX][move.first.posY];
     bool captured = false;
-    Piece* dup = nullptr;
+    Piece* dup;
     Position temp = move.second;
 
     // // Temporarily make the move
 
     // // checks if there is a piece that exists when trying to move the piece
-    if(board->getState()[move.second.posX][move.second.posY] != nullptr) {
-        cout << board->getState()[move.second.posX][move.second.posY]->displayChar() << endl;
-        cout << "the piece at the moved position is not a NULLPTR" << endl;
-        dup = board->duplicate(board->getState()[move.second.posX][move.second.posY]); 
+    if(board->getState()[temp.posX][temp.posY] != nullptr) {
+        cout << board->getState()[temp.posX][temp.posY]->displayChar() << endl;
+        dup = board->duplicate(board->getState()[temp.posX][temp.posY]);
+        captured = true; 
     }
 
-    board->makeMove(movedPiece, move.second);
+    board->makeMove(movedPiece, temp);
 
     // Check if any opponent's piece can capture the moved piece
     bool isSafe = true;
@@ -144,7 +144,7 @@ bool LevelThree::moveAvoidsCapture(const std::pair<Position, Position> &move, Bo
     }
 
     // // Revert the move
-    board->undoMove(dup,captured,move.first,move.second);
+    board->undoMove(dup,captured,move.first,temp);
 
     return isSafe;
 }

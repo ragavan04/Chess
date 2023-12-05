@@ -41,7 +41,7 @@ void Board::standardBoardSetup(){
     grid[7][5] = new Bishop(Piece::BISHOP, "black", {7, 5}, *this);
 
     // Setting up queens
-    grid[0][4] = new Queen(Piece::QUEEN, "white", {0, 3}, *this);
+    grid[0][3] = new Queen(Piece::QUEEN, "white", {0, 3}, *this);
     grid[7][3] = new Queen(Piece::QUEEN, "black", {7, 3}, *this);
 
     // Setting up kings
@@ -207,7 +207,7 @@ void Board::makeMove(Piece *p, Position newPos){
     }
 }
 
-void Board::undoMove(Piece* dup,bool captured, Position startPos, Position endPos) {
+void Board::undoMove(Piece* dup, bool captured, Position startPos, Position endPos) {
     // Get the piece at the end position
     // Piece* movedPiece = grid[endPos.posX][endPos.posY];
 
@@ -236,8 +236,9 @@ void Board::undoMove(Piece* dup,bool captured, Position startPos, Position endPo
     //     captured->setPosition(endPos);
     // }
 
+
     if(!captured) {
-       grid[endPos.posX][endPos.posY] = nullptr; 
+       grid[endPos.posX][endPos.posY] = nullptr;
     } else if(captured) {
         grid[endPos.posX][endPos.posY] = dup;
         dup->setPosition(endPos);

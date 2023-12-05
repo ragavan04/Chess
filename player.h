@@ -36,6 +36,7 @@ class Player{
         bool hasPlacedKing() const;
 
         bool addPieceType(char piece);
+        void removePieceType(Piece::Type piece);
 
         virtual int getComputerLevel() const { return 0; } // Default implementation for non-computer players
 

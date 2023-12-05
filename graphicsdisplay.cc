@@ -34,7 +34,7 @@ void GraphicsDisplay::notify(const Board &board, int srcRow, int srcCol, int des
     Piece *srcPiece = state[srcRow][srcCol];
     Piece *destPiece = state[destRow][destCol];
 
-    if (srcRow == 0 && srcCol == 0 && destRow == 7 && destCol == 7) {
+    if (srcRow == 0 && srcCol == 0 && destRow == 0 && destCol == 0) {
         for (int row = 0; row < gridSize; ++row) {
             for (int col = 0; col < gridSize; ++col) {
                 Piece *piece = state[row][col];

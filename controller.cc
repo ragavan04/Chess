@@ -502,7 +502,7 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
 
             
     theBoard->makeMove(curPiece, endingPos);        
-    } 
+        } 
     }
     theBoard->notifyObservers(startingPos.posX, startingPos.posY, endingPos.posX, endingPos.posY);
     cout << *theBoard << endl;

@@ -1,95 +1,146 @@
 #include "levelfour.h"
+using namespace std;
 
-LevelFour::LevelFour(const std::string& colour, std::string playerType) 
-    : LevelThree(colour, playerType), useOpeningBook(true) {
-    loadOpeningBook();
-}
+LevelFour::LevelFour(const string& colour, string playerType) : LevelThree(colour, playerType) {}
 
-void LevelFour::loadOpeningBook() {
-    openingBook.push_back({ {0, 6}, {2, 5} }); // White's knight from g1 to f3
-    openingBook.push_back({ {0, 1}, {2, 2} }); // White's knight from b1 to c3
-    // openingBook.push_back({ {7, 1}, {5, 2} }); // Black's knight from b8 to c6
-    // openingBook.push_back({ {7, 6}, {5, 5} }); // Black's knight from g8 to f6
-    // // Pawn structure-focused opening moves
-    openingBook.push_back({ {1, 4}, {3, 4} }); // Double King's Pawn
-    openingBook.push_back({ {6, 4}, {4, 4} });
-    openingBook.push_back({ {1, 3}, {3, 3} }); // Double Queen's Pawn
-    openingBook.push_back({ {6, 3}, {4, 3} });
-    openingBook.push_back({ {1, 4}, {3, 4} }); // Sicilian Defense
-    openingBook.push_back({ {6, 2}, {4, 2} });
-    openingBook.push_back({ {1, 4}, {3, 4} }); // Caro-Kann Defense
-    openingBook.push_back({ {6, 2}, {5, 2} });
-    openingBook.push_back({ {1, 4}, {3, 4} }); // King's Indian Defense
-    openingBook.push_back({ {6, 6}, {5, 6} });
-    openingBook.push_back({ {1, 3}, {3, 3} }); // Queen's Gambit
-    openingBook.push_back({ {6, 4}, {4, 4} });
-    openingBook.push_back({ {1, 3}, {3, 3} }); // Slav Defense
-    openingBook.push_back({ {6, 2}, {4, 2} });
-    openingBook.push_back({ {1, 4}, {3, 4} }); // Ruy Lopez Opening
-    openingBook.push_back({ {6, 4}, {5, 4} });
-    // // Common opening moves
-    openingBook.push_back({ {1, 4}, {3, 4} }); // King's Pawn Opening
-    openingBook.push_back({ {1, 3}, {3, 3} }); // Queen's Pawn Opening
-    openingBook.push_back({ {1, 2}, {3, 2} }); // English Opening
-    openingBook.push_back({ {1, 6}, {3, 6} }); // King's Indian Attack
-    openingBook.push_back({ {6, 4}, {4, 4} }); // French Defense
-    openingBook.push_back({ {6, 3}, {4, 3} }); // Queen's Gambit
-    // // Add more openings as needed
-}
+pair<Position, Position> LevelFour::algorithm(Board* board) const {
+    auto availableMovesMap = getAvailableMoves();
+    vector<std::pair<Position, Position>> possibleMoves;
 
+    // Converting map<Position, vector<Position>> to vector<pair<Position, Position>>
+    for (const auto& movePair : availableMovesMap) {
+        Position start = movePair.first;
+        for (const Position& end : movePair.second) {
+            possibleMoves.emplace_back(start, end);
+        }
+    }
 
+    int maxScore = -1;
+    std::pair<Position, Position> bestMove;
+    int firstMoveScore = evaluateMove(possibleMoves[0],board);
+    maxScore = firstMoveScore;
 
-std::pair<Position, Position> LevelFour::selectOpeningMove(Board* board) const {
-    for (auto it = openingBook.begin(); it != openingBook.end();) {
-        const auto &move = *it;
-        Piece* piece = board->getState()[move.first.posX][move.first.posY];
-        if (piece != nullptr && piece->getColour() == this->getColour()) {
-            if (piece->isValid(move.second)) {
-                cout << "USING OPENING MOVE" << endl;
-                auto validMove = *it;
-                it = openingBook.erase(it); // Remove the valid move from the book
-                return validMove;
-            } else {
-                // Invalid move, remove it and continue
-                it = openingBook.erase(it);
+    for (const auto &move : possibleMoves) {
+        int moveScore = evaluateMove(move, board);
+        if (moveScore > maxScore) {
+            maxScore = moveScore;
+            bestMove = move;
+        }
+    }
+
+    if(firstMoveScore == maxScore) {
+         map<Position, vector<Position>> availableMoves = getAvailableMoves();
+
+        // Check if there are any available moves 
+        if (availableMoves.empty()) {
+            // No available moves, return a default pair (for testing purposes)
+            return make_pair(Position{-1, -1}, Position{-1, -1});
+        }
+        
+        // Use a random device to generate a random index for positions
+        random_device dev;
+        mt19937 gen(dev());
+        uniform_int_distribution<size_t> positionDistribution(0, availableMoves.size() - 1);
+
+        while (true) {
+            size_t randomPositionIndex = positionDistribution(gen);
+
+            // Use an iterator to find the random element in the map for positions
+            auto positionIterator = next(begin(availableMoves), randomPositionIndex);
+            Position randomPosition = positionIterator->first;
+
+            // Get the available moves for the randomly selected position
+            const vector<Position>& movesForRandomPosition = positionIterator->second;
+
+            // Check if there are any available moves for the selected position
+            if (!movesForRandomPosition.empty()) {
+                // Use a random index for moves
+                uniform_int_distribution<size_t> moveDistribution(0, movesForRandomPosition.size() - 1);
+                size_t randomMoveIndex = moveDistribution(gen);
+
+                // Get the random move for the selected position
+                Position randomMove = movesForRandomPosition[randomMoveIndex];
+
+                return make_pair(randomPosition, randomMove);
             }
-        } else {
-            // If piece is nullptr or not the right colour, skip this move
-            ++it;
         }
     }
 
-    // If no valid opening move is found, use LevelThree algorithm
-    cout << "NOT USING OPENING BOOK, USING LEVEL THREE ALGORITHM" << endl;
-    return LevelThree::algorithm(board);
+
+    return bestMove;
 }
 
 
+int LevelFour::evaluateMove(const std::pair<Position, Position> &move, Board* board) const {
+    int score = 0;
+    Position start = move.first;
+    Position end = move.second;
+    Piece* movingPiece = board->getState()[start.posX][start.posY];
+    Piece* targetPiece = board->getState()[end.posX][end.posY];
 
-
-std::pair<Position, Position> LevelFour::algorithm(Board* board) const {
-    // Check for an opening move
-    std::pair<Position, Position> openingMove = { {-1, -1}, {-1, -1} };
-    if (useOpeningBook) {
-        openingMove = selectOpeningMove(board);
+    // Score for capturing a piece
+    if (targetPiece != nullptr && movingPiece != nullptr && board->canCapture(start,end) && targetPiece->getColour() != movingPiece->getColour()) {
+        score += targetPiece->getScoreValue();
     }
 
-    // If we have a valid opening move, check if it's better or equal to other moves
-    if (openingMove.first.posX != -1) {
-        int openingMoveScore = 8; // Score assigned to opening moves
-
-        // Use LevelThree's algorithm to find the best move
-        std::pair<Position, Position> bestLevelThreeMove = LevelThree::algorithm(board);
-        int levelThreeMoveScore = LevelThree::evaluateMove(bestLevelThreeMove, board);
-
-        // Compare the scores
-        if (levelThreeMoveScore <= openingMoveScore) {
-            return openingMove; // Use opening move if it's better or equal
+    // Score for avoiding capture
+    if (moveAvoidsCapture(move, board, movingPiece->getColour())) {
+        if (movingPiece->getType() == Piece::PAWN){
+            score += 1;
+        } else if (movingPiece->getType() == Piece::KING){
+            score += 15;
+        } else if (movingPiece->getType() == Piece::QUEEN) {
+            score += 10;
         } else {
-            return bestLevelThreeMove; // Use LevelThree move otherwise
+            score += 5;
         }
+        
     }
 
-    // If no opening move or if opening move is not good enough, use LevelThree logic
-    return LevelThree::algorithm(board);
+    // Score for checking the opponent's king
+    if (board->isInCheckAfterMove(move.first, move.second, movingPiece->getColour())) {
+        score += 12;
+    }
+
+    return score;
 }
+
+bool LevelFour::moveAvoidsCapture(const std::pair<Position, Position> &move, Board* board, const std::string& playerColour) const {
+    Piece* movedPiece = board->getState()[move.first.posX][move.first.posY];
+    bool captured = false;
+    Piece* dup;
+    Position temp = move.second;
+
+    // // Temporarily make the move
+
+    // // checks if there is a piece that exists when trying to move the piece
+    if(board->getState()[temp.posX][temp.posY] != nullptr) {
+        cout << board->getState()[temp.posX][temp.posY]->displayChar() << endl;
+        dup = board->duplicate(board->getState()[temp.posX][temp.posY]);
+        captured = true; 
+    }
+
+    board->makeMove(movedPiece, temp);
+
+    // Check if any opponent's piece can capture the moved piece
+    bool isSafe = true;
+    for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 8; y++) {
+            Piece* potentialAttacker = board->getState()[x][y];
+            if (potentialAttacker != nullptr && potentialAttacker->getColour() != playerColour) {
+               Position attackerPosition = {x, y};
+                if (board->canCapture(attackerPosition, temp)) {
+                    isSafe = false;
+                    break;
+                }
+            }
+        }
+        if (!isSafe) break;
+    }
+
+    // // Revert the move
+    board->undoMove(dup,captured,move.first,temp);
+
+    return isSafe;
+}
+

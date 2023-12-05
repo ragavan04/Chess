@@ -51,6 +51,10 @@ void Controller::run(){
                     player1 = new LevelOne{"white", "computer"};
                     cout << "white lvl 1 created" << endl;
                 }
+                // if (whiteDifficulty == 2) {
+                //     player1 = new LevelTwo{"white", "computer"};
+                //     cout << "white lvl 2 created" << endl;
+                // }
                 if (whiteDifficulty == 3){
                     player1 = new LevelThree("white", "computer");
                     cout << "white lvl 3 created" << endl;
@@ -58,6 +62,10 @@ void Controller::run(){
                 if (whiteDifficulty == 4){
                     player1 = new LevelFour("white", "computer");
                     cout << "white lvl 4 created" << endl;
+                }
+                if (whiteDifficulty == 5) {
+                    player1 = new LevelFive{"white", "computer"};
+                    cout << "white lvl 1 created" << endl;
                 }
             }
 
@@ -69,6 +77,10 @@ void Controller::run(){
                     player2 = new LevelOne{"black", "computer"};
                     cout << "black lvl 1 created" << endl;
                 }
+                // if (blackDifficulty == 2){
+                //     player2 = new LevelTwo("black", "computer");
+                //     cout << "black lvl 2 created" << endl;
+                // }
                 if (blackDifficulty == 3){
                     player2 = new LevelThree("black", "computer");
                     cout << "black lvl 3 created" << endl;
@@ -76,6 +88,10 @@ void Controller::run(){
                 if (blackDifficulty == 4){
                     player2 = new LevelFour("black", "computer");
                     cout << "black lvl 4 created" << endl;
+                }
+                if (blackDifficulty == 5){
+                    player2 = new LevelThree("black", "computer");
+                    cout << "black lvl 5 created" << endl;
                 }
             }
 
@@ -481,6 +497,22 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
         } 
     }
 
+    if (computerLevel == 2){
+         LevelTwo* levelTwoComputer = dynamic_cast<LevelTwo*>(player);
+        if (levelTwoComputer != nullptr) {
+            // player is a Level1Computer
+            pair<Position, Position>  move = levelTwoComputer->algorithm(theBoard);
+            
+            startingPos = move.first;  // get the position of the piece to be moved
+            endingPos = move.second; // get the ending position of the piece to be moved
+            cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
+            cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
+            Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
+            
+            theBoard->makeMove(curPiece, endingPos);        
+        } 
+    }
+
     if (computerLevel == 3){
          LevelThree* levelThreeComputer = dynamic_cast<LevelThree*>(player);
         if (levelThreeComputer != nullptr) {
@@ -519,6 +551,30 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
         theBoard->makeMove(curPiece, endingPos);        
         } 
     }
+
+    if (computerLevel == 5){
+         LevelFive* levelFiveComputer = dynamic_cast<LevelFive*>(player);
+        if (levelFiveComputer != nullptr) {
+            // player is a Level1Computer
+            pair<Position, Position>  move = levelFiveComputer->algorithm(theBoard);
+            
+            Position startingPos = move.first;  // get the position of the piece to be moved
+            Position endingPos = move.second; // get the ending position of the piece to be moved
+            cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
+            cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
+            Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
+            cout << "reached" << endl;
+            if (curPiece != nullptr) {
+                cout << "Current Piece: " << curPiece->displayChar() << endl;
+                theBoard->makeMove(curPiece, endingPos);
+            } else {
+                cout << "No piece at starting position (" << startingPos.posX << ", " << startingPos.posY << ")" << endl;
+            }
+
+        theBoard->makeMove(curPiece, endingPos);        
+        } 
+    }
+
     theBoard->notifyObservers(startingPos.posX, startingPos.posY, endingPos.posX, endingPos.posY);
     cout << *theBoard << endl;
 }

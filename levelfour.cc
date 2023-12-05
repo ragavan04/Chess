@@ -34,7 +34,7 @@ std::pair<Position, Position> LevelFour::algorithm(Board* board) const {
 
         // Use LevelThree's algorithm to find the best move
         std::pair<Position, Position> bestLevelThreeMove = LevelThree::algorithm(board);
-        int levelThreeMoveScore = evaluateMove(bestLevelThreeMove, board);
+        int levelThreeMoveScore = LevelThree::evaluateMoveThree(bestLevelThreeMove, board);
 
         // Compare the scores
         if (levelThreeMoveScore <= openingMoveScore) {

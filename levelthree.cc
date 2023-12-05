@@ -6,13 +6,12 @@
 
 using namespace std;
 
-LevelThree::LevelThree(const string& colour, string playerType) : Computer(colour, playerType) {}
+LevelThree::LevelThree(const string& colour, string playerType) : LevelTwo(colour, playerType) {}
 
 pair<Position, Position> LevelThree::algorithm(Board* board) const {
     auto availableMovesMap = getAvailableMoves();
     vector<std::pair<Position, Position>> possibleMoves;
 
-    // Converting map<Position, vector<Position>> to vector<pair<Position, Position>>
     for (const auto& movePair : availableMovesMap) {
         Position start = movePair.first;
         for (const Position& end : movePair.second) {
@@ -22,11 +21,11 @@ pair<Position, Position> LevelThree::algorithm(Board* board) const {
 
     int maxScore = -1;
     std::pair<Position, Position> bestMove;
-    int firstMoveScore = evaluateMove(possibleMoves[0],board);
+    int firstMoveScore = evaluateMoveThree(possibleMoves[0],board);
     maxScore = firstMoveScore;
 
     for (const auto &move : possibleMoves) {
-        int moveScore = evaluateMove(move, board);
+        int moveScore = evaluateMoveThree(move, board);
         if (moveScore > maxScore) {
             maxScore = moveScore;
             bestMove = move;
@@ -34,41 +33,7 @@ pair<Position, Position> LevelThree::algorithm(Board* board) const {
     }
 
     if(firstMoveScore == maxScore) {
-         map<Position, vector<Position>> availableMoves = getAvailableMoves();
-
-        // Check if there are any available moves 
-        if (availableMoves.empty()) {
-            // No available moves, return a default pair (for testing purposes)
-            return make_pair(Position{-1, -1}, Position{-1, -1});
-        }
-        
-        // Use a random device to generate a random index for positions
-        random_device dev;
-        mt19937 gen(dev());
-        uniform_int_distribution<size_t> positionDistribution(0, availableMoves.size() - 1);
-
-        while (true) {
-            size_t randomPositionIndex = positionDistribution(gen);
-
-            // Use an iterator to find the random element in the map for positions
-            auto positionIterator = next(begin(availableMoves), randomPositionIndex);
-            Position randomPosition = positionIterator->first;
-
-            // Get the available moves for the randomly selected position
-            const vector<Position>& movesForRandomPosition = positionIterator->second;
-
-            // Check if there are any available moves for the selected position
-            if (!movesForRandomPosition.empty()) {
-                // Use a random index for moves
-                uniform_int_distribution<size_t> moveDistribution(0, movesForRandomPosition.size() - 1);
-                size_t randomMoveIndex = moveDistribution(gen);
-
-                // Get the random move for the selected position
-                Position randomMove = movesForRandomPosition[randomMoveIndex];
-
-                return make_pair(randomPosition, randomMove);
-            }
-        }
+         LevelOne::algorithm(board);
     }
 
 
@@ -76,42 +41,57 @@ pair<Position, Position> LevelThree::algorithm(Board* board) const {
 }
 
 
-int LevelThree::evaluateMove(const std::pair<Position, Position> &move, Board* board) const {
-    int score = 0;
+int LevelThree::evaluateMoveThree(const std::pair<Position, Position> &move, Board* board) const {
+    int avoidScore = 0;
     Position start = move.first;
     Position end = move.second;
     Piece* movingPiece = board->getState()[start.posX][start.posY];
     Piece* targetPiece = board->getState()[end.posX][end.posY];
+    int captureScore = 0;
+    int checkScore = 0;
+    string oppColour;
+    int bestScore = 0;
 
     // Score for capturing a piece
     if (targetPiece != nullptr && movingPiece != nullptr && board->canCapture(start,end) && targetPiece->getColour() != movingPiece->getColour()) {
-        score += targetPiece->getScoreValue();
+        captureScore += targetPiece->getScoreValue();
     }
-
+    
     // Score for avoiding capture
     if (moveAvoidsCapture(move, board, movingPiece->getColour())) {
-        if (movingPiece->getType() == Piece::PAWN){
-            score += 1;
-        } else if (movingPiece->getType() == Piece::KING){
-            score += 15;
-        } else if (movingPiece->getType() == Piece::QUEEN) {
-            score += 10;
-        } else {
-            score += 5;
-        }
-        
+        avoidScore = movingPiece->getScoreValue();
     }
+
+    if(movingPiece->getColour() == "white") {
+        oppColour = "black";
+    } else if(movingPiece->getColour() == "black") {
+       oppColour = "white"; 
+    }
+
 
     // Score for checking the opponent's king
-    if (board->isInCheckAfterMove(move.first, move.second, movingPiece->getColour())) {
-        score += 12;
+    if (board->isInCheckAfterMove(move.first, move.second, oppColour)) {
+        checkScore += 20;
     }
 
-    return score;
+    if(captureScore <= avoidScore) {
+        return avoidScore;
+    } else if(captureScore > avoidScore) {
+        return captureScore;
+    } else if(captureScore <= checkScore) {
+        return checkScore;
+    } else if(captureScore > checkScore) {
+        return captureScore;
+    } else if(avoidScore <= checkScore) {
+        return checkScore;
+    } else if(avoidScore > checkScore) {
+        return avoidScore;
+    }
 }
 
 bool LevelThree::moveAvoidsCapture(const std::pair<Position, Position> &move, Board* board, const std::string& playerColour) const {
     Piece* movedPiece = board->getState()[move.first.posX][move.first.posY];
+    Piece* copy;
     bool captured = false;
     Piece* dup;
     Position temp = move.second;
@@ -123,6 +103,12 @@ bool LevelThree::moveAvoidsCapture(const std::pair<Position, Position> &move, Bo
         cout << board->getState()[temp.posX][temp.posY]->displayChar() << endl;
         dup = board->duplicate(board->getState()[temp.posX][temp.posY]);
         captured = true; 
+    }
+
+    if(board->getState()[move.first.posX][move.first.posY]->getType() == Piece::KING || 
+        board->getState()[move.first.posX][move.first.posY]->getType() == Piece::PAWN || 
+        board->getState()[move.first.posX][move.first.posY]->getType() == Piece::ROOK) {
+        copy = board->getState()[move.first.posX][move.first.posY];
     }
 
     board->makeMove(movedPiece, temp);
@@ -145,6 +131,10 @@ bool LevelThree::moveAvoidsCapture(const std::pair<Position, Position> &move, Bo
 
     // // Revert the move
     board->undoMove(dup,captured,move.first,temp);
+    
+    if(copy != nullptr) {
+        board->getState()[move.first.posX][move.first.posY] = copy;
+    }
 
     return isSafe;
 }

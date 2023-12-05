@@ -175,7 +175,8 @@ void Board::makeMove(Piece *p, Position newPos){
 
     // en passant is valid after it has been moved twice ///////// -------> change grid[newPos.posX][newPos.posY] to just p
     if(grid[p->getX()][p->getY()] != nullptr && grid[newPos.posX][newPos.posY]->getType() == Piece::PAWN) {
-        
+
+
         Pawn *pawn = dynamic_cast<Pawn*>(p);
         pawn->setMove();
 
@@ -403,14 +404,26 @@ bool Board::isInCheckAfterMove(Position currPos, Position newPos, string colour)
     // return isInCheck;
     bool captured = false;
     Piece* dup;
+    Piece* copy = nullptr;
     if(grid[newPos.posX][newPos.posY] != nullptr) {
         captured = true;  
         dup = duplicate(grid[newPos.posX][newPos.posY]); 
     }
 
+    if(grid[currPos.posX][currPos.posY]->getType() == Piece::KING || 
+        grid[currPos.posX][currPos.posY]->getType() == Piece::PAWN || 
+        grid[currPos.posX][currPos.posY]->getType() == Piece::ROOK) {
+        copy = duplicate(grid[currPos.posX][currPos.posY]);
+    }
+
     makeMove(grid[currPos.posX][currPos.posY],newPos);
     bool isInCheck = isCheck(colour);
     undoMove(dup,captured,currPos,newPos);
+
+    if(copy != nullptr) {
+       grid[currPos.posX][currPos.posY] = copy; 
+    }
+
     return isInCheck;    
 }
 

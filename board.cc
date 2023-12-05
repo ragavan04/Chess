@@ -247,7 +247,7 @@ void Board::undoMove(Piece* dup,bool captured, Position startPos, Position endPo
         cout << grid[endPos.posX][endPos.posY]->displayChar() << " has been stored properly" << endl;
     }
 
-    //notifyObservers();
+    notifyObservers(startPos.posX, startPos.posY, endPos.posX, endPos.posY);
 }
 
 

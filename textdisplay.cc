@@ -5,7 +5,7 @@ TextDisplay::TextDisplay() {
     theDisplay.resize(boardSize, vector<char>(boardSize, ' '));
 }
 
-void TextDisplay::notify(const Board& board) {
+void TextDisplay::notify(const Board &board, int srcRow, int srcCol, int destRow, int destCol) {
     for (int row = 0; row < boardSize; ++row) {
         for (int col = 0; col < boardSize; ++col) {
             if (board.getState()[row][col] != nullptr) {

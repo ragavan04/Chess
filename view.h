@@ -9,7 +9,7 @@ using namespace std;
 class Board;
 class View{
     public:
-        virtual void notify(const Board& board) = 0;
+        virtual void notify(const Board &board, int srcRow, int srcCol, int destRow, int destCol) = 0;
         virtual ~View() {}; // virtual dtor
     
 };

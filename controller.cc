@@ -79,7 +79,7 @@ void Controller::run(){
                 // }
             }
 
-            theBoard->notifyObservers();
+            theBoard->notifyObservers(0, 0, 7, 7);
             cout << *theBoard;
             cout << "board dref" << endl;
 
@@ -93,7 +93,7 @@ void Controller::run(){
         } else if (command == "resign") {
             if (gameInProgress){
                 // print board
-                theBoard->notifyObservers();
+                theBoard->notifyObservers(0, 0, 7, 7);
                 cout << *theBoard << endl;
 
                 // check for player 1 resign
@@ -196,7 +196,7 @@ void Controller::run(){
                 setupMode(player1, player2);
                 player1->renderAvailableMoves(theBoard);
                 player2->renderAvailableMoves(theBoard);
-                theBoard->notifyObservers();
+                theBoard->notifyObservers(0, 0, 7, 7);
                 cout << *theBoard << endl;
             } else {
                 cout << "1 or more player not initalized" << endl;
@@ -206,7 +206,7 @@ void Controller::run(){
                 theBoard->standardBoardSetup();
                 player1->renderAvailableMoves(theBoard);
                 player2->renderAvailableMoves(theBoard);
-                theBoard->notifyObservers();
+                theBoard->notifyObservers(0, 0, 7, 7);
                 cout << *theBoard << endl;
             } else {
                 cout << "1 or more player not initalized" << endl;
@@ -215,7 +215,7 @@ void Controller::run(){
 
         } else if (command == "test"){
             theBoard->testBoardSetup();
-            theBoard->notifyObservers();
+            theBoard->notifyObservers(0, 0, 7, 7);
             cout << *theBoard << endl;
         } else {
             std::cout << "Invalid command." << std::endl;
@@ -418,16 +418,17 @@ void Controller::makeHumanMove(const string& playerColor, Player* player) {
         } else {
             cout << "Invalid move." << endl;
         }
+        theBoard->notifyObservers(tempStartPos.posX, tempStartPos.posY, tempEndPos.posX, tempEndPos.posY);
+        cout << *theBoard << endl;
     }
-
-    theBoard->notifyObservers();
-    cout << *theBoard << endl;
 }
 
 
 void Controller::makeComputerMove(const string& playerColour, Player* player){
     int computerLevel = player->getComputerLevel();
     cout << playerColour << "(Computer Level " << computerLevel << ")." << endl;
+    Position startingPos;
+    Position endingPos;
 
     if (computerLevel == 1){
         LevelOne* levelOneComputer = dynamic_cast<LevelOne*>(player);
@@ -435,8 +436,8 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             // player is a Level1Computer
             pair<Position, Position>  move = levelOneComputer->algorithm(theBoard);
             
-            Position startingPos = move.first;  // get the position of the piece to be moved
-            Position endingPos = move.second; // get the ending position of the piece to be moved
+            startingPos = move.first;  // get the position of the piece to be moved
+            endingPos = move.second; // get the ending position of the piece to be moved
             cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
             cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
@@ -451,8 +452,8 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             // player is a Level1Computer
             pair<Position, Position>  move = levelThreeComputer->algorithm(theBoard);
             
-            Position startingPos = move.first;  // get the position of the piece to be moved
-            Position endingPos = move.second; // get the ending position of the piece to be moved
+            startingPos = move.first;  // get the position of the piece to be moved
+            endingPos = move.second; // get the ending position of the piece to be moved
             cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
             cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
@@ -481,7 +482,7 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
     //         theBoard->makeMove(curPiece, endingPos);        
     //     } 
     // }
-    theBoard->notifyObservers();
+    theBoard->notifyObservers(startingPos.posX, startingPos.posY, endingPos.posX, endingPos.posY);
     cout << *theBoard << endl;
 }
 

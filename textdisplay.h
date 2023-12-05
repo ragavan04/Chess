@@ -9,7 +9,7 @@ class TextDisplay : public View {
     vector<vector<char>> theDisplay;
     public:
         TextDisplay();
-        void notify(const Board& board) override;
+        void notify(const Board &board, int srcRow, int srcCol, int destRow, int destCol) override;
         ~TextDisplay();
         friend ostream& operator<<(ostream& out, const TextDisplay& td);
 };

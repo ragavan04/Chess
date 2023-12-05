@@ -79,9 +79,8 @@ void Controller::run(){
                 }
             }
 
-            theBoard->notifyObservers(0, 0, 7, 7);
-            cout << *theBoard;
-            cout << "board dref" << endl;
+            theBoard->notifyObservers(0, 0, 0, 0);
+            cout << *theBoard << endl;
 
 
             // Start a new game
@@ -93,9 +92,8 @@ void Controller::run(){
         } else if (command == "resign") {
             if (gameInProgress){
                 // print board
-                theBoard->notifyObservers(0, 0, 7, 7);
+                theBoard->notifyObservers(0, 0, 0, 0);
                 cout << *theBoard << endl;
-
                 // check for player 1 resign
                 if (theBoard->getTurn() == 0){
                     cout << "Player 1 resigns" << endl;
@@ -203,8 +201,6 @@ void Controller::run(){
                 setupMode(player1, player2);
                 player1->renderAvailableMoves(theBoard);
                 player2->renderAvailableMoves(theBoard);
-                theBoard->notifyObservers(0, 0, 7, 7);
-                cout << *theBoard << endl;
             } else {
                 cout << "1 or more player not initalized" << endl;
             }
@@ -213,7 +209,7 @@ void Controller::run(){
                 theBoard->standardBoardSetup();
                 player1->renderAvailableMoves(theBoard);
                 player2->renderAvailableMoves(theBoard);
-                theBoard->notifyObservers(0, 0, 7, 7);
+                theBoard->notifyObservers(0, 0, 0, 0);
                 cout << *theBoard << endl;
             } else {
                 cout << "1 or more player not initalized" << endl;
@@ -222,8 +218,6 @@ void Controller::run(){
 
         } else if (command == "test"){
             theBoard->testBoardSetup();
-            theBoard->notifyObservers(0, 0, 7, 7);
-            cout << *theBoard << endl;
         } else {
             std::cout << "Invalid command." << std::endl;
         }
@@ -313,7 +307,7 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
         
         // Add piece to the board
         if (whitePlacing){
-            if (theBoard->getState()[position.posX][position.posY] == nullptr){
+            if (theBoard->getState()[position.posX][position.posY] != nullptr){
                 theBoard->removePiece(position);
             }
             theBoard->addPiece(tolower(piece), position);
@@ -321,9 +315,11 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
                 theBoard->removePiece(position);
                 cout << "Cannot place king in check in setup. Piece is not added." << endl;
             }
+            theBoard->notifyObservers(0, 0, position.posX, position.posY);
+            cout << *theBoard << endl;
             cout << "Piece added: " << piece << " Position: " << letter_position << endl;
         } else if (blackPlacing){
-            if (theBoard->getState()[position.posX][position.posY] == nullptr){
+            if (theBoard->getState()[position.posX][position.posY] != nullptr){
                 theBoard->removePiece(position);
             }
             theBoard->addPiece(toupper(piece), position);
@@ -331,6 +327,8 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
                 theBoard->removePiece(position);
                 cout << "Cannot place king in check in setup. Piece is not added." << endl;
             }
+            theBoard->notifyObservers(0, 0, position.posX, position.posY);
+            cout << *theBoard << endl;
             cout << "Piece added: " << piece << " Position: " << letter_position << endl;
         } else {
             cout << "No colour selected to place pieces. Enter '= colour' to let a player place pieces" << endl;
@@ -341,6 +339,8 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
             if (theBoard->getState()[position.posX][position.posY] != nullptr && theBoard->getState()[position.posX][position.posY]->getColour() == "white"){
                 theBoard->removePiece(position);
                 player1->removePieceType(theBoard->getState()[position.posX][position.posY]->getType());
+                theBoard->notifyObservers(0, 0, position.posX, position.posY);
+                cout << *theBoard << endl;
                 cout << "piece remove: " << letter_position <<  endl;
             } else {
                 cout << "Cannot remove a piece thats not yours or an empty position." << endl;
@@ -352,6 +352,8 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
                 theBoard->removePiece(position);
                 player1->removePieceType(theBoard->getState()[position.posX][position.posY]->getType());
                 cout << "piece remove: " << letter_position <<  endl;
+                theBoard->notifyObservers(0, 0, position.posX, position.posY);
+                cout << *theBoard << endl;
             } else {
                 cout << "Cannot remove a piece thats not yours or an empty position." << endl;
             }
@@ -390,6 +392,8 @@ Position Controller::convertCoords(string coords) const{
 void Controller::makeHumanMove(const string& playerColor, Player* player) {
     bool validMoveMade = false;
     bool validPromotionEntered = false;
+    Position tempStartPos = {0, 0};
+    Position tempEndPos = {0, 0};
 
     while (!validMoveMade) {
         string startPosition, endPosition;
@@ -399,8 +403,8 @@ void Controller::makeHumanMove(const string& playerColor, Player* player) {
             cin >> startPosition;
         }
         cin >> endPosition;
-        Position tempStartPos = convertCoords(startPosition);
-        Position tempEndPos = convertCoords(endPosition);
+        tempStartPos = convertCoords(startPosition);
+        tempEndPos = convertCoords(endPosition);
 
         cout << "Starting position: (" << tempStartPos.posX << "," << tempStartPos.posY << ")" << endl;
         cout << "Ending position: (" << tempEndPos.posX << "," << tempEndPos.posY << ")" << endl;
@@ -444,9 +448,9 @@ void Controller::makeHumanMove(const string& playerColor, Player* player) {
         } else {
             cout << "Invalid move." << endl;
         }
-        theBoard->notifyObservers(tempStartPos.posX, tempStartPos.posY, tempEndPos.posX, tempEndPos.posY);
-        cout << *theBoard << endl;
     }
+    theBoard->notifyObservers(tempStartPos.posX, tempStartPos.posY, tempEndPos.posX, tempEndPos.posY);
+    cout << *theBoard << endl;
 }
 
 
@@ -507,8 +511,7 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
                 cout << "No piece at starting position (" << startingPos.posX << ", " << startingPos.posY << ")" << endl;
             }
 
-            
-    theBoard->makeMove(curPiece, endingPos);        
+        theBoard->makeMove(curPiece, endingPos);        
         } 
     }
     theBoard->notifyObservers(startingPos.posX, startingPos.posY, endingPos.posX, endingPos.posY);

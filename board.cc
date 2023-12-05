@@ -7,13 +7,12 @@
 #include "bishop.h"
 #include "queen.h"
 #include "king.h"
+#include "view.h"
 using namespace std;
 
 Board::Board() : grid{8, vector<Piece*>(8,nullptr)}, turn{0}, isWin{false}, views{vector<View*>(2, nullptr)} {
-    //GraphicsDisplay* gd = new GraphicsDisplay(xw, 8); // Example dimensions
-    //this->attach(gd);
-
     views[0] = new TextDisplay();
+    views[1] = new GraphicsDisplay(*(new Xwindow()), 8);
 }
 
 void Board::standardBoardSetup(){
@@ -219,7 +218,7 @@ void Board::undoMove(Position startPos, Position endPos) {
         movedPiece->setPosition(startPos);
     }
 
-    notifyObservers();
+    notifyObservers(startPos.posX, startPos.posY, endPos.posX, endPos.posY);
 }
 
 
@@ -572,10 +571,10 @@ vector<vector<Piece*>> Board::getState() const {
     return grid;
 }
 
-void Board::notifyObservers() {
+void Board::notifyObservers(int srcRow, int srcCol, int destRow, int destCol) {
     for (auto view : views) {
         if (view) {
-            view->notify(*this);
+            view->notify(*this, srcRow, srcCol, destRow, destCol);
         }
     }
 }

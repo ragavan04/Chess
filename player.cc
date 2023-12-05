@@ -133,7 +133,7 @@ void Player::removePieceType(Piece::Type piece){
     } else if (piece == Piece::Type::ROOK){
         p = 'r';
     } 
-    pieceCount[piece]--;
+    --pieceCount[piece];
 }
 
 Player::~Player() {

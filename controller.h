@@ -21,8 +21,8 @@ class Controller{
     View* TD;
     // unique_ptr<View> GD; 
     bool isWin;
-    int player1Score;
-    int player2Score;
+    float player1Score;
+    float player2Score;
     bool gameInProgress;
     bool whitePlacing;
     bool blackPlacing;

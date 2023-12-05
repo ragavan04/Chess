@@ -29,49 +29,55 @@ std::map<Position, std::vector<Position>> Player::getAvailableMoves() const {
     return availableMoves;
 }
 
-void Player::renderAvailableMoves(Board* board) {
-    availableMoves.clear(); // Clearing the existing moves
-
-    for (int x = 0; x < 8; x++) { 
-        for (int y = 0; y < 8; y++) {
-            Position pos = {x, y};
-            Piece* piece = board->getState()[x][y];
-            if (piece != nullptr && piece->getColour() == this->getColour()) {
-                // Get possible moves for this piece
-                vector<Position> moves = piece->getPossibleMoves();
-                // Add to the map
-                availableMoves[pos] = moves;
-            }
-        }
-    }  
-}
-
 // void Player::renderAvailableMoves(Board* board) {
 //     availableMoves.clear(); // Clearing the existing moves
-
-//     bool kingInCheck = board->isCheck(this->getColour());
 
 //     for (int x = 0; x < 8; x++) { 
 //         for (int y = 0; y < 8; y++) {
 //             Position pos = {x, y};
 //             Piece* piece = board->getState()[x][y];
 //             if (piece != nullptr && piece->getColour() == this->getColour()) {
+//                 // Get possible moves for this piece
 //                 vector<Position> moves = piece->getPossibleMoves();
-//                 vector<Position> validMoves;
-
-//                 for (const Position& move : moves) {
-//                     if (!kingInCheck || board->isInCheckAfterMove(pos, move, this->getColour())) {
-//                         validMoves.push_back(move);
-//                     }
-//                 }
-
-//                 if (!validMoves.empty()) {
-//                     availableMoves[pos] = validMoves;
-//                 }
+//                 // Add to the map
+//                 availableMoves[pos] = moves;
 //             }
 //         }
 //     }  
 // }
+
+
+void Player::renderAvailableMoves(Board* board) {
+    availableMoves.clear(); // Clear previous moves
+
+    // Iterate through all positions on the board
+    for (int x = 0; x < 8; ++x) {
+        for (int y = 0; y < 8; ++y) {
+            Position currentPosition = {x, y};
+            Piece* currentPiece = board->getState()[x][y];
+
+            // Check if there's a piece at the current position and it belongs to the player
+            if (currentPiece && currentPiece->getColour() == this->colour) {
+                vector<Position> validMoves;
+
+                // Get all possible moves for the piece
+                vector<Position> possibleMoves = currentPiece->getPossibleMoves();
+
+                // Validate each possible move
+                for (const auto& move : possibleMoves) {
+                    if (!board->isInCheckAfterMove(currentPosition, move, this->colour)) {
+                        validMoves.push_back(move);
+                    }
+                }
+
+                // If there are valid moves, add them to the map
+                if (!validMoves.empty()) {
+                    availableMoves[currentPosition] = validMoves;
+                }
+            }
+        }
+    }
+}
 
 
 

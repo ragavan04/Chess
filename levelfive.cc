@@ -65,31 +65,19 @@ std::pair<Position, Position> LevelFive::selectOpeningMove(Board* board) const {
 }
 
 
-
-
 std::pair<Position, Position> LevelFive::algorithm(Board* board) const {
-    // Check for an opening move
-    std::pair<Position, Position> openingMove = { {-1, -1}, {-1, -1} };
+    // Attempt to use an opening move if available
     if (useOpeningBook) {
-        openingMove = selectOpeningMove(board);
-    }
-
-    // If we have a valid opening move, check if it's better or equal to other moves
-    if (openingMove.first.posX != -1) {
-        int openingMoveScore = 8; // Score assigned to opening moves
-
-        // Use LevelFour's algorithm to find the best move
-        std::pair<Position, Position> bestLevelFourMove = LevelFour::algorithm(board);
-        int levelFourMoveScore = LevelFour::evaluateMove(bestLevelFourMove, board);
-
-        // Compare the scores
-        if (levelFourMoveScore <= openingMoveScore) {
-            return openingMove; // Use opening move if it's better or equal
-        } else {
-            return bestLevelFourMove; // Use LevelFour move otherwise
+        std::pair<Position, Position> openingMove = selectOpeningMove(board);
+        if (openingMove.first.posX != -1) {
+            // If a valid opening move is found, return it
+            return openingMove;
         }
+        // If no valid opening move is found, selectOpeningMove will use LevelFour's algorithm
+        // The flag 'useOpeningBook' should be set to false in selectOpeningMove if the book is exhausted
     }
 
-    // If no opening move or if opening move is not good enough, use LevelFour logic
+    // Default to LevelFour's algorithm if not using the opening book or if no valid opening move is found
     return LevelFour::algorithm(board);
 }
+

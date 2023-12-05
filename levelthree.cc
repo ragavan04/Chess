@@ -1,6 +1,7 @@
 #include "levelthree.h"
 #include <utility>
 #include <set>
+#include <random>
 
 
 using namespace std;
@@ -21,6 +22,8 @@ pair<Position, Position> LevelThree::algorithm(Board* board) const {
 
     int maxScore = -1;
     std::pair<Position, Position> bestMove;
+    int firstMoveScore = evaluateMove(possibleMoves[0],board);
+    maxScore = firstMoveScore;
 
     for (const auto &move : possibleMoves) {
         int moveScore = evaluateMove(move, board);
@@ -29,6 +32,45 @@ pair<Position, Position> LevelThree::algorithm(Board* board) const {
             bestMove = move;
         }
     }
+
+    if(firstMoveScore == maxScore) {
+         map<Position, vector<Position>> availableMoves = getAvailableMoves();
+
+        // Check if there are any available moves 
+        if (availableMoves.empty()) {
+            // No available moves, return a default pair (for testing purposes)
+            return make_pair(Position{-1, -1}, Position{-1, -1});
+        }
+        
+        // Use a random device to generate a random index for positions
+        random_device dev;
+        mt19937 gen(dev());
+        uniform_int_distribution<size_t> positionDistribution(0, availableMoves.size() - 1);
+
+        while (true) {
+            size_t randomPositionIndex = positionDistribution(gen);
+
+            // Use an iterator to find the random element in the map for positions
+            auto positionIterator = next(begin(availableMoves), randomPositionIndex);
+            Position randomPosition = positionIterator->first;
+
+            // Get the available moves for the randomly selected position
+            const vector<Position>& movesForRandomPosition = positionIterator->second;
+
+            // Check if there are any available moves for the selected position
+            if (!movesForRandomPosition.empty()) {
+                // Use a random index for moves
+                uniform_int_distribution<size_t> moveDistribution(0, movesForRandomPosition.size() - 1);
+                size_t randomMoveIndex = moveDistribution(gen);
+
+                // Get the random move for the selected position
+                Position randomMove = movesForRandomPosition[randomMoveIndex];
+
+                return make_pair(randomPosition, randomMove);
+            }
+        }
+    }
+
 
     return bestMove;
 }
@@ -42,7 +84,7 @@ int LevelThree::evaluateMove(const std::pair<Position, Position> &move, Board* b
     Piece* targetPiece = board->getState()[end.posX][end.posY];
 
     // Score for capturing a piece
-    if (targetPiece != nullptr && movingPiece != nullptr && targetPiece->getColour() != movingPiece->getColour()) {
+    if (targetPiece != nullptr && movingPiece != nullptr && board->canCapture(start,end) && targetPiece->getColour() != movingPiece->getColour()) {
         score += targetPiece->getScoreValue();
     }
 
@@ -70,41 +112,39 @@ int LevelThree::evaluateMove(const std::pair<Position, Position> &move, Board* b
 
 bool LevelThree::moveAvoidsCapture(const std::pair<Position, Position> &move, Board* board, const std::string& playerColour) const {
     Piece* movedPiece = board->getState()[move.first.posX][move.first.posY];
-    Piece *captured = nullptr;
+    bool captured = false;
+    Piece* dup = nullptr;
+    Position temp = move.second;
 
     // // Temporarily make the move
 
     // // checks if there is a piece that exists when trying to move the piece
-    // if(board->getState()[move.second.posX][move.second.posY] != nullptr) {
-    //     cout << board->getState()[move.second.posX][move.second.posY]->displayChar() << endl;
-    //     cout << "the piece at the moved position is not a NULLPTR" << endl;
-    //     captured = board->getState()[move.second.posX][move.second.posY]; 
-    // }
+    if(board->getState()[move.second.posX][move.second.posY] != nullptr) {
+        cout << board->getState()[move.second.posX][move.second.posY]->displayChar() << endl;
+        cout << "the piece at the moved position is not a NULLPTR" << endl;
+        dup = board->duplicate(board->getState()[move.second.posX][move.second.posY]); 
+    }
 
-    // if(captured != nullptr) {
-    //     cout << "Captured piece is confirmed not nullptr" << endl;
-    // }
+    board->makeMove(movedPiece, move.second);
 
-    // board->makeMove(movedPiece, move.second);
-
-    // // Check if any opponent's piece can capture the moved piece
+    // Check if any opponent's piece can capture the moved piece
     bool isSafe = true;
-    // for (int x = 0; x < 8; x++) {
-    //     for (int y = 0; y < 8; y++) {
-    //         Piece* potentialAttacker = board->getState()[x][y];
-    //         if (potentialAttacker != nullptr && potentialAttacker->getColour() != playerColour) {
-    //             Position attackerPosition = {x, y};
-    //             if (board->canCapture(attackerPosition, move.second)) {
-    //                 isSafe = false;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     if (!isSafe) break;
-    // }
+    for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 8; y++) {
+            Piece* potentialAttacker = board->getState()[x][y];
+            if (potentialAttacker != nullptr && potentialAttacker->getColour() != playerColour) {
+               Position attackerPosition = {x, y};
+                if (board->canCapture(attackerPosition, temp)) {
+                    isSafe = false;
+                    break;
+                }
+            }
+        }
+        if (!isSafe) break;
+    }
 
     // // Revert the move
-    // board->undoMove(captured,move.first,move.second);
+    board->undoMove(dup,captured,move.first,move.second);
 
     return isSafe;
 }

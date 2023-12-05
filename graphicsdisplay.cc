@@ -53,7 +53,7 @@ void GraphicsDisplay::notify(const Board &board, int srcRow, int srcCol, int des
                     char pieceChar = piece->displayChar();  // Assuming Piece has a method to return a char representing it
                     string pieceStr(1, pieceChar);
 
-                    unsigned long colour = (piece->getColour() == "white") ? 0xFF0000 : 0x0000FF;
+                    unsigned long colour = (piece->getColour() == "white") ? 0xFF0000 : 0x6E8A93;
 
                     // Draw the piece on the board
                     window.drawString(offsetX + col * pixels + pixels / 2, yPos + pixels / 2, pieceStr, colour);

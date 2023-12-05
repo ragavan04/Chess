@@ -49,14 +49,6 @@ void Board::standardBoardSetup(){
     grid[7][4] = new King(Piece::KING, "black", {7, 4}, *this);
 }
 
-void Board::testBoardSetup(){
-
-    grid[7][0] = new Rook(Piece::ROOK, "black", {7, 0}, *this);
-    grid[3][4] = new King(Piece::KING, "black", {7, 0}, *this);
-    grid[1][0] = new King(Piece::KING, "white", {0, 1}, *this);
-    grid[0][0] = new Rook(Piece::ROOK, "white", {0, 0}, *this);
-
-}
 
 
 void Board::makeMove(Piece *p, Position newPos){
@@ -173,7 +165,7 @@ void Board::makeMove(Piece *p, Position newPos){
 
     }
 
-    // en passant is valid after it has been moved twice ///////// -------> change grid[newPos.posX][newPos.posY] to just p
+    // en passant is valid after it has been moved twice ///////
     if(grid[p->getX()][p->getY()] != nullptr && grid[newPos.posX][newPos.posY]->getType() == Piece::PAWN) {
 
 
@@ -209,17 +201,7 @@ void Board::makeMove(Piece *p, Position newPos){
 }
 
 void Board::undoMove(Piece* dup, bool captured, Position startPos, Position endPos) {
-    // Get the piece at the end position
-    // Piece* movedPiece = grid[endPos.posX][endPos.posY];
 
-    // // Move the piece back to its original position
-    // grid[startPos.posX][startPos.posY] = movedPiece;
-    // grid[endPos.posX][endPos.posY] = nullptr;
-
-    // // Update the piece's position
-    // if (movedPiece) {
-    //     movedPiece->setPosition(startPos);
-    // }
 
     Piece *movedPiece = grid[endPos.posX][endPos.posY];
     grid[startPos.posX][startPos.posY] = movedPiece;
@@ -228,14 +210,6 @@ void Board::undoMove(Piece* dup, bool captured, Position startPos, Position endP
         movedPiece->setPosition(startPos);
     }
 
-    // if(captured == nullptr) {
-    //     grid[endPos.posX][endPos.posY] = nullptr;
-
-    // } else if(captured != nullptr) {
-    //     cout << "captured move has been put back at (" << endPos.posX << "," << endPos.posY << ")" << endl;
-    //     grid[endPos.posX][endPos.posY] = captured;
-    //     captured->setPosition(endPos);
-    // }
 
 
     if(!captured) {
@@ -398,10 +372,7 @@ Piece* Board::duplicate(Piece* p) {
 
 
 bool Board::isInCheckAfterMove(Position currPos, Position newPos, string colour) {
-    // makeMove(grid[currPos.posX][currPos.posY], newPos);
-    // bool isInCheck = isCheck(colour);
-    // undoMove(currPos, newPos);
-    // return isInCheck;
+    
     bool captured = false;
     Piece* dup;
     Piece* copy = nullptr;
@@ -687,6 +658,7 @@ bool Board::isCheckmate(string playerColour) {
     if(threat.posX == -1 && threat.posY == -1) {
         return false;
     }
+    return (counter == kingPossibleMoves.size());
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {

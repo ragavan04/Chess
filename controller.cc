@@ -13,6 +13,11 @@ void Controller::run(){
     string command;
     Player* player1;
     Player* player2;
+
+    cout << "Welcome to Chess!!" << endl;
+    cout << "To play a Human vs. Human game, simply enter 'game human human'" << endl;
+    cout << "To play against a computer simply enter 'game human computer[#]' and replace # with a number between 1-5" << endl;
+    cout << "You can also make two computers play against each other!" << endl; 
     
     while (cin >> command) {
 
@@ -49,23 +54,23 @@ void Controller::run(){
             } else {
                 if (whiteDifficulty == 1) {
                     player1 = new LevelOne{"white", "computer"};
-                    cout << "white lvl 1 created" << endl;
+                    cout << "white level 1 created" << endl;
                 }
-                // if (whiteDifficulty == 2) {
-                //     player1 = new LevelTwo{"white", "computer"};
-                //     cout << "white lvl 2 created" << endl;
-                // }
+                if (whiteDifficulty == 2) {
+                    player1 = new LevelTwo{"white", "computer"};
+                    cout << "white lvl 2 created" << endl;
+                }
                 if (whiteDifficulty == 3){
                     player1 = new LevelThree("white", "computer");
-                    cout << "white lvl 3 created" << endl;
+                    cout << "white level 3 created" << endl;
                 }
                 if (whiteDifficulty == 4){
                     player1 = new LevelFour("white", "computer");
-                    cout << "white lvl 4 created" << endl;
+                    cout << "white level 4 created" << endl;
                 }
                 if (whiteDifficulty == 5) {
                     player1 = new LevelFive{"white", "computer"};
-                    cout << "white lvl 1 created" << endl;
+                    cout << "white level 1 created" << endl;
                 }
             }
 
@@ -75,23 +80,23 @@ void Controller::run(){
             } else {
                 if (blackDifficulty == 1) {
                     player2 = new LevelOne{"black", "computer"};
-                    cout << "black lvl 1 created" << endl;
+                    cout << "black level 1 created" << endl;
                 }
-                // if (blackDifficulty == 2){
-                //     player2 = new LevelTwo("black", "computer");
-                //     cout << "black lvl 2 created" << endl;
-                // }
+                if (blackDifficulty == 2){
+                    player2 = new LevelTwo("black", "computer");
+                    cout << "black lvl 2 created" << endl;
+                }
                 if (blackDifficulty == 3){
                     player2 = new LevelThree("black", "computer");
-                    cout << "black lvl 3 created" << endl;
+                    cout << "black level 3 created" << endl;
                 }
                 if (blackDifficulty == 4){
                     player2 = new LevelFour("black", "computer");
-                    cout << "black lvl 4 created" << endl;
+                    cout << "black level 4 created" << endl;
                 }
                 if (blackDifficulty == 5){
                     player2 = new LevelThree("black", "computer");
-                    cout << "black lvl 5 created" << endl;
+                    cout << "black level 5 created" << endl;
                 }
             }
 
@@ -102,6 +107,7 @@ void Controller::run(){
             // Start a new game
             gameInProgress = true;
             cout << "Enter 'setup' to place your own pieces. Enter 'standard' to use a standard chess board" << endl;
+            
 
             
             
@@ -232,8 +238,6 @@ void Controller::run(){
             }
 
 
-        } else if (command == "test"){
-            theBoard->testBoardSetup();
         } else {
             std::cout << "Invalid command." << std::endl;
         }
@@ -252,6 +256,7 @@ void Controller::displayScore() const{
 void Controller::setupMode(Player* player1, Player* player2) {
     std::string setupCommand;
     cout << "Entering setup mode. Enter commands to place pieces or type 'done' to exit." << endl;
+    cout << "Enter a colour to start placing pieces for that colour i.e '= white'" << endl;
     while (getline(cin, setupCommand)) {
         if (setupCommand == "done") {
             

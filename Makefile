@@ -1,21 +1,20 @@
 CXX = g++-11 -std=c++20
 CXXFLAGS = -Wall -g -MMD -Werror=vla # use -MMD to generate dependencies
-SOURCES = $(wildcard *.cc)   # list of all .cc files in the current directory
-OBJECTS = ${SOURCES:.cc=.o}  # .o files depend upon .cc files with same names
-DEPENDS = ${OBJECTS:.o=.d}   # .d file is list of dependencies for corresponding .cc file
+SOURCES = $(filter-out graphicsdisplay.cc window.cc, $(wildcard *.cc))
+OBJECTS = ${SOURCES:.cc=.o}
+DEPENDS = ${OBJECTS:.o=.d}
 EXEC = chess
-LIBFLAGS = -lX11
 
 # First target in the makefile is the default target.
 $(EXEC): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $(EXEC)  $(LIBFLAGS)
+	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $(EXEC)
 	strip $(EXEC)
 
 %.o: %.cc 
-	$(CXX) -c -o $@ $< $(CXXFLAGS) $(LIBFLAGS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
 -include ${DEPENDS}
 
-.PHONY: clean tests
+.PHONY: clean
 clean:
-	rm  -f $(OBJECTS) $(DEPENDS) $(EXEC)
+	rm -f $(OBJECTS) $(DEPENDS) $(EXEC)

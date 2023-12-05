@@ -154,6 +154,7 @@ void Controller::run(){
             
             if (theBoard->isCheckmate("white")){
                 cout << "Checkmate! Black wins!" << endl;
+                ++player2Score;
                 theBoard->clearBoard();
                 cout << "New game started" << endl;
                 continue;
@@ -162,6 +163,7 @@ void Controller::run(){
             
             if (theBoard->isCheckmate("black")){
                 cout << "Checkmate! White wins!" << endl;
+                ++player1Score;
                 theBoard->clearBoard();
                 cout << "New game started" << endl;
                 continue;
@@ -175,12 +177,10 @@ void Controller::run(){
                 cout << "Black is in check" << endl;
             }
             
-            if (theBoard->isStalemate("white")){
+            if (theBoard->isStalemate("white") || theBoard->isStalemate("black")){
                 cout << "Stalemate" << endl; 
-            }
-
-            if (theBoard->isStalemate("black")){
-                cout << "Stalemate" << endl; 
+                player1Score += 0.5;
+                player1Score += 0.5;
             }
 
             player1->renderAvailableMoves(theBoard);

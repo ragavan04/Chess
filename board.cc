@@ -395,6 +395,9 @@ bool Board::isInCheckAfterMove(Position currPos, Position newPos, string colour)
        grid[currPos.posX][currPos.posY] = copy; 
     }
 
+    delete dup;
+    delete copy;
+
     return isInCheck;    
 }
 

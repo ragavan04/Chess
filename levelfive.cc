@@ -45,7 +45,6 @@ std::pair<Position, Position> LevelFive::selectOpeningMove(Board* board) const {
         Piece* piece = board->getState()[move.first.posX][move.first.posY];
         if (piece != nullptr && piece->getColour() == this->getColour()) {
             if (piece->isValid(move.second)) {
-                cout << "USING OPENING MOVE" << endl;
                 auto validMove = *it;
                 it = openingBook.erase(it); // Remove the valid move from the book
                 return validMove;
@@ -60,7 +59,6 @@ std::pair<Position, Position> LevelFive::selectOpeningMove(Board* board) const {
     }
 
     // If no valid opening move is found, use LevelFour algorithm
-    cout << "NOT USING OPENING BOOK, USING LEVEL THREE ALGORITHM" << endl;
     return LevelFour::algorithm(board);
 }
 

@@ -68,7 +68,7 @@ void GraphicsDisplay::notify(const Board &board, int srcRow, int srcCol, int des
         if (srcPiece != nullptr) {
             char srcPieceChar = srcPiece->displayChar();  // Assuming Piece has a method to return a char representing it
             string srcPieceStr(1, srcPieceChar);
-            unsigned long srcColour = (srcPiece->getColour() == "white") ? 0xFF0000 : 0x0000FF;
+            unsigned long srcColour = (srcPiece->getColour() == "white") ? 0xFF0000 : 0x6E8A93;
             window.drawString(srcX + pixels / 2, srcY + pixels / 2, srcPieceStr, srcColour);
         }
 
@@ -76,7 +76,7 @@ void GraphicsDisplay::notify(const Board &board, int srcRow, int srcCol, int des
         if (destPiece != nullptr) {
             char destPieceChar = destPiece->displayChar();  // Assuming Piece has a method to return a char representing it
             string destPieceStr(1, destPieceChar);
-            unsigned long destColour = (destPiece->getColour() == "white") ? 0xFF0000 : 0x0000FF;
+            unsigned long destColour = (destPiece->getColour() == "white") ? 0xFF0000 : 0x6E8A93;
             window.drawString(destX + pixels / 2, destY + pixels / 2, destPieceStr, destColour);
         }
     }

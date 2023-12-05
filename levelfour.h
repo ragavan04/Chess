@@ -11,7 +11,7 @@ public:
     LevelFour(const std::string& colour, std::string playerType);
     std::pair<Position, Position> algorithm(Board* board) const override;
     void loadOpeningBook();
-    std::pair<Position, Position> selectOpeningMove() const;
+    std::pair<Position, Position> selectOpeningMove(Board* board) const;
     int getComputerLevel() const override { return 4; }
 };
 

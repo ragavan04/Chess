@@ -113,6 +113,24 @@ bool Player::addPieceType(char piece) {
     return true;  // Indicate successful addition
 }
 
+void Player::removePieceType(Piece::Type piece){
+    char p;
+    if (piece == Piece::Type::BISHOP){
+        p = 'b';
+    } else if (piece == Piece::Type::KING){
+        p = 'k';
+    } else if (piece == Piece::Type::QUEEN){
+        p = 'q';
+    } else if (piece == Piece::Type::PAWN){
+        p = 'p';
+    } else if (piece == Piece::Type::KNIGHT){
+        p = 'n';
+    } else if (piece == Piece::Type::ROOK){
+        p = 'r';
+    } 
+    pieceCount[piece]--;
+}
+
 Player::~Player() {
     // Assuming lostPieces holds dynamically allocated Piece objects
     for (auto piece : lostPieces) {

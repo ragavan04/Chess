@@ -1,18 +1,18 @@
 #ifndef __LEVELFOUR_H__
 #define __LEVELFOUR_H__
-#include "computer.h"
-#include "board.h"
+#include "levelthree.h"
+#include <vector>
+#include <map>
 
-class LevelFour : public Computer {
+class LevelFour : public LevelThree {
+    mutable std::vector<std::pair<Position, Position>> openingBook;
+    mutable bool useOpeningBook;
 public:
     LevelFour(const std::string& colour, std::string playerType);
     std::pair<Position, Position> algorithm(Board* board) const override;
+    void loadOpeningBook();
+    std::pair<Position, Position> selectOpeningMove() const;
     int getComputerLevel() const override { return 4; }
-
-private:
-    int minimax(Board* board, int depth, bool isMaximizingPlayer, int alpha, int beta) const;
-    int evaluateBoardState(Board* board) const;
-    
 };
 
-#endif
+#endif // __LEVELFOUR_H__

@@ -6,7 +6,6 @@
 #include <memory>
 #include "player.h"
 #include "graphicsdisplay.h"
-// #include "window.h"
 class Piece;
 class Player;
 class View;
@@ -19,10 +18,7 @@ class Board {
     vector<vector<Piece*>> grid;
     int turn;
     bool isWin;
-    //Player player1; 
-    //Player player2; 
     vector<View*> views;
-    //Xwindow xw;
 
     public:
         Board();
@@ -55,7 +51,7 @@ class Board {
         bool isCheckmate(string playerColour);
         vector<vector<Piece*>> getState() const; // returns the grid
         // void clone(Piece::Type pieceType); // makes a clone of the given piece 
-        void notifyObservers(); // notifies observers of changes made to the board
+        void notifyObservers(int srcRow, int srcCol, int destRow, int destCol); // notifies observers of changes made to the board
         void attach(View *o);
         void clearBoard();
         ~Board();

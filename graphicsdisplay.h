@@ -1,24 +1,21 @@
-#ifndef GRAPHICSDISPLAY_H
-#define GRAPHICSDISPLAY_H
+#ifndef __GRAPHICSDISPLAY_H__
+#define __GRAPHICSDISPLAY_H__
 #include "view.h" 
-// #include "window.h"
+#include "window.h"
+using namespace std;
+
+class Board;
+class Piece;
 
 class GraphicsDisplay : public View {
-    // Xwindow &window;
-    // int gridSize;
-    // int dimentions;
+    Xwindow &window;
+    int gridSize;
+    int dimentions;
 public:
-    // GraphicsDisplay(Xwindow &xw, int size) : window(xw), gridSize(size) {
-    //     dimentions = 500 / gridSize; // find the size of each rect
-    //     window.fillRectangle(0, 0, 500, 500, 0);
-    // }
-
-    // void notify(const Board &board); // Override from observer
-
+    GraphicsDisplay(Xwindow &window, int gridSize);
+    void notify(const Board &board, int srcRow, int srcCol, int destRow, int destCol);
+    ~GraphicsDisplay();
 };
-
-
-
 
 #endif
 

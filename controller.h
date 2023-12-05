@@ -11,6 +11,7 @@
 #include "computer.h"
 #include "levelone.h"
 #include "levelthree.h"
+#include "levelfour.h"
 #include "graphicsdisplay.h"
 
 using namespace std;
@@ -23,6 +24,8 @@ class Controller{
     int player1Score;
     int player2Score;
     bool gameInProgress;
+    bool whitePlacing;
+    bool blackPlacing;
 
     public:
     	Controller();

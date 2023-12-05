@@ -3,7 +3,7 @@
 #include "textdisplay.h"
 using namespace std;
 
-Controller::Controller() : theBoard{new Board}, isWin{false}, player1Score{0}, player2Score{0}, gameInProgress{false} {}
+Controller::Controller() : theBoard{new Board}, isWin{false}, player1Score{0}, player2Score{0}, gameInProgress{false}, whitePlacing(false), blackPlacing(false) {}
 
 Controller::~Controller() {
     theBoard->clearBoard();
@@ -55,6 +55,10 @@ void Controller::run(){
                     player1 = new LevelThree("white", "computer");
                     cout << "white lvl 3 created" << endl;
                 }
+                if (whiteDifficulty == 4){
+                    player1 = new LevelFour("white", "computer");
+                    cout << "white lvl 4 created" << endl;
+                }
             }
 
             if (blackPlayer == "human"){
@@ -69,9 +73,13 @@ void Controller::run(){
                     player2 = new LevelThree("black", "computer");
                     cout << "black lvl 3 created" << endl;
                 }
+                if (blackDifficulty == 4){
+                    player2 = new LevelFour("black", "computer");
+                    cout << "black lvl 4 created" << endl;
+                }
             }
 
-            theBoard->notifyObservers();
+            theBoard->notifyObservers(0, 0, 7, 7);
             cout << *theBoard;
             cout << "board dref" << endl;
 
@@ -85,7 +93,7 @@ void Controller::run(){
         } else if (command == "resign") {
             if (gameInProgress){
                 // print board
-                theBoard->notifyObservers();
+                theBoard->notifyObservers(0, 0, 7, 7);
                 cout << *theBoard << endl;
 
                 // check for player 1 resign
@@ -195,7 +203,7 @@ void Controller::run(){
                 setupMode(player1, player2);
                 player1->renderAvailableMoves(theBoard);
                 player2->renderAvailableMoves(theBoard);
-                theBoard->notifyObservers();
+                theBoard->notifyObservers(0, 0, 7, 7);
                 cout << *theBoard << endl;
             } else {
                 cout << "1 or more player not initalized" << endl;
@@ -205,7 +213,7 @@ void Controller::run(){
                 theBoard->standardBoardSetup();
                 player1->renderAvailableMoves(theBoard);
                 player2->renderAvailableMoves(theBoard);
-                theBoard->notifyObservers();
+                theBoard->notifyObservers(0, 0, 7, 7);
                 cout << *theBoard << endl;
             } else {
                 cout << "1 or more player not initalized" << endl;
@@ -214,7 +222,7 @@ void Controller::run(){
 
         } else if (command == "test"){
             theBoard->testBoardSetup();
-            theBoard->notifyObservers();
+            theBoard->notifyObservers(0, 0, 7, 7);
             cout << *theBoard << endl;
         } else {
             std::cout << "Invalid command." << std::endl;
@@ -248,11 +256,12 @@ void Controller::setupMode(Player* player1, Player* player2) {
         }
         processSetupCommand(setupCommand, player1, player2);
     }
+    whitePlacing = false;
+    blackPlacing = false;
 }
 
 
-void Controller::processSetupCommand(const string& command, Player* player1, Player* player2) {
-    bool whitePlacing, blackPlacing;
+void Controller::processSetupCommand(const string& command, Player* player1, Player* player2) {   
     // Parse the command to extract piece type and position
     char action, piece;
     string letter_position;
@@ -260,13 +269,21 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
     stringstream ss{command};
     ss >> action;
     if (action == '+') {
+        if (!whitePlacing && !blackPlacing) {
+            cout << "Please select a colour first." << endl;
+            return;
+        }
         ss >> piece >> letter_position;
     } else if (action == '-') {
+        if (!whitePlacing && !blackPlacing) {
+            cout << "Please select a colour first." << endl;
+            return;
+        }
         ss >> letter_position;
     } else if (action == '='){
         ss >> colour;
     }
-   
+
     Position position = convertCoords(letter_position);
     
     if (action == '='){
@@ -283,16 +300,10 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
         // Check if the piece can be added based on the count
         
         bool canAddPiece = false;
-        if (whitePlacing && !theBoard->isCheck("black") && !theBoard->isCheck("white") && !((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)) && player1->addPieceType(piece)) canAddPiece = true;
-        if (blackPlacing && !theBoard->isCheck("black") && !theBoard->isCheck("white") && !((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)) && player2->addPieceType(piece)) canAddPiece = true;
+        if ((whitePlacing && !blackPlacing) && !((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)) && player1->addPieceType(piece)) canAddPiece = true;
+        if ((blackPlacing && !whitePlacing) && !((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)) && player2->addPieceType(piece)) canAddPiece = true;
 
-        if (!whitePlacing && !blackPlacing){
-            cout << "no colour selcted" << endl;
-            return;
-        } else if (theBoard->isCheck("white") || theBoard->isCheck("black")){
-            cout << "Cannot place king in check in setup. Please remove the piece commiting the check before continuning" << endl;
-            return;
-        } else if ((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)){
+        if ((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)){
             cout << "Cannot place pawn at row 1 or row 8" << endl;
             return;
         } else if (!canAddPiece) {
@@ -302,10 +313,24 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
         
         // Add piece to the board
         if (whitePlacing){
+            if (theBoard->getState()[position.posX][position.posY] == nullptr){
+                theBoard->removePiece(position);
+            }
             theBoard->addPiece(tolower(piece), position);
+            if (theBoard->isCheck("black") || theBoard->isCheck("white")){
+                theBoard->removePiece(position);
+                cout << "Cannot place king in check in setup. Piece is not added." << endl;
+            }
             cout << "Piece added: " << piece << " Position: " << letter_position << endl;
         } else if (blackPlacing){
+            if (theBoard->getState()[position.posX][position.posY] == nullptr){
+                theBoard->removePiece(position);
+            }
             theBoard->addPiece(toupper(piece), position);
+            if (theBoard->isCheck("black") || theBoard->isCheck("white")){
+                theBoard->removePiece(position);
+                cout << "Cannot place king in check in setup. Piece is not added." << endl;
+            }
             cout << "Piece added: " << piece << " Position: " << letter_position << endl;
         } else {
             cout << "No colour selected to place pieces. Enter '= colour' to let a player place pieces" << endl;
@@ -315,6 +340,7 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
         if (whitePlacing){
             if (theBoard->getState()[position.posX][position.posY] != nullptr && theBoard->getState()[position.posX][position.posY]->getColour() == "white"){
                 theBoard->removePiece(position);
+                player1->removePieceType(theBoard->getState()[position.posX][position.posY]->getType());
                 cout << "piece remove: " << letter_position <<  endl;
             } else {
                 cout << "Cannot remove a piece thats not yours or an empty position." << endl;
@@ -324,6 +350,7 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
         if (blackPlacing){
             if (theBoard->getState()[position.posX][position.posY] != nullptr &&  theBoard->getState()[position.posX][position.posY]->getColour() == "black"){
                 theBoard->removePiece(position);
+                player1->removePieceType(theBoard->getState()[position.posX][position.posY]->getType());
                 cout << "piece remove: " << letter_position <<  endl;
             } else {
                 cout << "Cannot remove a piece thats not yours or an empty position." << endl;
@@ -417,16 +444,17 @@ void Controller::makeHumanMove(const string& playerColor, Player* player) {
         } else {
             cout << "Invalid move." << endl;
         }
+        theBoard->notifyObservers(tempStartPos.posX, tempStartPos.posY, tempEndPos.posX, tempEndPos.posY);
+        cout << *theBoard << endl;
     }
-
-    theBoard->notifyObservers();
-    cout << *theBoard << endl;
 }
 
 
 void Controller::makeComputerMove(const string& playerColour, Player* player){
     int computerLevel = player->getComputerLevel();
     cout << playerColour << "(Computer Level " << computerLevel << ")." << endl;
+    Position startingPos;
+    Position endingPos;
 
     if (computerLevel == 1){
         LevelOne* levelOneComputer = dynamic_cast<LevelOne*>(player);
@@ -434,8 +462,8 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             // player is a Level1Computer
             pair<Position, Position>  move = levelOneComputer->algorithm(theBoard);
             
-            Position startingPos = move.first;  // get the position of the piece to be moved
-            Position endingPos = move.second; // get the ending position of the piece to be moved
+            startingPos = move.first;  // get the position of the piece to be moved
+            endingPos = move.second; // get the ending position of the piece to be moved
             cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
             cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
@@ -450,8 +478,8 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             // player is a Level1Computer
             pair<Position, Position>  move = levelThreeComputer->algorithm(theBoard);
             
-            Position startingPos = move.first;  // get the position of the piece to be moved
-            Position endingPos = move.second; // get the ending position of the piece to be moved
+            startingPos = move.first;  // get the position of the piece to be moved
+            endingPos = move.second; // get the ending position of the piece to be moved
             cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
             cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
@@ -459,7 +487,31 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             theBoard->makeMove(curPiece, endingPos);        
         } 
     }
-    theBoard->notifyObservers();
+
+    if (computerLevel == 4){
+         LevelFour* levelFourComputer = dynamic_cast<LevelFour*>(player);
+        if (levelFourComputer != nullptr) {
+            // player is a Level1Computer
+            pair<Position, Position>  move = levelFourComputer->algorithm(theBoard);
+            
+            Position startingPos = move.first;  // get the position of the piece to be moved
+            Position endingPos = move.second; // get the ending position of the piece to be moved
+            cout << "START POS X: " << startingPos.posX << "  Y:  " << startingPos.posY << endl;
+            cout << "ending pos X: " << endingPos.posX << "  Y:  " << endingPos.posY << endl;
+            Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
+            cout << "reached" << endl;
+            if (curPiece != nullptr) {
+                cout << "Current Piece: " << curPiece->displayChar() << endl;
+                theBoard->makeMove(curPiece, endingPos);
+            } else {
+                cout << "No piece at starting position (" << startingPos.posX << ", " << startingPos.posY << ")" << endl;
+            }
+
+            
+    theBoard->makeMove(curPiece, endingPos);        
+        } 
+    }
+    theBoard->notifyObservers(startingPos.posX, startingPos.posY, endingPos.posX, endingPos.posY);
     cout << *theBoard << endl;
 }
 

@@ -73,7 +73,7 @@ void Controller::run(){
                 }
                 if (whiteDifficulty == 5) {
                     player1 = new LevelFive{"white", "computer"};
-                    cout << "white level 1 created" << endl;
+                    cout << "white level 5 created" << endl;
                 }
             }
 

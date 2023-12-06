@@ -49,7 +49,9 @@ pair<Position, Position> LevelOne::algorithm(Board* board) const {
             if(movingPiece->getType() == Piece::KING && board->isInCheckAfterMove(randomPosition,randomMove,oppColour)) { 
                 continue;
             }
+            
+            return make_pair(randomPosition, randomMove);
         }
-        return make_pair(randomPosition, randomMove);
+        
     }
 }

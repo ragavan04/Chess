@@ -204,6 +204,9 @@ void Controller::run(){
                 cout << "Stalemate" << endl; 
                 player1Score += 0.5;
                 player1Score += 0.5;
+                theBoard->clearBoard();
+                cout << "New game started" << endl;
+                continue;
             }
 
             player1->renderAvailableMoves(theBoard);

@@ -37,7 +37,6 @@ pair<Position, Position> LevelTwo::algorithm(Board* board) const {
          bestMove = LevelOne::algorithm(board);
     }
 
-
     return bestMove;
 }
 
@@ -51,11 +50,28 @@ int LevelTwo::evaluateMoveTwo(const pair<Position, Position> &move, Board* board
     Piece* movingPiece = board->getState()[start.posX][start.posY];
     Piece* targetPiece = board->getState()[end.posX][end.posY];
     int captureScore = 0;
+    int checkScore = 0;
 
     // Score for capturing a piece
     if (targetPiece != nullptr && movingPiece != nullptr && board->canCapture(start,end) && targetPiece->getColour() != movingPiece->getColour()) {
         captureScore += targetPiece->getScoreValue();
     }
+
+    if (movingPiece != nullptr && movingPiece->getType() == Piece::KING && !board->isInCheckAfterMove(move.first, move.second, oppColour)) {
+        return 1000;
+    }
+
+    // Score for checking the opponent's king
+    if (movingPiece != nullptr && movingPiece->getType() != Piece::KING && board->isInCheckAfterMove(move.first, move.second, oppColour)) {
+        checkScore += 20;
+    }
+
+    if(captureScore >= checkScore) {
+        return captureScore;
+    } else if(captureScore < checkScore) {
+        return checkScore;
+    }
+
 
     return captureScore;
 

@@ -7,6 +7,7 @@ using namespace std;
 pair<Position, Position> LevelOne::algorithm(Board* board) const {
     // Get available moves from the map
     map<Position, vector<Position>> availableMoves = getAvailableMoves();
+    string oppColour;
 
     // Check if there are any available moves 
     if (availableMoves.empty()) {
@@ -38,7 +39,16 @@ pair<Position, Position> LevelOne::algorithm(Board* board) const {
             // Get the random move for the selected position
             Position randomMove = movesForRandomPosition[randomMoveIndex];
 
-            return make_pair(randomPosition, randomMove);
+            if(movingPiece->getColour() == "white") {
+                oppColour = "black";
+            } else if(movingPiece->getColour() == "black") {
+            oppColour = "white"; 
+            }
+
+            if(board->getState()[randomPosition.posX][randomPosition.posY]->getType() != Piece::KING &
+                & isInCheckAfterMove(randomPosition,randomMove,oppColour)) { 
+                return make_pair(randomPosition, randomMove);
+            }
         }
     }
 }

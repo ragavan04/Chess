@@ -502,7 +502,21 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             endingPos = move.second; // get the ending position of the piece to be moved
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
             
-            theBoard->makeMove(curPiece, endingPos);        
+            // pawn promotion logic
+            if ((curPiece->getType() == Piece::PAWN) && playerColour == "white" && endingPos.posX == 7 || (curPiece->getType() == Piece::PAWN) && playerColour == "black" && endingPos.posX == 0){               
+                theBoard->removePiece(startingPos);
+                // check if player is white, if so add piece for white player
+                if (playerColour == "white"){
+                    theBoard->addPiece(tolower('r'), endingPos);
+                } 
+
+                // check if player is black, if so add piece for black player
+                if (playerColour == "black"){
+                    theBoard->addPiece(toupper('r'), endingPos);
+                }
+            } else {
+                theBoard->makeMove(curPiece, endingPos);  
+            }      
         } 
     }
 
@@ -516,7 +530,21 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             endingPos = move.second; // get the ending position of the piece to be moved
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
             
-            theBoard->makeMove(curPiece, endingPos);        
+            // pawn promotion logic
+            if ((curPiece->getType() == Piece::PAWN) && playerColour == "white" && endingPos.posX == 7 || (curPiece->getType() == Piece::PAWN) && playerColour == "black" && endingPos.posX == 0){               
+                theBoard->removePiece(startingPos);
+                // check if player is white, if so add piece for white player
+                if (playerColour == "white"){
+                    theBoard->addPiece(tolower('n'), endingPos);
+                } 
+
+                // check if player is black, if so add piece for black player
+                if (playerColour == "black"){
+                    theBoard->addPiece(toupper('n'), endingPos);
+                }
+            } else {
+                theBoard->makeMove(curPiece, endingPos);  
+            }              
         } 
     }
 
@@ -530,7 +558,21 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             endingPos = move.second; // get the ending position of the piece to be moved
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
             
-            theBoard->makeMove(curPiece, endingPos);        
+            // pawn promotion logic
+            if ((curPiece->getType() == Piece::PAWN) && playerColour == "white" && endingPos.posX == 7 || (curPiece->getType() == Piece::PAWN) && playerColour == "black" && endingPos.posX == 0){               
+                theBoard->removePiece(startingPos);
+                // check if player is white, if so add piece for white player
+                if (playerColour == "white"){
+                    theBoard->addPiece(tolower('q'), endingPos);
+                } 
+
+                // check if player is black, if so add piece for black player
+                if (playerColour == "black"){
+                    theBoard->addPiece(toupper('q'), endingPos);
+                }
+            } else {
+                theBoard->makeMove(curPiece, endingPos);  
+            }      
         } 
     }
 
@@ -544,7 +586,21 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             endingPos = move.second; // get the ending position of the piece to be moved
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
             
-            theBoard->makeMove(curPiece, endingPos);  
+            // pawn promotion logic
+            if ((curPiece->getType() == Piece::PAWN) && playerColour == "white" && endingPos.posX == 7 || (curPiece->getType() == Piece::PAWN) && playerColour == "black" && endingPos.posX == 0){               
+                theBoard->removePiece(startingPos);
+                // check if player is white, if so add piece for white player
+                if (playerColour == "white"){
+                    theBoard->addPiece(tolower('q'), endingPos);
+                } 
+
+                // check if player is black, if so add piece for black player
+                if (playerColour == "black"){
+                    theBoard->addPiece(toupper('q'), endingPos);
+                }
+            } else {
+                theBoard->makeMove(curPiece, endingPos);  
+            } 
 
         } 
     }
@@ -559,7 +615,21 @@ void Controller::makeComputerMove(const string& playerColour, Player* player){
             endingPos = move.second; // get the ending position of the piece to be moved
             Piece* curPiece = theBoard->getState()[startingPos.posX][startingPos.posY];
             
-            theBoard->makeMove(curPiece, endingPos);  
+            // pawn promotion logic
+            if ((curPiece->getType() == Piece::PAWN) && playerColour == "white" && endingPos.posX == 7 || (curPiece->getType() == Piece::PAWN) && playerColour == "black" && endingPos.posX == 0){               
+                theBoard->removePiece(startingPos);
+                // check if player is white, if so add piece for white player
+                if (playerColour == "white"){
+                    theBoard->addPiece(tolower('q'), endingPos);
+                } 
+
+                // check if player is black, if so add piece for black player
+                if (playerColour == "black"){
+                    theBoard->addPiece(toupper('q'), endingPos);
+                }
+            } else {
+                theBoard->makeMove(curPiece, endingPos);  
+            }  
        
         } 
     }

@@ -38,6 +38,7 @@ pair<Position, Position> LevelOne::algorithm(Board* board) const {
 
             // Get the random move for the selected position
             Position randomMove = movesForRandomPosition[randomMoveIndex];
+            Piece *movingPiece = board->getState()[randomPosition.posX][randomPosition.posY];
 
             if(movingPiece->getColour() == "white") {
                 oppColour = "black";
@@ -45,8 +46,7 @@ pair<Position, Position> LevelOne::algorithm(Board* board) const {
             oppColour = "white"; 
             }
 
-            if(board->getState()[randomPosition.posX][randomPosition.posY]->getType() != Piece::KING &
-                & isInCheckAfterMove(randomPosition,randomMove,oppColour)) { 
+            if(movingPiece->getType() != Piece::KING && isInCheckAfterMove(randomPosition,randomMove,oppColour)) { 
                 return make_pair(randomPosition, randomMove);
             }
         }

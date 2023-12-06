@@ -69,6 +69,9 @@ int LevelFour::evaluateMove(const std::pair<Position, Position> &move, Board* bo
        oppColour = "white"; 
     }
 
+     if (movingPiece != nullptr && movingPiece->getType() == Piece::KING && !board->isInCheckAfterMove(move.first, move.second, oppColour)) {
+        return 1000;
+    }
 
     // Score for checking the opponent's king
     if (movingPiece != nullptr && movingPiece->getType() != Piece::KING && board->isInCheckAfterMove(move.first, move.second, oppColour)) {

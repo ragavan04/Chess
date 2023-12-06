@@ -104,7 +104,7 @@ bool LevelThree::avoidsCapture(const pair<Position, Position> &move, Board* boar
         if (!isSafe) break;
     }
 
-
+    return isSafe;
 
 }
 

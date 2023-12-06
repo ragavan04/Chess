@@ -46,7 +46,7 @@ pair<Position, Position> LevelOne::algorithm(Board* board) const {
             oppColour = "white"; 
             }
 
-            if (movingPiece != nullptr && movingPiece->getType() == Piece::KING && !board->isInCheckAfterMove(randomPosition,randomMove, oppColour)) {
+            if (movingPiece != nullptr && movingPiece->getType() == Piece::KING && board->isInCheckAfterMove(randomPosition,randomMove, oppColour)) {
                 continue;
             }
 

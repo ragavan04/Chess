@@ -188,7 +188,6 @@ void Board::makeMove(Piece *p, Position newPos){
             && (p->getColour() == "white" && (grid[p->getX() - 1][p->getY()]->getType() == Piece::PAWN))) {
             delete grid[p->getX() - 1][p->getY()];
             grid[p->getX() - 1][p->getY()] = nullptr;
-            cout << "deleted black pawn" << endl;
     }
             
         
@@ -196,7 +195,6 @@ void Board::makeMove(Piece *p, Position newPos){
             && (p->getColour() == "black" && (grid[p->getX() + 1][p->getY()]->getType() == Piece::PAWN))) {
             delete grid[p->getX() + 1][p->getY()];
             grid[p->getX() + 1][p->getY()] = nullptr;
-            cout << "deleted white pawn" << endl;
     }
 }
 

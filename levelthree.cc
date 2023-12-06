@@ -64,7 +64,7 @@ int LevelThree::evaluateMove(const pair<Position, Position> &move, Board* board)
     }
 
     // Score for checking the opponent's king
-    if (movingPiece->getType() != Piece::KING && board->isInCheckAfterMove(move.first, move.second, oppColour)) {
+    if (movingPiece != nullptr && movingPiece->getType() != Piece::KING && board->isInCheckAfterMove(move.first, move.second, oppColour)) {
         checkScore += 20;
     }
 

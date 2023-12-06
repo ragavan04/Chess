@@ -51,11 +51,19 @@ int LevelTwo::evaluateMoveTwo(const pair<Position, Position> &move, Board* board
     Piece* targetPiece = board->getState()[end.posX][end.posY];
     int captureScore = 0;
     int checkScore = 0;
+    string oppColour;
 
     // Score for capturing a piece
     if (targetPiece != nullptr && movingPiece != nullptr && board->canCapture(start,end) && targetPiece->getColour() != movingPiece->getColour()) {
         captureScore += targetPiece->getScoreValue();
     }
+
+    if(movingPiece->getColour() == "white") {
+        oppColour = "black";
+    } else if(movingPiece->getColour() == "black") {
+       oppColour = "white"; 
+    }
+
 
     if (movingPiece != nullptr && movingPiece->getType() == Piece::KING && !board->isInCheckAfterMove(move.first, move.second, oppColour)) {
         return 1000;

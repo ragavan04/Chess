@@ -63,12 +63,12 @@ int LevelThree::evaluateMove(const pair<Position, Position> &move, Board* board)
        oppColour = "white"; 
     }
 
-    if (movingPiece != nullptr && movingPiece->getType() == Piece::KING && !board->isInCheckAfterMove(move.first, move.second, oppColour)) {
+    if (movingPiece != nullptr && movingPiece->getType() == Piece::KING && !board->isInCheckAfterMove(start, end, oppColour)) {
         return 1000;
     }
 
     // Score for checking the opponent's king
-    if (movingPiece != nullptr && movingPiece->getType() != Piece::KING && board->isInCheckAfterMove(move.first, move.second, oppColour)) {
+    if (movingPiece != nullptr && movingPiece->getType() != Piece::KING && board->isInCheckAfterMove(start, end, oppColour)) {
         checkScore += 20;
     }
 

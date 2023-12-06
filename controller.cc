@@ -325,11 +325,10 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
         
         bool canAddPiece = false;
         if ((whitePlacing && !blackPlacing) && !((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7))) {
-            player1->addPieceType(piece); 
-            canAddPiece = true;}
+            canAddPiece = player1->addPieceType(piece);
+        }
         if ((blackPlacing && !whitePlacing) && !((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7))) {
-             player2->addPieceType(piece); 
-             canAddPiece = true;
+             canAddPiece = player2->addPieceType(piece); 
         }
 
         if ((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)){

@@ -335,7 +335,9 @@ void Controller::processSetupCommand(const string& command, Player* player1, Pla
         if ((piece == 'p' || piece == 'P') && (position.posX == 0 || position.posX == 7)){
             cout << "Cannot place pawn at row 1 or row 8" << endl;
             return;
-        } else if (!canAddPiece) {
+        } 
+        
+        if (!canAddPiece) {
             cout << "Exceeded the standard amount for this piece type." << endl;
             return;
         }
